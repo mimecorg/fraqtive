@@ -1,0 +1,44 @@
+Fraqtive
+Version 0.4.0 (2008-03-25)
+
+Fraqtive is an open source, multi-platform generator of the Mandelbrot
+family fractals. It uses very fast algorithms supporting SSE2
+and multi-core processors. It generates high quality anti-aliased
+images. It allows real-time navigation and dynamic generation
+of the Julia fractal preview.
+
+
+Credits and License
+===================
+
+Program copyright (C) 2004-2008 Michał Męciński
+
+Icons based on the KDE Crystal theme copyright (C) 2002 and following
+years KDE Artists
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+Resources
+=========
+
+Website
+    http://fraqtive.mimec.org/
+
+Forum
+    http://fraqtive.mimec.org/forum/general
+
+Bugs & Requests
+    http://fraqtive.mimec.org/forum/tracker

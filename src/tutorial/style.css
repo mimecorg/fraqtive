@@ -1,0 +1,34 @@
+body
+{
+  font-size: large;
+}
+h1
+{
+  font-size: x-large;
+  font-weight: bold;
+  color: #358;
+  margin: 0 0 1em 0;
+}
+h2
+{
+  font-size: large;
+  font-weight: bold;
+  color: #358;
+  margin: 0 0 1em 0;
+}
+p
+{
+  margin: 0 0 0.8em 0;
+}
+table
+{
+  margin: 0.8em 0 0.8em 0;
+}
+th
+{
+  background-color: #ccf;
+}
+td
+{
+  background-color: #eee;
+}

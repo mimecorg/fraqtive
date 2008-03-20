@@ -1,0 +1,235 @@
+<ui version="4.0" >
+ <class>FraqtiveMainWindow</class>
+ <widget class="QMainWindow" name="FraqtiveMainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>880</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Fraqtive</string>
+  </property>
+  <widget class="QWidget" name="centralWidget" >
+   <layout class="QVBoxLayout" >
+    <property name="leftMargin" >
+     <number>0</number>
+    </property>
+    <property name="topMargin" >
+     <number>0</number>
+    </property>
+    <property name="rightMargin" >
+     <number>0</number>
+    </property>
+    <property name="bottomMargin" >
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="ViewContainer" native="1" name="mainContainer" />
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="toolBar" >
+   <property name="windowTitle" >
+    <string>Toolbar</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionFractalType" />
+   <addaction name="actionEditGradient" />
+   <addaction name="separator" />
+   <addaction name="actionDefaultPosition" />
+   <addaction name="actionNavigateBack" />
+   <addaction name="actionNavigateForward" />
+  </widget>
+  <widget class="QDockWidget" name="dockProperties" >
+   <property name="windowTitle" >
+    <string>Properties</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockPropertiesContents" >
+    <layout class="QVBoxLayout" >
+     <item>
+      <widget class="PropertyToolBox" native="1" name="propertyToolBox" />
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockPreview" >
+   <property name="windowTitle" >
+    <string>Julia Preview</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockPreviewContents" >
+    <layout class="QVBoxLayout" >
+     <item>
+      <widget class="ViewContainer" native="1" name="previewContainer" />
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>880</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>&amp;Fraqtive</string>
+    </property>
+    <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuEdit" >
+    <property name="title" >
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionFractalType" />
+    <addaction name="actionEditGradient" />
+   </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionQuickTutorial" />
+    <addaction name="separator" />
+    <addaction name="actionAboutFraqtive" />
+    <addaction name="actionAboutQt" />
+   </widget>
+   <widget class="QMenu" name="menuView" >
+    <property name="title" >
+     <string>&amp;View</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuPosition" >
+    <property name="title" >
+     <string>&amp;Position</string>
+    </property>
+    <addaction name="actionDefaultPosition" />
+    <addaction name="separator" />
+    <addaction name="actionNavigateBack" />
+    <addaction name="actionNavigateForward" />
+   </widget>
+   <addaction name="menuFile" />
+   <addaction name="menuEdit" />
+   <addaction name="menuView" />
+   <addaction name="menuPosition" />
+   <addaction name="menuHelp" />
+  </widget>
+  <action name="actionQuit" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/quit-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionAboutFraqtive" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/fraqtive-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;About Fraqtive</string>
+   </property>
+  </action>
+  <action name="actionAboutQt" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/qt-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>About &amp;Qt</string>
+   </property>
+  </action>
+  <action name="actionQuickTutorial" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/tutorial-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Quick Tutorial</string>
+   </property>
+  </action>
+  <action name="actionFractalType" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/edit-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Fractal Type...</string>
+   </property>
+  </action>
+  <action name="actionEditGradient" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/gradient-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Gradient...</string>
+   </property>
+  </action>
+  <action name="actionDefaultPosition" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/home-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Default Position</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+Home</string>
+   </property>
+  </action>
+  <action name="actionNavigateBack" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/back-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Navigate &amp;Back</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+Left</string>
+   </property>
+  </action>
+  <action name="actionNavigateForward" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/forward-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Navigate &amp;Forward</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+Right</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PropertyToolBox</class>
+   <extends>QWidget</extends>
+   <header>propertytoolbox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ViewContainer</class>
+   <extends>QWidget</extends>
+   <header>viewcontainer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="icons.qrc" />
+ </resources>
+ <connections/>
+</ui>

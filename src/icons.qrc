@@ -1,0 +1,21 @@
+<RCC>
+    <qresource>
+        <file>icons/back-16.png</file>
+        <file>icons/back-22.png</file>
+        <file>icons/edit-16.png</file>
+        <file>icons/edit-22.png</file>
+        <file>icons/forward-16.png</file>
+        <file>icons/forward-22.png</file>
+        <file>icons/fraqtive-16.png</file>
+        <file>icons/fraqtive-22.png</file>
+        <file>icons/fraqtive-32.png</file>
+        <file>icons/fraqtive-48.png</file>
+        <file>icons/gradient-16.png</file>
+        <file>icons/gradient-22.png</file>
+        <file>icons/home-16.png</file>
+        <file>icons/home-22.png</file>
+        <file>icons/qt-16.png</file>
+        <file>icons/quit-16.png</file>
+        <file>icons/tutorial-16.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,76 @@
+Installation
+============
+
+Requirements:
+
+ * Qt 4.3 or newer (http://www.trolltech.com/products/qt/)
+
+The program can be build using the standard 'qmake' tool from Qt. Simple configure
+scripts are available for both Linux and Windows which create a configuration file
+and run qmake with appropriate parameters. See detailed instructions below.
+
+
+Linux
+=====
+
+To compile the program you will need a C++ compiler (preferably gcc) and headers
+for the Qt library (if you use binary packages, make sure you have the appropriate
+'devel' package installed).
+
+The typical procedure of building and installing the program is:
+
+    $ ./configure
+    $ make
+    # make install
+
+Additional options that can be passed to the configure script:
+
+    -prefix DIR
+
+        Location where the package will be installed (default is '/usr/local').
+
+    -qmake PATH
+
+        Full path to the 'qmake' tool (required if it cannot be found
+        automatically).
+
+    -debug
+
+        Build with debugging symbols.
+
+
+Windows
+=======
+
+You must have the Qt/Windows Open Source Edition installed. By default it is compiled
+using the MinGW compiler. Since Qt 4.3.2 also Microsoft Visual C++ is supported and
+can be used to compile Qt libraries and programs using Qt.
+
+If you are using MinGW, open the Qt Command Prompt. Go to the directory where
+you have unpacked Fraqtive and run:
+
+    > configure.bat
+    > mingw32-make
+
+If you are using Microsoft Visual C++, open the Visual Studio Command Prompt.
+Make sure that QTDIR is set to the path where Qt was installed. Go to the directory
+where you have unpacked Fraqtive and run:
+
+    > set QTDIR=C:\path\to\qt4
+    > configure.bat
+    > nmake
+
+Additional options that can be passed to the configure script:
+
+    -prefix DIR
+
+        The location where the package will be installed (default is
+        'C:\Program Files\Fraqtive').
+
+    -debug
+
+        Build with debugging symbols.
+
+    -msvc
+
+        Generate a solution for Microsoft Visual Studio instead of Makefiles.

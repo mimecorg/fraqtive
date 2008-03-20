@@ -1,0 +1,10 @@
+<RCC>
+    <qresource>
+        <file>tutorial/page01.html</file>
+        <file>tutorial/page02.html</file>
+        <file>tutorial/page03.html</file>
+        <file>tutorial/page04.html</file>
+        <file>tutorial/page05.html</file>
+        <file>tutorial/style.css</file>
+    </qresource>
+</RCC>

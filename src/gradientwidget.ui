@@ -1,0 +1,55 @@
+<ui version="4.0" >
+ <class>GradientWidget</class>
+ <widget class="QWidget" name="GradientWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>459</width>
+    <height>309</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string/>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="spacing" >
+    <number>5</number>
+   </property>
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="ShadeWidget" native="1" name="gradient" />
+   </item>
+   <item>
+    <widget class="ShadeWidget" native="1" name="shadeRed" />
+   </item>
+   <item>
+    <widget class="ShadeWidget" native="1" name="shadeGreen" />
+   </item>
+   <item>
+    <widget class="ShadeWidget" native="1" name="shadeBlue" />
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ShadeWidget</class>
+   <extends>QWidget</extends>
+   <header>shadewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

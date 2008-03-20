@@ -1,0 +1,15 @@
+0.4.0 (2008-03-25)
+    * created new fractal generator engine
+    * redesigned and rewritten user interface using Qt4
+
+0.3.1 (2005-09-07)
+    * minor improvements and bug fixes
+
+0.3.0 (2005-07-04)
+    * ported to KDE3
+
+0.2.1 (2005-02-11)
+    * minor improvements and bug fixes
+
+0.2.0 (2005-01-24)
+    * initial Qt3 version

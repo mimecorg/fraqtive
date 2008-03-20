@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Fraqtive
+GenericName=Fractal Generator
+Comment=Program drawing Mandelbrot and Julia fractals
+Icon=fraqtive
+Exec=fraqtive
+Categories=Qt;Education;Science;Math;
