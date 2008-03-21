@@ -49,7 +49,6 @@ SOURCES   += advancedsettingspage.cpp \
              fractaltypewidget.cpp \
              fraqtiveapplication.cpp \
              fraqtivemainwindow.cpp \
-             generatorcore.cpp \
              gradientdialog.cpp \
              gradientwidget.cpp \
              imageview.cpp \
@@ -80,8 +79,25 @@ win32 {
     SOURCES += windowsmodernstyle.cpp
 }
 
+no-sse2|win32-msvc|win32-g++: CONFIG -= sse2
+
 sse2 {
     DEFINES += HAVE_SSE2
+    win32-g++|!win32:!*-icc* {
+        SSE2_SOURCES += generatorcore.cpp
+        sse2_compiler.commands = $$QMAKE_CXX -c -msse2 $(CXXFLAGS) $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+        sse2_compiler.dependency_type = TYPE_C
+        sse2_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
+        sse2_compiler.input = SSE2_SOURCES
+        sse2_compiler.variable_out = OBJECTS
+        sse2_compiler.name = compiling[sse2] ${QMAKE_FILE_IN}
+        silent:sse2_compiler.commands = @echo compiling[sse2] ${QMAKE_FILE_IN} && $$sse2_compiler.commands
+        QMAKE_EXTRA_COMPILERS += sse2_compiler
+    } else {
+        SOURCES += generatorcore.cpp
+    }
+} else {
+    SOURCES += generatorcore.cpp
 }
 
 INCLUDEPATH += .
@@ -90,6 +106,7 @@ PRECOMPILED_HEADER = fraqtive_pch.h
 
 win32 {
     RC_FILE = fraqtive.rc
+    LIBS += -lshell32
 }
 
 MOC_DIR = ../tmp

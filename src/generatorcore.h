@@ -11,6 +11,10 @@
 #ifndef GENERATORCORE_H
 #define GENERATORCORE_H
 
+#if defined( Q_OS_WIN64 ) && defined( _M_X64 )
+#undef HAVE_SSE2
+#endif
+
 namespace GeneratorCore
 {
 
