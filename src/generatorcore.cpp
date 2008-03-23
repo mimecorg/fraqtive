@@ -761,7 +761,7 @@ static inline void calculateSSE2( double result[], double x[], double y[], doubl
     __m128d rmax = _mm_set1_pd( BailoutRadius ); 
 
     int count[ 2 ] = { 0, 0 };
-    double final[ 2 ];
+    double final[ 2 ] = { 0.0, 0.0 };
 
     for ( int k = maxIterations; k > 0; k -= AutoStepsSSE2<N, VARIANT>::Steps ) {
         if ( AutoStepsSSE2<N, VARIANT>::calculate( k, zx, zy, rcx, rcy, rmax, count, final ) )
