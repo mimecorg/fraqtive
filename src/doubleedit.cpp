@@ -38,7 +38,7 @@ void DoubleEdit::setValue( double value )
 {
     value = qBound( m_minimum, m_maximum, value );
 
-    if ( m_value != value ) {
+    if ( m_value != value || text().isEmpty() ) {
         internalSetValue( value );
         setText( QString::number( m_value, 'g', 14 ) );
     }
