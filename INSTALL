@@ -13,9 +13,9 @@ and run qmake with appropriate parameters. See detailed instructions below.
 Linux
 =====
 
-To compile the program you will need a C++ compiler (preferably gcc) and headers
-for the Qt library (if you use binary packages, make sure you have the appropriate
-'devel' package installed).
+To compile the program you will need a modern C++ compiler (preferably gcc)
+and headers for the Qt library (if you use binary packages, make sure you have
+the appropriate 'devel' package installed).
 
 The typical procedure of building and installing the program is:
 
@@ -38,6 +38,10 @@ Additional options that can be passed to the configure script:
 
         Build with debugging symbols.
 
+    -no-sse2
+    
+        Compile without using SSE2 instructions (by default SSE2 is enabled).
+
 
 Windows
 =======
@@ -52,9 +56,9 @@ you have unpacked Fraqtive and run:
     > configure.bat
     > mingw32-make
 
-If you are using Microsoft Visual C++, open the Visual Studio Command Prompt.
-Make sure that QTDIR is set to the path where Qt was installed. Go to the directory
-where you have unpacked Fraqtive and run:
+If you are using Microsoft Visual C++, open the Visual Studio Command Prompt. Note that
+only Visual Studio 2005 or newer is supported. Make sure that QTDIR is set to the path
+where Qt was installed. Go to the directory where you have unpacked Fraqtive and run:
 
     > set QTDIR=C:\path\to\qt4
     > configure.bat
@@ -70,6 +74,11 @@ Additional options that can be passed to the configure script:
     -debug
 
         Build with debugging symbols.
+
+    -no-sse2
+    
+        Compile without using SSE2 instructions (by default SSE2 is enabled
+        except on MinGW where it's buggy).
 
     -msvc
 
