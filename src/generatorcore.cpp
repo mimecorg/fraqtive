@@ -13,6 +13,7 @@
 #include <qglobal.h>
 
 #include <math.h>
+#include <cstdlib>
 
 #if defined( HAVE_SSE2 )
 # include <emmintrin.h>
@@ -44,25 +45,25 @@ template<Variant VARIANT>
 static void adjust( double& /*zx*/, double& /*zy*/ );
 
 template<>
-static inline void adjust<NormalVariant>( double& /*zx*/, double& /*zy*/ )
+inline void adjust<NormalVariant>( double& /*zx*/, double& /*zy*/ )
 {
 }
 
 template<>
-static inline void adjust<ConjugateVariant>( double& /*zx*/, double& zy )
+inline void adjust<ConjugateVariant>( double& /*zx*/, double& zy )
 {
     zy = -zy;
 }
 
 template<>
-static inline void adjust<AbsoluteVariant>( double& zx, double& zy )
+inline void adjust<AbsoluteVariant>( double& zx, double& zy )
 {
     zx = fabs( zx );
     zy = fabs( zy );
 }
 
 template<>
-static inline void adjust<AbsoluteImVariant>( double& /*zx*/, double& zy )
+inline void adjust<AbsoluteImVariant>( double& /*zx*/, double& zy )
 {
     zy = fabs( zy );
 }
@@ -237,7 +238,7 @@ static inline void calculatePower( double& zx, double& zy, double& radius )
 }
 
 template<>
-static inline void calculatePower<2>( double& zx, double& zy, double& radius )
+inline void calculatePower<2>( double& zx, double& zy, double& radius )
 {
     double zxx = zx * zx;
     double zyy = zy * zy;
@@ -249,7 +250,7 @@ static inline void calculatePower<2>( double& zx, double& zy, double& radius )
 }
 
 template<>
-static inline void calculatePower<1>( double& /*zx*/, double& /*zy*/, double& /*radius*/ )
+inline void calculatePower<1>( double& /*zx*/, double& /*zy*/, double& /*radius*/ )
 {
 }
 
@@ -625,7 +626,7 @@ static inline void calculatePowerSSE2( __m128d& zx, __m128d& zy, __m128d& radius
 }
 
 template<>
-static inline void calculatePowerSSE2<2>( __m128d& zx, __m128d& zy, __m128d& radius )
+inline void calculatePowerSSE2<2>( __m128d& zx, __m128d& zy, __m128d& radius )
 {
     __m128d zxx = _mm_mul_pd( zx, zx );
     __m128d zyy = _mm_mul_pd( zy, zy );
@@ -637,7 +638,7 @@ static inline void calculatePowerSSE2<2>( __m128d& zx, __m128d& zy, __m128d& rad
 }
 
 template<>
-static inline void calculatePowerSSE2<1>( __m128d& /*zx*/, __m128d& /*zy*/, __m128d& /*radius*/ )
+inline void calculatePowerSSE2<1>( __m128d& /*zx*/, __m128d& /*zy*/, __m128d& /*radius*/ )
 {
 }
 
@@ -653,19 +654,19 @@ template<Variant VARIANT>
 static void adjustSSE2( __m128d& /*zx*/, __m128d& /*zy*/ );
 
 template<>
-static inline void adjustSSE2<NormalVariant>( __m128d& /*zx*/, __m128d& /*zy*/ )
+inline void adjustSSE2<NormalVariant>( __m128d& /*zx*/, __m128d& /*zy*/ )
 {
 }
 
 template<>
-static inline void adjustSSE2<ConjugateVariant>( __m128d& /*zx*/, __m128d& zy )
+inline void adjustSSE2<ConjugateVariant>( __m128d& /*zx*/, __m128d& zy )
 {
     __m128d mask = _mm_set1_pd( *reinterpret_cast<const double*>( SignMask ) );
     zy = _mm_xor_pd( mask, zy );
 }
 
 template<>
-static inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
+inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
 {
     __m128d mask = _mm_set1_pd( *reinterpret_cast<const double*>( NotSignMask ) );
     zx = _mm_and_pd( zx, mask );
@@ -673,7 +674,7 @@ static inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
 }
 
 template<>
-static inline void adjustSSE2<AbsoluteImVariant>( __m128d& /*zx*/, __m128d& zy )
+inline void adjustSSE2<AbsoluteImVariant>( __m128d& /*zx*/, __m128d& zy )
 {
     __m128d mask = _mm_set1_pd( *reinterpret_cast<const double*>( NotSignMask ) );
     zy = _mm_and_pd( zy, mask );

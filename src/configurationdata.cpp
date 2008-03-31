@@ -16,6 +16,7 @@
 #endif
 
 #include <QDir>
+#include <cstdlib>
 
 ConfigurationData::ConfigurationData()
 {
