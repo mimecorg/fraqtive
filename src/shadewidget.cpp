@@ -140,8 +140,8 @@ void ShadeWidget::mousePressEvent( QMouseEvent* e )
     }
 
     QPointF point = mapFromWidget( e->pos() );
-    point.setX( qBound( 0.0, point.x(), 1.0 ) );
-    point.setY( qBound( 0.0, point.y(), 1.0 ) );
+    point.setX( qBound( (qreal)0, point.x(), (qreal)1 ) );
+    point.setY( qBound( (qreal)0, point.y(), (qreal)1 ) ); 
 
     if ( index >= 0 && minDistance <= 10.0 ) {
         m_dragging = true;
@@ -174,8 +174,8 @@ void ShadeWidget::mouseMoveEvent( QMouseEvent* e )
         return;
 
     QPointF point = mapFromWidget( e->pos() );
-    point.setX( qBound( 0.0, point.x(), 1.0 ) );
-    point.setY( qBound( 0.0, point.y(), 1.0 ) );
+    point.setX( qBound( (qreal)0, point.x(), (qreal)1 ) );
+    point.setY( qBound( (qreal)0, point.y(), (qreal)1 ) ); 
 
     if ( m_index == 0 ) {
         point.setX( 0.0 );
