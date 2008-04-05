@@ -182,6 +182,8 @@ FractalGenerator::UpdateStatus FractalGenerator::updateData( FractalData* data )
             break;
 
         case PartialUpdate:
+            if ( data->isEmpty() )
+                return NoUpdate;
             data->setValidRegions( m_validRegions );
             break;
 
