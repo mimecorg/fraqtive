@@ -73,38 +73,83 @@ QVariant ConfigurationData::value( const QString& key, const QVariant& defaultVa
 
 void ConfigurationData::readConfiguration()
 {
-    QString path = locateDataFile( "config.dat" );
+    QFile file;
+    QDataStream stream;
 
-    QFile file( path );
-    if ( !file.open( QIODevice::ReadOnly ) )
-        return;
+    if ( readFile( &file, &stream, "config.dat" ) )
+        stream >> m_data;
 
-    QDataStream stream( &file );
-    stream.setVersion( QDataStream::Qt_4_2 );
+    if ( readFile( &file, &stream, "bookmarks.dat" ) )
+        stream >> m_bookmarks;
+
+    if ( readFile( &file, &stream, "presets.dat" ) )
+        stream >> m_userPresets;
+
+    if ( readFile( &file, &stream, ":/data/presets.dat" ) )
+        stream >> m_defaultPresets;
+}
+
+bool ConfigurationData::readFile( QFile* file, QDataStream* stream, const QString& fileName )
+{
+    QString path;
+    if ( QDir::isRelativePath( fileName ) )
+        path = locateDataFile( fileName );
+    else
+        path = fileName;
+
+    file->close();
+    file->setFileName( path );
+
+    if ( !file->open( QIODevice::ReadOnly ) )
+        return false;
+
+    stream->setDevice( file );
+    stream->setVersion( QDataStream::Qt_4_2 );
 
     qint32 version;
-    stream >> version;
+    *stream >> version;
 
     if ( version != 1 )
-        return;
+        return false;
 
-    stream >> m_data;
+    return true;
 }
 
 void ConfigurationData::writeConfiguration()
 {
-    QString path = locateDataFile( "config.dat" );
+    QFile file;
+    QDataStream stream;
 
-    QFile file( path );
-    if ( !file.open( QIODevice::WriteOnly ) )
-        return;
+    if ( writeFile( &file, &stream, "config.dat" ) )
+        stream << m_data;
 
-    QDataStream stream( &file );
-    stream.setVersion( QDataStream::Qt_4_2 );
+    if ( writeFile( &file, &stream, "bookmarks.dat" ) )
+        stream << m_bookmarks;
 
-    stream << (qint32)1; // increment version when adding / modifying fields
+    if ( writeFile( &file, &stream, "presets.dat" ) )
+        stream << m_userPresets;
+}
 
-    stream << m_data;
+bool ConfigurationData::writeFile( QFile* file, QDataStream* stream, const QString& fileName )
+{
+    QString path;
+    if ( QDir::isRelativePath( fileName ) )
+        path = locateDataFile( fileName );
+    else
+        path = fileName;
+
+    file->close();
+    file->setFileName( path );
+
+    if ( !file->open( QIODevice::WriteOnly ) )
+        return false;
+
+    stream->setDevice( file );
+    stream->setVersion( QDataStream::Qt_4_2 );
+
+    *stream << (qint32)1; // increment version when adding / modifying fields
+
+    return true;
 }
 
 QString ConfigurationData::locateDataFile( const QString& name )

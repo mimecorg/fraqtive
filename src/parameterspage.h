@@ -30,6 +30,8 @@ public:
 private slots:
     void on_buttonType_clicked();
     void on_buttonRestore_clicked();
+    void on_buttonLoad_clicked();
+    void on_buttonSave_clicked();
 
     void on_editJuliaX_valueChanged();
     void on_editJuliaY_valueChanged();

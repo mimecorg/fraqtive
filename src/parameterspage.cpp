@@ -12,6 +12,8 @@
 
 #include "fractalmodel.h"
 #include "fractaltypedialog.h"
+#include "loadbookmarkdialog.h"
+#include "savebookmarkdialog.h"
 
 ParametersPage::ParametersPage( QWidget* parent ) : QWidget( parent ),
     m_model( NULL ),
@@ -45,6 +47,20 @@ void ParametersPage::on_buttonType_clicked()
 void ParametersPage::on_buttonRestore_clicked()
 {
     m_model->setDefaultPosition();
+}
+
+void ParametersPage::on_buttonLoad_clicked()
+{
+    LoadBookmarkDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
+}
+
+void ParametersPage::on_buttonSave_clicked()
+{
+    SaveBookmarkDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
 }
 
 void ParametersPage::on_editJuliaX_valueChanged()

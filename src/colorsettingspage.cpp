@@ -15,6 +15,8 @@
 
 #include "fractalmodel.h"
 #include "gradientdialog.h"
+#include "loadpresetdialog.h"
+#include "savepresetdialog.h"
 #include "datafunctions.h"
 
 ColorSettingsPage::ColorSettingsPage( QWidget* parent ) : QWidget( parent ),
@@ -93,6 +95,20 @@ void ColorSettingsPage::on_buttonStore_clicked()
         m_model->saveDefaultColorSettings();
         updateButtons();
     }
+}
+
+void ColorSettingsPage::on_buttonLoad_clicked()
+{
+    LoadPresetDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
+}
+
+void ColorSettingsPage::on_buttonSave_clicked()
+{
+    SavePresetDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
 }
 
 void ColorSettingsPage::gradientChanged()

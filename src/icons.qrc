@@ -2,6 +2,7 @@
     <qresource>
         <file>icons/back-16.png</file>
         <file>icons/back-22.png</file>
+        <file>icons/delete-16.png</file>
         <file>icons/edit-16.png</file>
         <file>icons/edit-22.png</file>
         <file>icons/forward-16.png</file>
@@ -16,6 +17,7 @@
         <file>icons/home-22.png</file>
         <file>icons/qt-16.png</file>
         <file>icons/quit-16.png</file>
+        <file>icons/rename-16.png</file>
         <file>icons/tutorial-16.png</file>
     </qresource>
 </RCC>

@@ -307,6 +307,87 @@ inline bool operator ==( const ViewSettings& lhv, const ViewSettings& rhv )
 
 Q_DECLARE_METATYPE( ViewSettings )
 
+class Bookmark
+{
+public:
+    Bookmark();
+
+public:
+    void setFractalType( const FractalType& type ) { m_fractalType = type; }
+    FractalType fractalType() const { return m_fractalType; }
+
+    void setPosition( const Position& position ) { m_position = position; }
+    Position position() const { return m_position; }
+
+public:
+    friend QDataStream& operator <<( QDataStream& stream, const Bookmark& bookmark );
+    friend QDataStream& operator >>( QDataStream& stream, Bookmark& bookmark );
+
+    friend bool operator ==( const Bookmark& lhv, const Bookmark& rhv );
+    friend bool operator !=( const Bookmark& lhv, const Bookmark& rhv ) { return !( lhv == rhv ); }
+
+private:
+    FractalType m_fractalType;
+    Position m_position;
+};
+
+inline Bookmark::Bookmark()
+{
+}
+
+inline bool operator ==( const Bookmark& lhv, const Bookmark& rhv )
+{
+    return ( lhv.m_fractalType == rhv.m_fractalType )
+        && ( lhv.m_position == rhv.m_position );
+}
+
+Q_DECLARE_METATYPE( Bookmark )
+
+typedef QMap<QString, Bookmark> BookmarkMap;
+
+class Preset
+{
+public:
+    Preset();
+
+public:
+    void setGradient( const Gradient& gradient ) { m_gradient = gradient; }
+    Gradient gradient() const { return m_gradient; }
+
+    void setBackgroundColor( const QColor& color ) { m_backgroundColor = color; }
+    QColor backgroundColor() const { return m_backgroundColor; }
+
+    void setColorMapping( const ColorMapping& mapping ) { m_colorMapping = mapping; }
+    ColorMapping colorMapping() const { return m_colorMapping; }
+
+public:
+    friend QDataStream& operator <<( QDataStream& stream, const Preset& preset );
+    friend QDataStream& operator >>( QDataStream& stream, Preset& preset );
+
+    friend bool operator ==( const Preset& lhv, const Preset& rhv );
+    friend bool operator !=( const Preset& lhv, const Preset& rhv ) { return !( lhv == rhv ); }
+
+private:
+    Gradient m_gradient;
+    QColor m_backgroundColor;
+    ColorMapping m_colorMapping;
+};
+
+inline Preset::Preset()
+{
+}
+
+inline bool operator ==( const Preset& lhv, const Preset& rhv )
+{
+    return ( lhv.m_gradient == rhv.m_gradient )
+        && ( lhv.m_backgroundColor == rhv.m_backgroundColor )
+        && ( lhv.m_colorMapping == rhv.m_colorMapping );
+}
+
+Q_DECLARE_METATYPE( Preset )
+
+typedef QMap<QString, Preset> PresetMap;
+
 void registerDataStructures();
 
 #endif

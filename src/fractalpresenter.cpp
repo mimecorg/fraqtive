@@ -67,6 +67,8 @@ void FractalPresenter::setEnabled( bool enabled )
         m_generator->setEnabled( enabled );
         if ( !enabled )
             m_view->clearView();
+        else
+            m_view->initialUpdate( fractalData() );
     }
 }
 

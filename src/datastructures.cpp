@@ -131,6 +131,36 @@ QDataStream& operator >>( QDataStream& stream, ViewSettings& settings )
     return stream;
 }
 
+QDataStream& operator <<( QDataStream& stream, const Bookmark& bookmark )
+{
+    return stream
+        << bookmark.m_fractalType
+        << bookmark.m_position;
+}
+
+QDataStream& operator >>( QDataStream& stream, Bookmark& bookmark )
+{
+    return stream
+        >> bookmark.m_fractalType
+        >> bookmark.m_position;
+}
+
+QDataStream& operator <<( QDataStream& stream, const Preset& preset )
+{
+    return stream
+        << preset.m_gradient
+        << preset.m_backgroundColor
+        << preset.m_colorMapping;
+}
+
+QDataStream& operator >>( QDataStream& stream, Preset& preset )
+{
+    return stream
+        >> preset.m_gradient
+        >> preset.m_backgroundColor
+        >> preset.m_colorMapping;
+}
+
 void registerDataStructures()
 {
     qRegisterMetaTypeStreamOperators<FractalType>( "FractalType" );
@@ -139,4 +169,6 @@ void registerDataStructures()
     qRegisterMetaTypeStreamOperators<ColorMapping>( "ColorMapping" );
     qRegisterMetaTypeStreamOperators<GeneratorSettings>( "GeneratorSettings" );
     qRegisterMetaTypeStreamOperators<ViewSettings>( "ViewSettings" );
+    qRegisterMetaTypeStreamOperators<Bookmark>( "Bookmark" );
+    qRegisterMetaTypeStreamOperators<Preset>( "Preset" );
 }

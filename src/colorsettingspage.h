@@ -39,6 +39,8 @@ private slots:
 
     void on_buttonRestore_clicked();
     void on_buttonStore_clicked();
+    void on_buttonLoad_clicked();
+    void on_buttonSave_clicked();
 
     void gradientChanged();
     void backgroundColorChanged();

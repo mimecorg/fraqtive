@@ -13,6 +13,8 @@
 
 #include <QVariant>
 
+#include "datastructures.h"
+
 class ConfigurationData
 {
 public:
@@ -25,10 +27,22 @@ public:
     void setValue( const QString& key, const QVariant& value );
     QVariant value( const QString& key, const QVariant& defaultValue = QVariant() ) const;
 
+    BookmarkMap* bookmarks() { return &m_bookmarks; }
+    const BookmarkMap* bookmarks() const { return &m_bookmarks; }
+
+    PresetMap* defaultPresets() { return &m_defaultPresets; }
+    const PresetMap* defaultPresets() const { return &m_defaultPresets; }
+
+    PresetMap* userPresets() { return &m_userPresets; }
+    const PresetMap* userPresets() const { return &m_userPresets; }
+
     void readConfiguration();
     void writeConfiguration();
 
 private:
+    bool readFile( QFile* file, QDataStream* stream, const QString& path );
+    bool writeFile( QFile* file, QDataStream* stream, const QString& path );
+
     QString locateDataFile( const QString& name );
 
     bool checkAccess( const QString& path );
@@ -37,6 +51,10 @@ private:
     QString m_dataPath;
 
     QVariantMap m_data;
+
+    BookmarkMap m_bookmarks;
+    PresetMap m_defaultPresets;
+    PresetMap m_userPresets;
 };
 
 #endif

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource>
+        <file>data/presets.dat</file>
+    </qresource>
+</RCC>

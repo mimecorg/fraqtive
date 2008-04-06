@@ -210,14 +210,14 @@ QRgb ColorMapper::map( double value ) const
     if ( value == 0.0 )
         return m_backgroundColor;
 
-    int scaled = (int)( ( m_mapping.scale() * value + m_mapping.offset() ) * m_gradientSize );
-
     int index;
     if ( m_mapping.isMirrored() ) {
+        int scaled = (int)( ( m_mapping.scale() * value + 2 * m_mapping.offset() ) * m_gradientSize );
         index = scaled % ( 2 * m_gradientSize );
         if ( index >= m_gradientSize )
             index = 2 * m_gradientSize - index - 1;
     } else {
+        int scaled = (int)( ( m_mapping.scale() * value + m_mapping.offset() ) * m_gradientSize );
         index = scaled % m_gradientSize;
     }
 

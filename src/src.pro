@@ -6,6 +6,8 @@ TARGET = fraqtive
 HEADERS   += abstractjobprovider.h \
              abstractview.h \
              advancedsettingspage.h \
+             bookmarklistview.h \
+             bookmarkmodel.h \
              colorsettingspage.h \
              colorwidget.h \
              configurationdata.h \
@@ -26,14 +28,23 @@ HEADERS   += abstractjobprovider.h \
              gradientwidget.h \
              imageview.h \
              jobscheduler.h \
+             loadbookmarkdialog.h \
+             loadpresetdialog.h \
              multiiconengine.h \
              parameterspage.h \
+             presetlistview.h \
+             presetmodel.h \
              propertytoolbox.h \
+             renamedialog.h \
+             savebookmarkdialog.h \
+             savepresetdialog.h \
              shadewidget.h \
              tutorialdialog.h \
              viewcontainer.h
 
 SOURCES   += advancedsettingspage.cpp \
+             bookmarklistview.cpp \
+             bookmarkmodel.cpp \
              colorsettingspage.cpp \
              colorwidget.cpp \
              configurationdata.cpp \
@@ -53,10 +64,17 @@ SOURCES   += advancedsettingspage.cpp \
              gradientwidget.cpp \
              imageview.cpp \
              jobscheduler.cpp \
+             loadbookmarkdialog.cpp \
+             loadpresetdialog.cpp \
              main.cpp \
              multiiconengine.cpp \
              parameterspage.cpp \
+             presetlistview.cpp \
+             presetmodel.cpp \
              propertytoolbox.cpp \
+             renamedialog.cpp \
+             savebookmarkdialog.cpp \
+             savepresetdialog.cpp \
              shadewidget.cpp \
              tutorialdialog.cpp \
              viewcontainer.cpp
@@ -68,10 +86,16 @@ FORMS     += advancedsettingspage.ui \
              fraqtivemainwindow.ui \
              gradientdialog.ui \
              gradientwidget.ui \
+             loadbookmarkdialog.ui \
+             loadpresetdialog.ui \
              parameterspage.ui \
+             renamedialog.ui \
+             savebookmarkdialog.ui \
+             savepresetdialog.ui \
              tutorialdialog.ui
 
-RESOURCES += icons.qrc \
+RESOURCES += data.qrc \
+             icons.qrc \
              tutorial.qrc
 
 win32 {
