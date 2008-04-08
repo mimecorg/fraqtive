@@ -75,14 +75,8 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
 
     ConfigurationData* config = fraqtive()->configuration();
 
-    if ( config->value( "Maximized", false ).toBool() ) {
-        setWindowState( windowState() | Qt::WindowMaximized );
-    } else {
-        if ( config->contains( "Size" ) )
-            resize( config->value( "Size" ).toSize() );
-        if ( config->contains( "Position" ) )
-            move( config->value( "Position" ).toPoint() );
-    }
+    if ( config->contains( "Geometry" ) )
+        restoreGeometry( config->value( "Geometry" ).toByteArray() );
 
     if ( config->contains( "State" ) )
         restoreState( config->value( "State" ).toByteArray(), 1 );
@@ -100,9 +94,7 @@ void FraqtiveMainWindow::closeEvent( QCloseEvent* e )
     e->accept();
 
     ConfigurationData* config = fraqtive()->configuration();
-    config->setValue( "Size", size() );
-    config->setValue( "Position", pos() );
-    config->setValue( "Maximized", isMaximized() );
+    config->setValue( "Geometry", saveGeometry() );
     config->setValue( "State", saveState( 1 ) );
 
     if ( m_tutorialDialog )
