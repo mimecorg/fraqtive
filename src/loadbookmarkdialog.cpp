@@ -33,7 +33,7 @@ LoadBookmarkDialog::LoadBookmarkDialog( QWidget* parent ) : QDialog( parent ),
     m_ui.viewContainer->setView( view );
 
     m_presenter->setView( view );
-    m_presenter->setPriority( 1 );
+    m_presenter->setPriority( 2 );
 
     selectionChanged();
 }
@@ -45,6 +45,8 @@ LoadBookmarkDialog::~LoadBookmarkDialog()
 void LoadBookmarkDialog::setModel( FractalModel* model )
 {
     m_model = model;
+
+    m_ui.listView->setColorSettings( model->gradient(), model->backgroundColor(), model->colorMapping() );
 
     m_presenter->setColorSettings( model->gradient(), model->backgroundColor(), model->colorMapping() );
     m_presenter->setGeneratorSettings( model->generatorSettings() );

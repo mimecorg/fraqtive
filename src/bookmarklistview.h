@@ -25,6 +25,8 @@ public:
 public:
     void setMap( BookmarkMap* map );
 
+    void setColorSettings( const Gradient& gradient, const QColor& backgroundColor, const ColorMapping& mapping );
+
 protected: // overrides
     void contextMenuEvent( QContextMenuEvent* e );
 

@@ -34,6 +34,8 @@ SaveBookmarkDialog::~SaveBookmarkDialog()
 void SaveBookmarkDialog::setModel( FractalModel* model )
 {
     m_model = model;
+
+    m_ui.listView->setColorSettings( model->gradient(), model->backgroundColor(), model->colorMapping() );
 }
 
 void SaveBookmarkDialog::on_listView_doubleClicked()

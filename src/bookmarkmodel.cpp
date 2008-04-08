@@ -10,31 +10,108 @@
 
 #include "bookmarkmodel.h"
 
-BookmarkModel::BookmarkModel( QObject* parent ) : QAbstractListModel( parent )
+#include <math.h>
+
+#ifndef M_PI
+# define M_PI 3.14159265358979323846
+#endif
+
+#include "fraqtiveapplication.h"
+#include "fractaldata.h"
+#include "jobscheduler.h"
+#include "datafunctions.h"
+
+Q_DECLARE_METATYPE( QModelIndex )
+
+BookmarkModel::BookmarkModel( QObject* parent ) : QAbstractListModel( parent ),
+    m_gradientCache( NULL ),
+    m_enabled( false ),
+    m_activeJobs( 0 )
 {
+    qRegisterMetaType<QModelIndex>();
 }
 
 BookmarkModel::~BookmarkModel()
 {
-}
+    QMutexLocker locker( &m_mutex );
 
+    cancelJobs();
+
+    while ( m_activeJobs > 0 )
+        m_allJobsDone.wait( &m_mutex );
+
+    delete[] m_gradientCache;
+}
 
 void BookmarkModel::setMap( BookmarkMap* map )
 {
     m_map = map;
 
     update();
+
+    m_enabled = true;
+    m_queue = m_keys;
+}
+
+static const int GradientSize = 16384;
+
+void BookmarkModel::setColorSettings( const Gradient& gradient, const QColor& backgroundColor, const ColorMapping& mapping )
+{
+    QMutexLocker locker( &m_mutex );
+
+    cancelJobs();
+
+    if ( !m_gradientCache )
+        m_gradientCache = new QRgb[ GradientSize ];
+
+    DataFunctions::fillGradientCache( gradient, m_gradientCache, GradientSize );
+
+    m_backgroundColor = backgroundColor;
+    m_colorMapping = mapping;
+}
+
+void BookmarkModel::abortGeneration()
+{
+    QMutexLocker locker( &m_mutex );
+
+    m_enabled = false;
+
+    cancelJobs();
+}
+
+void BookmarkModel::continueGeneration()
+{
+    QMutexLocker locker( &m_mutex );
+
+    m_enabled = true;
+
+    addJobs();
+}
+
+void BookmarkModel::invalidateBookmark( const QString& name )
+{
+    QMutexLocker locker( &m_mutex );
+
+    m_pixmaps.remove( name );
+
+    if ( !m_queue.contains( name ) ) {
+        m_queue.append( name );
+        addJobs( 1 );
+    }
 }
 
 static bool localeAwareLessThan( const QString& s1, const QString& s2 )
 {
     return QString::localeAwareCompare( s1, s2 ) < 0;
 }
- 
+
 void BookmarkModel::update()
 {
-    m_keys = m_map->keys();
+    QMutexLocker locker( &m_mutex );
 
+    cancelJobs();
+
+    m_keys = m_map->keys();
     qSort( m_keys.begin(), m_keys.end(), localeAwareLessThan );
 
     reset();
@@ -53,7 +130,18 @@ QVariant BookmarkModel::data( const QModelIndex& index, int role ) const
         return m_keys.at( index.row() );
 
     if ( role == Qt::DecorationRole ) {
-        QPixmap pixmap( ":/icons/fraqtive-48.png", NULL );
+        QMutexLocker locker( &m_mutex );
+
+        QString name = m_keys.at( index.row() );
+
+        QPixmap pixmap;
+        if ( m_pixmaps.contains( name ) )
+            pixmap = m_pixmaps.value( name );
+        else
+            pixmap.load( ":/icons/fraqtive-48.png" );
+
+        locker.unlock();
+
         QPainter painter( &pixmap );
 
         QPixmap pixmap2 = pixmap;
@@ -74,4 +162,146 @@ QVariant BookmarkModel::data( const QModelIndex& index, int role ) const
     }
 
     return QVariant();
+}
+
+int BookmarkModel::priority() const
+{
+    return 1;
+}
+
+static int roundToCellSize( int size )
+{
+    // round up to nearest N * CellSize + 1
+    return ( ( size - 1 + GeneratorCore::CellSize - 1 ) / GeneratorCore::CellSize ) * GeneratorCore::CellSize + 1;
+}
+
+void BookmarkModel::executeJob()
+{
+    QMutexLocker locker( &m_mutex );
+
+    if ( !m_enabled || m_queue.isEmpty() ) {
+        finishJob();
+        return;
+    }
+
+    QString name = m_queue.takeFirst();
+
+    if ( !m_map->contains( name ) ) {
+        finishJob();
+        return;
+    }
+
+    Bookmark bookmark = m_map->value( name );
+
+    locker.unlock();
+
+    const int imageSize = 48;
+    const int bufferSize = roundToCellSize( imageSize );
+
+    double* buffer = new double[ bufferSize * bufferSize ];
+
+    calculate( bookmark, buffer, QSize( bufferSize, bufferSize ) );
+
+    FractalData data;
+    data.transferBuffer( buffer, bufferSize, QSize( bufferSize, bufferSize ) );
+
+    QImage image( imageSize, imageSize, QImage::Format_RGB32 );
+
+    ViewSettings settings = DataFunctions::defaultViewSettings();
+
+    DataFunctions::ColorMapper mapper( m_gradientCache, GradientSize, m_backgroundColor.rgb(), m_colorMapping );
+    DataFunctions::drawImage( image, &data, image.rect(), mapper, settings.antiAliasing() );
+
+    locker.relock();
+
+    if ( m_queue.contains( name ) ) {
+        finishJob();
+        return;
+    }
+
+    m_pixmaps.insert( name, QPixmap::fromImage( image ) );
+
+    int row = m_keys.indexOf( name );
+    if ( row >= 0 )
+        emit dataChanged( index( row ), index( row ) );
+
+    finishJob();
+}
+
+void BookmarkModel::calculate( const Bookmark& bookmark, double* buffer, const QSize& size )
+{
+    GeneratorCore::Input input;
+
+    Position position = bookmark.position();
+
+    double scale = pow( 10.0, -position.zoomFactor() ) / (double)size.height();
+
+    double sa = scale * sin( position.angle() * M_PI / 180.0 );
+    double ca = scale * cos( position.angle() * M_PI / 180.0 );
+
+    double offsetX = -(double)size.width() / 2.0 - 0.5;
+    double offsetY = -(double)size.height() / 2.0 - 0.5;
+
+    input.m_sa = sa;
+    input.m_ca = ca;
+    input.m_x = position.center().x() + ca * offsetX + sa * offsetY;
+    input.m_y = position.center().y() - sa * offsetX + ca * offsetY;
+
+    GeneratorCore::Output output;
+
+    output.m_buffer = buffer;
+    output.m_width = size.width();
+    output.m_height = size.height();
+    output.m_stride = size.width();
+
+    GeneratorSettings settings = DataFunctions::defaultGeneratorSettings();
+
+    int maxIterations = pow( 10.0, settings.calculationDepth() ) * qMax( 1.0, 1.45 + position.zoomFactor() );
+    double threshold = settings.detailThreshold();
+
+#if defined( HAVE_SSE2 )
+    GeneratorCore::FunctorSSE2* functorSSE2 = DataFunctions::createFunctorSSE2( bookmark.fractalType() );
+    if ( functorSSE2 ) {
+        GeneratorCore::generatePreviewSSE2( input, output, functorSSE2, maxIterations );
+        GeneratorCore::interpolate( output );
+        GeneratorCore::generateDetailsSSE2( input, output, functorSSE2, maxIterations, threshold );
+        delete functorSSE2;
+        return;
+    }
+#endif
+
+    GeneratorCore::Functor* functor = DataFunctions::createFunctor( bookmark.fractalType() );
+    if ( functor ) {
+        GeneratorCore::generatePreview( input, output, functor, maxIterations );
+        GeneratorCore::interpolate( output );
+        GeneratorCore::generateDetails( input, output, functor, maxIterations, threshold );
+        delete functor;
+    }
+}
+
+void BookmarkModel::addJobs( int count /*= -1*/ )
+{
+    if ( count < 0 )
+        count = m_queue.count();
+    if ( count > 0 ) {
+        fraqtive()->jobScheduler()->addJobs( this, count );
+        m_activeJobs += count;
+    }
+}
+
+void BookmarkModel::cancelJobs()
+{
+    int count = fraqtive()->jobScheduler()->cancelAllJobs( this );
+    m_activeJobs -= count;
+
+    if ( m_activeJobs == 0 )
+        m_allJobsDone.wakeAll();
+}
+
+void BookmarkModel::finishJob()
+{
+    m_activeJobs--;
+
+    if ( m_activeJobs == 0 )
+        m_allJobsDone.wakeAll();
 }

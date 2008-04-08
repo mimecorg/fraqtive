@@ -290,4 +290,51 @@ void drawImage( QImage& image, const FractalData* data, const QRect& region, con
     }
 }
 
+GeneratorCore::Functor* createFunctor( const FractalType& type )
+{
+    switch ( type.exponentType() ) {
+        case IntegralExponent:
+            if ( type.fractal() == MandelbrotFractal ) {
+                return GeneratorCore::createMandelbrotFastFunctor( type.integralExponent(), type.variant() );
+            } else {
+                return GeneratorCore::createJuliaFastFunctor( type.parameter().x(),
+                    type.parameter().y(), type.integralExponent(), type.variant() );
+            }
+            break;
+
+        case RealExponent:
+            if ( type.fractal() == MandelbrotFractal ) {
+                return GeneratorCore::createMandelbrotFunctor( type.realExponent(), type.variant() );
+            } else if ( type.fractal() == JuliaFractal ) {
+                return GeneratorCore::createJuliaFunctor( type.parameter().x(),
+                    type.parameter().y(), type.realExponent(), type.variant() );
+            }
+            break;
+    }
+
+    return NULL;
+}
+
+#if defined( HAVE_SSE2 )
+
+GeneratorCore::FunctorSSE2* createFunctorSSE2( const FractalType& type )
+{
+    switch ( type.exponentType() ) {
+        case IntegralExponent:
+            if ( GeneratorCore::isSSE2Available() ) {
+                if ( type.fractal() == MandelbrotFractal ) {
+                    return GeneratorCore::createMandelbrotFunctorSSE2( type.integralExponent(), type.variant() );
+                } else if ( type.fractal() == JuliaFractal ) {
+                    return GeneratorCore::createJuliaFunctorSSE2( type.parameter().x(),
+                        type.parameter().y(), type.integralExponent(), type.variant() );
+                }
+            }
+            break;
+    }
+
+    return NULL;
+}
+
+#endif
+
 } // namespace DataFunctions

@@ -37,6 +37,13 @@ void BookmarkListView::setMap( BookmarkMap* map )
     ( (BookmarkModel*)model() )->setMap( map );
 }
 
+void BookmarkListView::setColorSettings( const Gradient& gradient, const QColor& backgroundColor, const ColorMapping& mapping )
+{
+    BookmarkModel* bookmarkModel = (BookmarkModel*)model();
+    bookmarkModel->setColorSettings( gradient, backgroundColor, mapping );
+    bookmarkModel->continueGeneration();
+}
+
 void BookmarkListView::contextMenuEvent( QContextMenuEvent* e )
 {
     QModelIndexList selection = selectionModel()->selectedIndexes();
@@ -56,8 +63,10 @@ void BookmarkListView::renameItem()
     QModelIndexList selection = selectionModel()->selectedIndexes();
 
     if ( selection.count() == 1 ) {
+        BookmarkModel* bookmarkModel = (BookmarkModel*)model();
+        BookmarkMap* map = bookmarkModel->map();
+
         QString name = model()->data( selection[ 0 ] ).toString();
-        BookmarkMap* map = ( (BookmarkModel*)model() )->map();
 
         RenameDialog dialog( this );
 
@@ -66,10 +75,16 @@ void BookmarkListView::renameItem()
         dialog.setExistingNames( map->keys() );
 
         if ( dialog.exec() == QDialog::Accepted ) {
+            bookmarkModel->abortGeneration();
+
             Bookmark bookmark = map->take( name );
             map->insert( dialog.name(), bookmark );
 
-            ( (BookmarkModel*)model() )->update();
+            bookmarkModel->invalidateBookmark( name );
+            bookmarkModel->invalidateBookmark( dialog.name() );
+            bookmarkModel->update();
+
+            bookmarkModel->continueGeneration();
         }
     }
 }
@@ -83,10 +98,17 @@ void BookmarkListView::deleteItem()
 
         if ( QMessageBox::warning( this, tr( "Warning" ), tr( "<qt>Are you sure you want to delete bookmark<br>named <b>%1</b>?</qt>" ).arg( name ),
             QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Ok ) {
-            BookmarkMap* map = ( (BookmarkModel*)model() )->map();
+            BookmarkModel* bookmarkModel = (BookmarkModel*)model();
+
+            bookmarkModel->abortGeneration();
+
+            BookmarkMap* map = bookmarkModel->map();
             map->remove( name );
 
-            ( (BookmarkModel*)model() )->update();
+            bookmarkModel->invalidateBookmark( name );
+            bookmarkModel->update();
+
+            bookmarkModel->continueGeneration();
         }
     }
 }

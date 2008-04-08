@@ -13,9 +13,10 @@
 
 #include <QAbstractListModel>
 
+#include "abstractjobprovider.h"
 #include "datastructures.h"
 
-class BookmarkModel : public QAbstractListModel
+class BookmarkModel : public QAbstractListModel, public AbstractJobProvider
 {
     Q_OBJECT
 public:
@@ -26,6 +27,13 @@ public:
     void setMap( BookmarkMap* map );
     BookmarkMap* map() const { return m_map; }
 
+    void setColorSettings( const Gradient& gradient, const QColor& backgroundColor, const ColorMapping& mapping );
+
+    void abortGeneration();
+    void continueGeneration();
+
+    void invalidateBookmark( const QString& name );
+
     void update();
 
 public: // overrides
@@ -33,10 +41,35 @@ public: // overrides
 
     QVariant data( const QModelIndex& index, int role ) const;
 
+public: // AbstractJobProvider implementation
+    int priority() const;
+
+    void executeJob();
+
+private:
+    void calculate( const Bookmark& bookmark, double* buffer, const QSize& size );
+
+    void addJobs( int count = -1 );
+    void cancelJobs();
+    void finishJob();
+
 private:
     BookmarkMap* m_map;
 
+    QRgb* m_gradientCache;
+    QColor m_backgroundColor;
+    ColorMapping m_colorMapping;
+
+    mutable QMutex m_mutex;
+
     QStringList m_keys;
+    QMap<QString, QPixmap> m_pixmaps;
+
+    bool m_enabled;
+    QStringList m_queue;
+
+    int m_activeJobs;
+    QWaitCondition m_allJobsDone;
 };
 
 #endif

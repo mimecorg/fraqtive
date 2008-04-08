@@ -19,6 +19,7 @@
 #include "fraqtiveapplication.h"
 #include "fractaldata.h"
 #include "jobscheduler.h"
+#include "datafunctions.h"
 
 FractalGenerator::FractalGenerator( QObject* parent ) : QObject( parent ),
     m_preview( false ),
@@ -307,41 +308,15 @@ void FractalGenerator::createFunctor()
 {
     delete m_functor;
     m_functor = NULL;
+
 #if defined( HAVE_SSE2 )
     delete m_functorSSE2;
-    m_functorSSE2 = NULL;
+    m_functorSSE2 = DataFunctions::createFunctorSSE2( m_type );
+    if ( m_functorSSE2 != NULL )
+        return;
 #endif
 
-    switch ( m_type.exponentType() ) {
-        case IntegralExponent:
-#if defined( HAVE_SSE2 )
-            if ( GeneratorCore::isSSE2Available() ) {
-                if ( m_type.fractal() == MandelbrotFractal ) {
-                    m_functorSSE2 = GeneratorCore::createMandelbrotFunctorSSE2( m_type.integralExponent(), m_type.variant() );
-                } else if ( m_type.fractal() == JuliaFractal ) {
-                    m_functorSSE2 = GeneratorCore::createJuliaFunctorSSE2( m_type.parameter().x(),
-                        m_type.parameter().y(), m_type.integralExponent(), m_type.variant() );
-                }
-                break;
-            }
-#endif
-            if ( m_type.fractal() == MandelbrotFractal ) {
-                m_functor = GeneratorCore::createMandelbrotFastFunctor( m_type.integralExponent(), m_type.variant() );
-            } else {
-                m_functor = GeneratorCore::createJuliaFastFunctor( m_type.parameter().x(),
-                    m_type.parameter().y(), m_type.integralExponent(), m_type.variant() );
-            }
-            break;
-
-        case RealExponent:
-            if ( m_type.fractal() == MandelbrotFractal ) {
-                m_functor = GeneratorCore::createMandelbrotFunctor( m_type.realExponent(), m_type.variant() );
-            } else if ( m_type.fractal() == JuliaFractal ) {
-                m_functor = GeneratorCore::createJuliaFunctor( m_type.parameter().x(),
-                    m_type.parameter().y(), m_type.realExponent(), m_type.variant() );
-            }
-            break;
-    }
+    m_functor = DataFunctions::createFunctor( m_type );
 }
 
 void FractalGenerator::splitRegions()

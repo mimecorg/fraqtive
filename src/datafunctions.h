@@ -14,6 +14,7 @@
 #include <QGradient>
 
 #include "datastructures.h"
+#include "generatorcore.h"
 
 class FractalData;
 
@@ -50,6 +51,14 @@ private:
 };
 
 void drawImage( QImage& image, const FractalData* data, const QRect& region, const ColorMapper& mapper, AntiAliasing antiAliasing );
+
+GeneratorCore::Functor* createFunctor( const FractalType& type );
+
+#if defined( HAVE_SSE2 )
+
+GeneratorCore::FunctorSSE2* createFunctorSSE2( const FractalType& type );
+
+#endif
 
 } // namespace DataFunctions
 
