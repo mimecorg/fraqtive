@@ -33,6 +33,7 @@ private slots:
     void on_actionQuit_activated();
     void on_actionFractalType_activated();
     void on_actionEditGradient_activated();
+    void on_actionFullScreen_activated();
     void on_actionNavigateBack_activated();
     void on_actionNavigateForward_activated();
     void on_actionDefaultPosition_activated();

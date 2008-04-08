@@ -113,6 +113,8 @@
     <property name="title" >
      <string>&amp;View</string>
     </property>
+    <addaction name="actionFullScreen" />
+    <addaction name="separator" />
    </widget>
    <widget class="QMenu" name="menuPosition" >
     <property name="title" >
@@ -211,6 +213,17 @@
    </property>
    <property name="shortcut" >
     <string>Alt+Right</string>
+   </property>
+  </action>
+  <action name="actionFullScreen" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/fullscreen-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Full Screen</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+Return</string>
    </property>
   </action>
  </widget>

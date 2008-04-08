@@ -103,6 +103,9 @@ void FraqtiveMainWindow::closeEvent( QCloseEvent* e )
 
 void FraqtiveMainWindow::on_actionQuit_activated()
 {
+    if ( m_ui.mainContainer->windowState() & Qt::WindowFullScreen )
+        on_actionFullScreen_activated();
+
     close();
 }
 
@@ -127,6 +130,24 @@ void FraqtiveMainWindow::on_actionEditGradient_activated()
 void FraqtiveMainWindow::applyGradient( const Gradient& gradient )
 {
     m_model->setGradient( gradient );
+}
+
+void FraqtiveMainWindow::on_actionFullScreen_activated()
+{
+    if ( m_ui.mainContainer->windowState() & Qt::WindowFullScreen ) {
+        m_ui.mainContainer->setParent( m_ui.centralWidget );
+        m_ui.vboxLayout->addWidget( m_ui.mainContainer );
+        QList<QAction*> actions = menuBar()->actions();
+        for ( int i = 0; i < actions.count(); i++ )
+            m_ui.mainContainer->removeAction( actions.at( i ) );
+        show();
+    } else {
+        m_ui.mainContainer->setParent( NULL );
+        m_ui.mainContainer->showFullScreen();
+        m_ui.mainContainer->addActions( menuBar()->actions() );
+        m_ui.mainContainer->setWindowTitle( windowTitle() );
+        hide();
+    }
 }
 
 void FraqtiveMainWindow::on_actionDefaultPosition_activated()
