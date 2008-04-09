@@ -44,6 +44,8 @@
    <addaction name="actionFractalType" />
    <addaction name="actionEditGradient" />
    <addaction name="separator" />
+   <addaction name="actionFullScreen" />
+   <addaction name="separator" />
    <addaction name="actionDefaultPosition" />
    <addaction name="actionNavigateBack" />
    <addaction name="actionNavigateForward" />
@@ -98,7 +100,10 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="actionFractalType" />
+    <addaction name="separator" />
     <addaction name="actionEditGradient" />
+    <addaction name="actionLoadPreset" />
+    <addaction name="actionSavePreset" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
@@ -124,6 +129,9 @@
     <addaction name="separator" />
     <addaction name="actionNavigateBack" />
     <addaction name="actionNavigateForward" />
+    <addaction name="separator" />
+    <addaction name="actionLoadBookmark" />
+    <addaction name="actionSaveBookmark" />
    </widget>
    <addaction name="menuFile" />
    <addaction name="menuEdit" />
@@ -163,7 +171,7 @@
     <iconset resource="icons.qrc" >:/icons/tutorial-16.png</iconset>
    </property>
    <property name="text" >
-    <string>&amp;Quick Tutorial</string>
+    <string>Quick &amp;Tutorial</string>
    </property>
   </action>
   <action name="actionFractalType" >
@@ -171,7 +179,7 @@
     <iconset resource="icons.qrc" >:/icons/edit-22.png</iconset>
    </property>
    <property name="text" >
-    <string>&amp;Fractal Type...</string>
+    <string>Change &amp;Fractal Type...</string>
    </property>
   </action>
   <action name="actionEditGradient" >
@@ -179,7 +187,7 @@
     <iconset resource="icons.qrc" >:/icons/gradient-22.png</iconset>
    </property>
    <property name="text" >
-    <string>&amp;Gradient...</string>
+    <string>Edit &amp;Gradient...</string>
    </property>
   </action>
   <action name="actionDefaultPosition" >
@@ -224,6 +232,38 @@
    </property>
    <property name="shortcut" >
     <string>Alt+Return</string>
+   </property>
+  </action>
+  <action name="actionLoadBookmark" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/load-bookmark-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Load Bookmark...</string>
+   </property>
+  </action>
+  <action name="actionSaveBookmark" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/save-bookmark-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Save Bookmark...</string>
+   </property>
+  </action>
+  <action name="actionLoadPreset" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/load-preset-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Load Preset...</string>
+   </property>
+  </action>
+  <action name="actionSavePreset" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/save-preset-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Save Preset...</string>
    </property>
   </action>
  </widget>

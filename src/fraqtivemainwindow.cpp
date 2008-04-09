@@ -22,6 +22,10 @@
 #include "imageview.h"
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
+#include "loadbookmarkdialog.h"
+#include "savebookmarkdialog.h"
+#include "loadpresetdialog.h"
+#include "savepresetdialog.h"
 
 FraqtiveMainWindow::FraqtiveMainWindow() :
     m_tutorialDialog( NULL )
@@ -174,6 +178,34 @@ void FraqtiveMainWindow::navigationChanged()
 {
     m_ui.actionNavigateBack->setEnabled( m_model->canNavigateBackward() );
     m_ui.actionNavigateForward->setEnabled( m_model->canNavigateForward() );
+}
+
+void FraqtiveMainWindow::on_actionLoadPreset_activated()
+{
+    LoadPresetDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
+}
+
+void FraqtiveMainWindow::on_actionSavePreset_activated()
+{
+    SavePresetDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
+}
+
+void FraqtiveMainWindow::on_actionLoadBookmark_activated()
+{
+    LoadBookmarkDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
+}
+
+void FraqtiveMainWindow::on_actionSaveBookmark_activated()
+{
+    SaveBookmarkDialog dialog( this );
+    dialog.setModel( m_model );
+    dialog.exec();
 }
 
 void FraqtiveMainWindow::on_actionQuickTutorial_activated()

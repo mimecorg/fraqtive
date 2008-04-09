@@ -17,9 +17,13 @@
         <file>icons/gradient-22.png</file>
         <file>icons/home-16.png</file>
         <file>icons/home-22.png</file>
+        <file>icons/load-bookmark-16.png</file>
+        <file>icons/load-preset-16.png</file>
         <file>icons/qt-16.png</file>
         <file>icons/quit-16.png</file>
         <file>icons/rename-16.png</file>
+        <file>icons/save-bookmark-16.png</file>
+        <file>icons/save-preset-16.png</file>
         <file>icons/tutorial-16.png</file>
     </qresource>
 </RCC>

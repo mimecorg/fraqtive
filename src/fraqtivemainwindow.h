@@ -37,6 +37,10 @@ private slots:
     void on_actionNavigateBack_activated();
     void on_actionNavigateForward_activated();
     void on_actionDefaultPosition_activated();
+    void on_actionLoadPreset_activated();
+    void on_actionSavePreset_activated();
+    void on_actionLoadBookmark_activated();
+    void on_actionSaveBookmark_activated();
     void on_actionQuickTutorial_activated();
     void on_actionAboutFraqtive_activated();
     void on_actionAboutQt_activated();
