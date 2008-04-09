@@ -135,10 +135,12 @@ QVariant BookmarkModel::data( const QModelIndex& index, int role ) const
         QString name = m_keys.at( index.row() );
 
         QPixmap pixmap;
-        if ( m_pixmaps.contains( name ) )
+        if ( m_pixmaps.contains( name ) ) {
             pixmap = m_pixmaps.value( name );
-        else
-            pixmap.load( ":/icons/fraqtive-48.png" );
+        } else {
+            pixmap = QPixmap( 48, 48 );
+            pixmap.fill( QApplication::palette().color( QPalette::Disabled, QPalette::Window ) );
+        }
 
         locker.unlock();
 
