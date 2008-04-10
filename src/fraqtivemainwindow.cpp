@@ -75,6 +75,8 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
     m_model->setNavigationEnabled( true );
     m_model->setEnabled( true );
 
+    m_ui.mainContainer->installEventFilter( this );
+
     view->setFocus();
 
     ConfigurationData* config = fraqtive()->configuration();
@@ -97,6 +99,9 @@ void FraqtiveMainWindow::closeEvent( QCloseEvent* e )
 {
     e->accept();
 
+    if ( isFullScreenMode() )
+        leaveFullScreenMode();
+
     ConfigurationData* config = fraqtive()->configuration();
     config->setValue( "Geometry", saveGeometry() );
     config->setValue( "State", saveState( 1 ) );
@@ -105,10 +110,28 @@ void FraqtiveMainWindow::closeEvent( QCloseEvent* e )
         m_tutorialDialog->close();
 }
 
+bool FraqtiveMainWindow::eventFilter( QObject* watched, QEvent* e )
+{
+    if ( watched == m_ui.mainContainer ) {
+        if ( e->type() == QEvent::Close ) {
+            close();
+            return true;
+        }
+
+        if ( e->type() == QEvent::KeyPress && static_cast<QKeyEvent*>( e )->key() == Qt::Key_Escape ) {
+            if ( isFullScreenMode() )
+                leaveFullScreenMode();
+            return true;
+        }
+    }
+
+    return QMainWindow::eventFilter( watched, e );
+}
+
 void FraqtiveMainWindow::on_actionQuit_activated()
 {
-    if ( m_ui.mainContainer->windowState() & Qt::WindowFullScreen )
-        on_actionFullScreen_activated();
+    if ( isFullScreenMode() )
+        leaveFullScreenMode();
 
     close();
 }
@@ -138,20 +161,34 @@ void FraqtiveMainWindow::applyGradient( const Gradient& gradient )
 
 void FraqtiveMainWindow::on_actionFullScreen_activated()
 {
-    if ( m_ui.mainContainer->windowState() & Qt::WindowFullScreen ) {
-        m_ui.mainContainer->setParent( m_ui.centralWidget );
-        m_ui.vboxLayout->addWidget( m_ui.mainContainer );
-        QList<QAction*> actions = menuBar()->actions();
-        for ( int i = 0; i < actions.count(); i++ )
-            m_ui.mainContainer->removeAction( actions.at( i ) );
-        show();
-    } else {
-        m_ui.mainContainer->setParent( NULL );
-        m_ui.mainContainer->showFullScreen();
-        m_ui.mainContainer->addActions( menuBar()->actions() );
-        m_ui.mainContainer->setWindowTitle( windowTitle() );
-        hide();
-    }
+    if ( isFullScreenMode() )
+        leaveFullScreenMode();
+    else
+        enterFullScreenMode();
+}
+
+bool FraqtiveMainWindow::isFullScreenMode() const
+{
+    return m_ui.mainContainer->windowState() & Qt::WindowFullScreen;
+}
+
+void FraqtiveMainWindow::enterFullScreenMode()
+{
+    m_ui.mainContainer->setParent( NULL );
+    m_ui.mainContainer->showFullScreen();
+    m_ui.mainContainer->addActions( menuBar()->actions() );
+    m_ui.mainContainer->setWindowTitle( windowTitle() );
+    hide();
+}
+
+void FraqtiveMainWindow::leaveFullScreenMode()
+{
+    m_ui.mainContainer->setParent( m_ui.centralWidget );
+    m_ui.vboxLayout->addWidget( m_ui.mainContainer );
+    QList<QAction*> actions = menuBar()->actions();
+    for ( int i = 0; i < actions.count(); i++ )
+        m_ui.mainContainer->removeAction( actions.at( i ) );
+    show();
 }
 
 void FraqtiveMainWindow::on_actionDefaultPosition_activated()

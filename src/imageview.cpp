@@ -445,10 +445,13 @@ void ImageView::leaveEvent( QEvent* /*e*/ )
 
 void ImageView::keyPressEvent( QKeyEvent* e )
 {
-    if ( !m_interactive || m_image.isNull() || ( e->modifiers() & Qt::AltModifier ) != 0 )
+    if ( !m_interactive || m_image.isNull() || ( e->modifiers() & Qt::AltModifier ) != 0 ) {
+        e->ignore();
         return;
+    }
 
     if ( e->key() == Qt::Key_Escape && m_tracking != NoTracking ) {
+        e->accept();
         m_tracking = NoTracking;
         m_presenter->clearTracking();
         if ( !m_transform.isIdentity() )
@@ -492,6 +495,10 @@ void ImageView::keyPressEvent( QKeyEvent* e )
             break;
     }
 
-    if ( !matrix.isIdentity() )
+    if ( !matrix.isIdentity() ) {
+        e->accept();
         m_presenter->changePosition( m_scale * matrix * m_invScale );
+    } else {
+        e->ignore();
+    }
 }

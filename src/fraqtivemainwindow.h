@@ -26,6 +26,9 @@ public:
     FraqtiveMainWindow();
     ~FraqtiveMainWindow();
 
+public: // overrides
+    bool eventFilter( QObject* watched, QEvent* e );
+
 protected: // overrides
     void closeEvent( QCloseEvent* e );
 
@@ -49,6 +52,11 @@ private slots:
     void navigationChanged();
 
     void applyGradient( const Gradient& gradient );
+
+private:
+    bool isFullScreenMode() const;
+    void enterFullScreenMode();
+    void leaveFullScreenMode();
 
 private:
     Ui::FraqtiveMainWindow m_ui;
