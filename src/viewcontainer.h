@@ -24,6 +24,7 @@ public:
 
 public:
     void setView( QWidget* view );
+    QWidget* view() const { return m_view; }
 
 public: // overrides
     QSize sizeHint() const;

@@ -245,6 +245,72 @@ void FraqtiveMainWindow::on_actionSaveBookmark_activated()
     dialog.exec();
 }
 
+void FraqtiveMainWindow::on_actionSaveImage_activated()
+{
+    ImageView* view = qobject_cast<ImageView*>( m_ui.mainContainer->view() );
+
+    QList<QByteArray> supportedFormats = QImageWriter::supportedImageFormats();
+
+    QList<QByteArray> formats;
+    QStringList filters;
+
+    const char* data[] = {
+        "png", QT_TR_NOOP( "PNG Image" ), "*.png",
+        "jpeg", QT_TR_NOOP( "JPEG Image" ), "*.jpeg;*.jpg",
+        "tiff", QT_TR_NOOP( "TIFF Image" ), "*.tiff;*.tif",
+        "bmp", QT_TR_NOOP( "Windows Bitmap" ), "*.bmp",
+        "ppm", QT_TR_NOOP( "Portable Pixmap" ), "*.ppm",
+        NULL
+    };
+
+    for ( int i = 0; data[ i ] != NULL; i += 3 ) {
+        if ( supportedFormats.contains( data[ i ] ) ) {
+            formats.append( data[ i ] );
+            filters.append( QString( "%1 (%2)" ).arg( tr( data[ i + 1 ] ), QString::fromLatin1( data[ i + 2 ] ) ) );
+        }
+    }
+
+    ConfigurationData* config = fraqtive()->configuration();
+
+    QByteArray format = config->value( "SaveFormat" ).toByteArray();
+    if ( format.isEmpty() || !formats.contains( format ) )
+        format = formats.first();
+
+    QString selectedFilter = filters.at( formats.indexOf( format ) );
+
+    QString path = config->value( "SavePath", QDir::homePath() ).toString();
+
+    QString fileName = QFileInfo( QDir( path ), tr( "fractal" ) ).absoluteFilePath();
+
+    fileName = QFileDialog::getSaveFileName( this, tr( "Save Image" ), fileName,
+        filters.join( ";;" ), &selectedFilter );
+
+    if ( !fileName.isEmpty() ) {
+        int index = filters.indexOf( selectedFilter );
+        if ( index >= 0 )
+            format = formats.at( index );
+
+        config->setValue( "SaveFormat", format );
+        config->setValue( "SavePath", QFileInfo( fileName ).absolutePath() );
+
+        QImageWriter writer( fileName, format );
+
+        if ( format == "tiff" )
+            writer.setCompression( 1 );
+
+        if ( !writer.write( view->image() ) ) {
+            QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
+        }
+    }
+}
+
+void FraqtiveMainWindow::on_actionCopyImage_activated()
+{
+    ImageView* view = qobject_cast<ImageView*>( m_ui.mainContainer->view() );
+
+    QApplication::clipboard()->setImage( view->image() );
+}
+
 void FraqtiveMainWindow::on_actionQuickTutorial_activated()
 {
     if ( !m_tutorialDialog )

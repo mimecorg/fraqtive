@@ -2,6 +2,8 @@
     <qresource>
         <file>icons/back-16.png</file>
         <file>icons/back-22.png</file>
+        <file>icons/copy-16.png</file>
+        <file>icons/copy-22.png</file>
         <file>icons/delete-16.png</file>
         <file>icons/edit-16.png</file>
         <file>icons/edit-22.png</file>
@@ -22,6 +24,8 @@
         <file>icons/qt-16.png</file>
         <file>icons/quit-16.png</file>
         <file>icons/rename-16.png</file>
+        <file>icons/save-16.png</file>
+        <file>icons/save-22.png</file>
         <file>icons/save-bookmark-16.png</file>
         <file>icons/save-preset-16.png</file>
         <file>icons/tutorial-16.png</file>

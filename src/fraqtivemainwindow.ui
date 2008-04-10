@@ -41,14 +41,17 @@
    <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
+   <addaction name="actionSaveImage" />
+   <addaction name="actionCopyImage" />
+   <addaction name="separator" />
    <addaction name="actionFractalType" />
    <addaction name="actionEditGradient" />
-   <addaction name="separator" />
-   <addaction name="actionFullScreen" />
    <addaction name="separator" />
    <addaction name="actionDefaultPosition" />
    <addaction name="actionNavigateBack" />
    <addaction name="actionNavigateForward" />
+   <addaction name="separator" />
+   <addaction name="actionFullScreen" />
   </widget>
   <widget class="QDockWidget" name="dockProperties" >
    <property name="windowTitle" >
@@ -93,12 +96,16 @@
     <property name="title" >
      <string>&amp;Fraqtive</string>
     </property>
+    <addaction name="actionSaveImage" />
+    <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
    <widget class="QMenu" name="menuEdit" >
     <property name="title" >
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionCopyImage" />
+    <addaction name="separator" />
     <addaction name="actionFractalType" />
     <addaction name="separator" />
     <addaction name="actionEditGradient" />
@@ -264,6 +271,28 @@
    </property>
    <property name="text" >
     <string>&amp;Save Preset...</string>
+   </property>
+  </action>
+  <action name="actionCopyImage" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/copy-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Copy Image</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionSaveImage" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/icons/save-22.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Save Image...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

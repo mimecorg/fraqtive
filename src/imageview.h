@@ -28,6 +28,8 @@ public:
 public:
     void setInteractive( bool interactive );
 
+    QImage image() const { return m_image; }
+
 public: // AbstractView implementation
     void clearView();
 
