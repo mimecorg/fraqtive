@@ -26,7 +26,7 @@ ConfigurationData::ConfigurationData()
     QT_WA( {
         TCHAR appDataPath[ MAX_PATH ];
         if ( SHGetSpecialFolderPath( 0, appDataPath, CSIDL_APPDATA, FALSE ) )
-            m_dataPath = QDir::fromNativeSeparators( QString::fromUtf16( appDataPath ) );
+            m_dataPath = QDir::fromNativeSeparators( QString::fromUtf16( (ushort*)appDataPath ) );
     } , {
         char appDataPath[ MAX_PATH ];
         if ( SHGetSpecialFolderPathA( 0, appDataPath, CSIDL_APPDATA, FALSE ) )
