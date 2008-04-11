@@ -16,6 +16,10 @@
 # define M_PI 3.14159265358979323846
 #endif
 
+#include <QPalette>
+#include <QPainter>
+#include <QIcon>
+
 #include "fraqtiveapplication.h"
 #include "fractaldata.h"
 #include "jobscheduler.h"

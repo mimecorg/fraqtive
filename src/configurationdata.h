@@ -13,6 +13,8 @@
 
 #include <QVariant>
 
+class QFile;
+
 #include "datastructures.h"
 
 class ConfigurationData

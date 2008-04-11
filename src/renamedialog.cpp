@@ -10,6 +10,9 @@
 
 #include "renamedialog.h"
 
+#include <QPushButton>
+#include <QMessageBox>
+
 RenameDialog::RenameDialog( QWidget* parent ) : QDialog( parent )
 {
     m_ui.setupUi( this );

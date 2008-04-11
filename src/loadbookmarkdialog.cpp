@@ -10,6 +10,8 @@
 
 #include "loadbookmarkdialog.h"
 
+#include <QPushButton>
+
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "fractalpresenter.h"

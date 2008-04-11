@@ -13,6 +13,7 @@
 
 #include <QPolygonF>
 #include <QMetaType>
+#include <QColor>
 
 #include "generatorcore.h"
 

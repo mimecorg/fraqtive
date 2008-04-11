@@ -10,6 +10,9 @@
 
 #include "savebookmarkdialog.h"
 
+#include <QPushButton>
+#include <QMessageBox>
+
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "fractalmodel.h"

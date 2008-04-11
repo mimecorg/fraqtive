@@ -12,6 +12,7 @@
 #define PRESETMODEL_H
 
 #include <QAbstractItemModel>
+#include <QStringList>
 
 #include "datastructures.h"
 

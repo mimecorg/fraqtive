@@ -10,6 +10,10 @@
 
 #include "presetlistview.h"
 
+#include <QMenu>
+#include <QContextMenuEvent>
+#include <QMessageBox>
+
 #include "presetmodel.h"
 #include "renamedialog.h"
 

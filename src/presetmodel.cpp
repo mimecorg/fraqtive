@@ -11,6 +11,9 @@
 #include "presetmodel.h"
 
 #include <QPainter>
+#include <QApplication>
+#include <QPalette>
+#include <QIcon>
 
 #include "datafunctions.h"
 

@@ -10,6 +10,10 @@
 
 #include "bookmarklistview.h"
 
+#include <QMenu>
+#include <QContextMenuEvent>
+#include <QMessageBox>
+
 #include "bookmarkmodel.h"
 #include "renamedialog.h"
 

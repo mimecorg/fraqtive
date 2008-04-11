@@ -12,6 +12,9 @@
 #define BOOKMARKMODEL_H
 
 #include <QAbstractListModel>
+#include <QStringList>
+#include <QMutex>
+#include <QWaitCondition>
 
 #include "abstractjobprovider.h"
 #include "datastructures.h"

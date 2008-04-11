@@ -12,6 +12,9 @@
 
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QImageWriter>
+#include <QFileDialog>
+#include <QClipboard>
 
 #include "tutorialdialog.h"
 #include "datastructures.h"

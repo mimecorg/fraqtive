@@ -10,6 +10,8 @@
 
 #include "loadpresetdialog.h"
 
+#include <QPushButton>
+
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "fractalmodel.h"
