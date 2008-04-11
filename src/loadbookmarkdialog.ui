@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
-    <height>310</height>
+    <width>650</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -70,15 +70,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BookmarkListView</class>
+   <extends>QListView</extends>
+   <header>bookmarklistview.h</header>
+  </customwidget>
+  <customwidget>
    <class>ViewContainer</class>
    <extends>QWidget</extends>
    <header>viewcontainer.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BookmarkListView</class>
-   <extends>QListView</extends>
-   <header>bookmarklistview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
