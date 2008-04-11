@@ -198,14 +198,14 @@ void BookmarkModel::executeJob()
     locker.unlock();
 
     const int imageSize = 48;
-    const int bufferSize = roundToCellSize( imageSize );
+    const int bufferSize = roundToCellSize( imageSize + 2 ); // 2 pixel margin for anti-aliasing
 
     double* buffer = new double[ bufferSize * bufferSize ];
 
-    calculate( bookmark, buffer, QSize( bufferSize, bufferSize ) );
+    calculate( bookmark, buffer, QSize( bufferSize, bufferSize ), QSize( imageSize, imageSize ) );
 
     FractalData data;
-    data.transferBuffer( buffer, bufferSize, QSize( bufferSize, bufferSize ) );
+    data.transferBuffer( buffer, bufferSize, QSize( imageSize, imageSize ) );
 
     QImage image( imageSize, imageSize, QImage::Format_RGB32 );
 
@@ -230,19 +230,19 @@ void BookmarkModel::executeJob()
     finishJob();
 }
 
-void BookmarkModel::calculate( const Bookmark& bookmark, double* buffer, const QSize& size )
+void BookmarkModel::calculate( const Bookmark& bookmark, double* buffer, const QSize& size, const QSize& resolution )
 {
     GeneratorCore::Input input;
 
     Position position = bookmark.position();
 
-    double scale = pow( 10.0, -position.zoomFactor() ) / (double)size.height();
+    double scale = pow( 10.0, -position.zoomFactor() ) / (double)resolution.height();
 
     double sa = scale * sin( position.angle() * M_PI / 180.0 );
     double ca = scale * cos( position.angle() * M_PI / 180.0 );
 
-    double offsetX = -(double)size.width() / 2.0 - 0.5;
-    double offsetY = -(double)size.height() / 2.0 - 0.5;
+    double offsetX = -(double)resolution.width() / 2.0 - 0.5;
+    double offsetY = -(double)resolution.height() / 2.0 - 0.5;
 
     input.m_sa = sa;
     input.m_ca = ca;

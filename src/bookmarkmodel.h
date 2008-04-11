@@ -47,7 +47,7 @@ public: // AbstractJobProvider implementation
     void executeJob();
 
 private:
-    void calculate( const Bookmark& bookmark, double* buffer, const QSize& size );
+    void calculate( const Bookmark& bookmark, double* buffer, const QSize& size, const QSize& resolution );
 
     void addJobs( int count = -1 );
     void cancelJobs();
