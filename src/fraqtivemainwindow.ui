@@ -180,6 +180,9 @@
    <property name="text" >
     <string>Quick &amp;Tutorial</string>
    </property>
+   <property name="shortcut" >
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionFractalType" >
    <property name="icon" >
