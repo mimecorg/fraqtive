@@ -1,3 +1,11 @@
+0.4.1 (2008-04-14)
+    * added: bookmarks and color presets
+    * added: copy and save image
+    * added: full screen mode
+    * fixed: crash on multi-core processors
+    * fixed: compilation using GCC 3.4 and MinGW
+    * fixed: compilation on MIPS and ARM platforms
+
 0.4.0 (2008-03-25)
     * created new fractal generator engine
     * redesigned and rewritten user interface using Qt4
