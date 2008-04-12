@@ -293,6 +293,9 @@ void FraqtiveMainWindow::on_actionSaveImage_activated()
         if ( index >= 0 )
             format = formats.at( index );
 
+        if ( QFileInfo( fileName ).suffix().isEmpty() )
+            fileName += '.' + format;
+
         config->setValue( "SaveFormat", format );
         config->setValue( "SavePath", QFileInfo( fileName ).absolutePath() );
 
