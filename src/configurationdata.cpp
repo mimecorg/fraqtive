@@ -109,8 +109,10 @@ bool ConfigurationData::readFile( QFile* file, QDataStream* stream, const QStrin
     qint32 version;
     *stream >> version;
 
-    if ( version != 1 )
+    if ( version < 1 || version > 2 )
         return false;
+
+    m_dataVersion = version;
 
     return true;
 }
@@ -147,7 +149,10 @@ bool ConfigurationData::writeFile( QFile* file, QDataStream* stream, const QStri
     stream->setDevice( file );
     stream->setVersion( QDataStream::Qt_4_2 );
 
-    *stream << (qint32)1; // increment version when adding / modifying fields
+    // increment version when adding / modifying fields
+    m_dataVersion = 2;
+
+    *stream << (qint32)m_dataVersion;
 
     return true;
 }

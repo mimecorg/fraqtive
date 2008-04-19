@@ -45,6 +45,11 @@ void FractalPresenter::setModel( FractalModel* model )
 void FractalPresenter::setView( AbstractView* view )
 {
     m_view = view;
+
+    if ( m_model ) {
+        m_view->setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
+        m_view->setViewSettings( m_model->viewSettings() );
+    }
 }
 
 void FractalPresenter::setPreviewMode( bool preview )
@@ -145,6 +150,11 @@ const FractalData* FractalPresenter::fractalData()
     return &m_data;
 }
 
+int FractalPresenter::maximumIterations() const
+{
+    return m_generator->maximumIterations();
+}
+
 void FractalPresenter::setResolution( const QSize& resolution )
 {
     m_generator->setResolution( resolution );
@@ -189,6 +199,16 @@ void FractalPresenter::switchToJulia( const QPointF& point )
 {
     if ( m_model && m_model->fractalType().fractal() != JuliaFractal )
         m_model->setParameters( juliaType( point ), juliaPosition() );
+}
+
+void FractalPresenter::adjustCameraZoom( double delta )
+{
+    ViewSettings settings = m_model->viewSettings();
+
+    double zoom = qBound( 10.0, settings.cameraZoom() - 3.5 * delta, 45.0 );
+
+    settings.setCameraZoom( zoom );
+    m_model->setViewSettings( settings );
 }
 
 void FractalPresenter::customEvent( QEvent* e )

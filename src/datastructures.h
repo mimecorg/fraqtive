@@ -151,6 +151,8 @@ public:
     void setBlue( const QPolygonF& blue ) { m_blue = blue; }
     QPolygonF blue() const { return m_blue; }
 
+    bool isEmpty() const;
+
 public:
     friend QDataStream& operator <<( QDataStream& stream, const Gradient& gradient );
     friend QDataStream& operator >>( QDataStream& stream, Gradient& gradient );
@@ -276,6 +278,14 @@ enum AntiAliasing
     HighAntiAliasing
 };
 
+enum Resolution
+{
+    LowResolution,
+    MediumResolution,
+    HighResolution,
+    VeryHighResolution
+};
+
 class ViewSettings
 {
 public:
@@ -284,6 +294,15 @@ public:
 public:
     void setAntiAliasing( AntiAliasing antiAliasing ) { m_antiAliasing = antiAliasing; }
     AntiAliasing antiAliasing() const { return m_antiAliasing; }
+
+    void setMeshResolution( Resolution resolution ) { m_meshResolution = resolution; }
+    Resolution meshResolution() const { return m_meshResolution; }
+
+    void setHeightScale( double scale ) { m_heightScale = scale; }
+    double heightScale() const { return m_heightScale; }
+
+    void setCameraZoom( double Zoom ) { m_cameraZoom = Zoom; }
+    double cameraZoom() const { return m_cameraZoom; }
 
 public:
     friend QDataStream& operator <<( QDataStream& stream, const ViewSettings& settings );
@@ -294,16 +313,25 @@ public:
 
 private:
     AntiAliasing m_antiAliasing;
+    Resolution m_meshResolution;
+    double m_heightScale;
+    double m_cameraZoom; // degrees
 };
 
 inline ViewSettings::ViewSettings() :
-    m_antiAliasing( NoAntiAliasing )
+    m_antiAliasing( NoAntiAliasing ),
+    m_meshResolution( LowResolution ),
+    m_heightScale( 0.0 ),
+    m_cameraZoom( 0.0 )
 {
 }
 
 inline bool operator ==( const ViewSettings& lhv, const ViewSettings& rhv )
 {
-    return lhv.m_antiAliasing == rhv.m_antiAliasing;
+    return lhv.m_antiAliasing == rhv.m_antiAliasing
+        && lhv.m_meshResolution == rhv.m_meshResolution
+        && qFuzzyCompare( lhv.m_heightScale, rhv.m_heightScale )
+        && qFuzzyCompare( lhv.m_cameraZoom, rhv.m_cameraZoom );
 }
 
 Q_DECLARE_METATYPE( ViewSettings )

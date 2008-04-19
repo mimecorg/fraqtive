@@ -29,5 +29,9 @@
         <file>icons/save-bookmark-16.png</file>
         <file>icons/save-preset-16.png</file>
         <file>icons/tutorial-16.png</file>
+        <file>icons/view2d-16.png</file>
+        <file>icons/view2d-22.png</file>
+        <file>icons/view3d-16.png</file>
+        <file>icons/view3d-22.png</file>
     </qresource>
 </RCC>

@@ -41,6 +41,8 @@ public:
     void readConfiguration();
     void writeConfiguration();
 
+    int dataVersion() const { return m_dataVersion; }
+
 private:
     bool readFile( QFile* file, QDataStream* stream, const QString& path );
     bool writeFile( QFile* file, QDataStream* stream, const QString& path );
@@ -57,6 +59,8 @@ private:
     BookmarkMap m_bookmarks;
     PresetMap m_defaultPresets;
     PresetMap m_userPresets;
+
+    int m_dataVersion;
 };
 
 #endif

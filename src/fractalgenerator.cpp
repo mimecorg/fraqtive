@@ -169,6 +169,11 @@ void FractalGenerator::setResolution( const QSize& resolution )
     handleState();
 }
 
+int FractalGenerator::maximumIterations() const
+{
+    return pow( 10.0, m_settings.calculationDepth() ) * qMax( 1.0, 1.45 + m_position.zoomFactor() );
+}
+
 FractalGenerator::UpdateStatus FractalGenerator::updateData( FractalData* data )
 {
     QMutexLocker locker( &m_mutex );
@@ -226,7 +231,7 @@ void FractalGenerator::calculateRegion( const QRect& region )
     GeneratorCore::Output output;
     calculateOutput( &output, region );
 
-    int maxIterations = pow( 10.0, m_settings.calculationDepth() ) * qMax( 1.0, 1.45 + m_position.zoomFactor() );
+    int maxIterations = maximumIterations();
     double threshold = m_settings.detailThreshold();
 
     m_mutex.unlock();

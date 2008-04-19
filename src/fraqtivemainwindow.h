@@ -46,6 +46,8 @@ private slots:
     void on_actionSaveBookmark_activated();
     void on_actionSaveImage_activated();
     void on_actionCopyImage_activated();
+    void on_action2DView_activated();
+    void on_action3DView_activated();
     void on_actionQuickTutorial_activated();
     void on_actionAboutFraqtive_activated();
     void on_actionAboutQt_activated();

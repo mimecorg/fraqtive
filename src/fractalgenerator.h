@@ -54,8 +54,9 @@ public:
     void setGeneratorSettings( const GeneratorSettings& settings );
 
     void setResolution( const QSize& resolution );
-
     QSize resolution() const { return m_resolution; }
+
+    int maximumIterations() const;
 
     UpdateStatus updateData( FractalData* data );
 

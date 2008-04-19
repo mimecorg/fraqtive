@@ -14,12 +14,16 @@
 
 #include "fractalmodel.h"
 
-AdvancedSettingsPage::AdvancedSettingsPage( QWidget* parent ) : QWidget( parent )
+AdvancedSettingsPage::AdvancedSettingsPage( QWidget* parent ) : QWidget( parent ),
+    m_model( NULL ),
+    m_loading( false )
 {
     m_ui.setupUi( this );
 
     m_ui.sliderDepth->setScaledRange( 1.5, 3.5 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
+    m_ui.sliderHeight->setScaledRange( 0.02, 0.42 );
+    m_ui.sliderZoom->setScaledRange( 45.0, 10.0 );
 }
 
 AdvancedSettingsPage::~AdvancedSettingsPage()
@@ -64,6 +68,36 @@ void AdvancedSettingsPage::on_radioAAHigh_clicked()
     saveView();
 }
 
+void AdvancedSettingsPage::on_radioResLow_clicked()
+{
+    saveView();
+}
+
+void AdvancedSettingsPage::on_radioResMedium_clicked()
+{
+    saveView();
+}
+
+void AdvancedSettingsPage::on_radioResHigh_clicked()
+{
+    saveView();
+}
+
+void AdvancedSettingsPage::on_radioResVHigh_clicked()
+{
+    saveView();
+}
+
+void AdvancedSettingsPage::on_sliderHeight_valueChanged()
+{
+    saveView();
+}
+
+void AdvancedSettingsPage::on_sliderZoom_valueChanged()
+{
+    saveView();
+}
+
 void AdvancedSettingsPage::on_buttonRestore_clicked()
 {
     m_model->loadDefaultGeneratorSettings();
@@ -94,13 +128,20 @@ void AdvancedSettingsPage::viewSettingsChanged()
 
 void AdvancedSettingsPage::loadGenerator()
 {
+    m_loading = true;
+
     GeneratorSettings settings = m_model->generatorSettings();
     m_ui.sliderDepth->setScaledValue( settings.calculationDepth() );
     m_ui.sliderDetail->setScaledValue( settings.detailThreshold() );
+
+    m_loading = false;
 }
 
 void AdvancedSettingsPage::saveGenerator()
 {
+    if ( m_loading )
+        return;
+
     GeneratorSettings settings;
     settings.setCalculationDepth( m_ui.sliderDepth->scaledValue() );
     settings.setDetailThreshold( m_ui.sliderDetail->scaledValue() );
@@ -109,6 +150,8 @@ void AdvancedSettingsPage::saveGenerator()
 
 void AdvancedSettingsPage::loadView()
 {
+    m_loading = true;
+
     ViewSettings settings = m_model->viewSettings();
 
     switch ( settings.antiAliasing() ) {
@@ -125,10 +168,33 @@ void AdvancedSettingsPage::loadView()
             m_ui.radioAAHigh->setChecked( true );
             break;
     }
+
+    switch ( settings.meshResolution() ) {
+        case LowResolution:
+            m_ui.radioResLow->setChecked( true );
+            break;
+        case MediumResolution:
+            m_ui.radioResMedium->setChecked( true );
+            break;
+        case HighResolution:
+            m_ui.radioResHigh->setChecked( true );
+            break;
+        case VeryHighResolution:
+            m_ui.radioResVHigh->setChecked( true );
+            break;
+    }
+
+    m_ui.sliderHeight->setScaledValue( settings.heightScale() );
+    m_ui.sliderZoom->setScaledValue( settings.cameraZoom() );
+
+    m_loading = false;
 }
 
 void AdvancedSettingsPage::saveView()
 {
+    if ( m_loading )
+        return;
+
     ViewSettings settings;
 
     if ( m_ui.radioAANone->isChecked() )
@@ -139,6 +205,18 @@ void AdvancedSettingsPage::saveView()
         settings.setAntiAliasing( MediumAntiAliasing );
     if ( m_ui.radioAAHigh->isChecked() )
         settings.setAntiAliasing( HighAntiAliasing );
+
+    if ( m_ui.radioResLow->isChecked() )
+        settings.setMeshResolution( LowResolution );
+    if ( m_ui.radioResMedium->isChecked() )
+        settings.setMeshResolution( MediumResolution );
+    if ( m_ui.radioResHigh->isChecked() )
+        settings.setMeshResolution( HighResolution );
+    if ( m_ui.radioResVHigh->isChecked() )
+        settings.setMeshResolution( VeryHighResolution );
+
+    settings.setHeightScale( m_ui.sliderHeight->scaledValue() );
+    settings.setCameraZoom( m_ui.sliderZoom->scaledValue() );
 
     m_model->setViewSettings( settings );
 }

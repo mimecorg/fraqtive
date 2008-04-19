@@ -139,6 +139,131 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="labelResolution" >
+     <property name="text" >
+      <string>Mesh Resolution</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QFrame" name="frameResolution" >
+       <property name="frameShape" >
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <layout class="QHBoxLayout" >
+        <property name="spacing" >
+         <number>4</number>
+        </property>
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="radioResLow" >
+          <property name="text" >
+           <string>Low</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioResMedium" >
+          <property name="text" >
+           <string>Medium</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioResHigh" >
+          <property name="text" >
+           <string>High</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioResVHigh" >
+          <property name="text" >
+           <string>Very High</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelHeight" >
+     <property name="text" >
+      <string>Mesh Height Scale</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="DoubleSlider" name="sliderHeight" >
+     <property name="maximum" >
+      <number>100</number>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition" >
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval" >
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelZoom" >
+     <property name="text" >
+      <string>Camera Zoom</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="DoubleSlider" name="sliderZoom" >
+     <property name="maximum" >
+      <number>100</number>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition" >
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval" >
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="labelDefault" >
      <property name="text" >
       <string>Default Settings</string>
@@ -184,7 +309,7 @@
      <property name="sizeHint" >
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>28</height>
       </size>
      </property>
     </spacer>

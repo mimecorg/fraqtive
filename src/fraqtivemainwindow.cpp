@@ -23,6 +23,7 @@
 #include "fractaltypedialog.h"
 #include "gradientdialog.h"
 #include "imageview.h"
+#include "meshview.h"
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "loadbookmarkdialog.h"
@@ -79,6 +80,8 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
     m_model->setEnabled( true );
 
     m_ui.mainContainer->installEventFilter( this );
+
+    m_ui.action3DView->setEnabled( QGLFormat::hasOpenGL() );
 
     view->setFocus();
 
@@ -315,6 +318,35 @@ void FraqtiveMainWindow::on_actionCopyImage_activated()
     ImageView* view = qobject_cast<ImageView*>( m_ui.mainContainer->view() );
 
     QApplication::clipboard()->setImage( view->image() );
+}
+
+void FraqtiveMainWindow::on_action2DView_activated()
+{
+    if ( !qobject_cast<ImageView*>( m_ui.mainContainer->view() ) ) {
+        ImageView* view = new ImageView( m_ui.mainContainer, m_model->presenter() );
+        view->setInteractive( true );
+
+        m_model->presenter()->setView( view );
+        m_ui.mainContainer->setView( view );
+    }
+
+    m_ui.action2DView->setChecked( true );
+    m_ui.action3DView->setChecked( false );
+}
+
+void FraqtiveMainWindow::on_action3DView_activated()
+{
+    if ( !qobject_cast<MeshView*>( m_ui.mainContainer->view() ) ) {
+        MeshView* view = new MeshView( m_ui.mainContainer, m_model->presenter() );
+
+        m_model->presenter()->setView( view );
+        m_ui.mainContainer->setView( view );
+
+        m_model->clearHovering();
+    }
+
+    m_ui.action2DView->setChecked( false );
+    m_ui.action3DView->setChecked( true );
 }
 
 void FraqtiveMainWindow::on_actionQuickTutorial_activated()

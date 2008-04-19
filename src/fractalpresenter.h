@@ -51,6 +51,8 @@ public:
 
     const FractalData* fractalData();
 
+    int maximumIterations() const;
+
     void setResolution( const QSize& resolution );
 
     void setHoveringPoint( const QPointF& point );
@@ -62,6 +64,8 @@ public:
     void changePosition( const QMatrix& transform );
 
     void switchToJulia( const QPointF& point );
+
+    void adjustCameraZoom( double delta );
 
 protected: // overrides
     void customEvent( QEvent* e );

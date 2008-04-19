@@ -3,6 +3,8 @@ include( ../config.pri )
 TEMPLATE = app
 TARGET = fraqtive
 
+QT += opengl
+
 HEADERS   += abstractjobprovider.h \
              abstractview.h \
              advancedsettingspage.h \
@@ -30,6 +32,7 @@ HEADERS   += abstractjobprovider.h \
              jobscheduler.h \
              loadbookmarkdialog.h \
              loadpresetdialog.h \
+             meshview.h \
              multiiconengine.h \
              parameterspage.h \
              presetlistview.h \
@@ -67,6 +70,7 @@ SOURCES   += advancedsettingspage.cpp \
              loadbookmarkdialog.cpp \
              loadpresetdialog.cpp \
              main.cpp \
+             meshview.cpp \
              multiiconengine.cpp \
              parameterspage.cpp \
              presetlistview.cpp \

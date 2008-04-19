@@ -34,6 +34,12 @@ private slots:
     void on_radioAALow_clicked();
     void on_radioAAMedium_clicked();
     void on_radioAAHigh_clicked();
+    void on_radioResLow_clicked();
+    void on_radioResMedium_clicked();
+    void on_radioResHigh_clicked();
+    void on_radioResVHigh_clicked();
+    void on_sliderHeight_valueChanged();
+    void on_sliderZoom_valueChanged();
 
     void on_buttonRestore_clicked();
     void on_buttonStore_clicked();
@@ -54,6 +60,8 @@ private:
     Ui::AdvancedSettingsPage m_ui;
 
     FractalModel* m_model;
+
+    bool m_loading;
 };
 
 #endif

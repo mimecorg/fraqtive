@@ -9,6 +9,9 @@
 **************************************************************************/
 
 #include "datastructures.h"
+#include "datafunctions.h"
+#include "fraqtiveapplication.h"
+#include "configurationdata.h"
 
 #include <QDataStream>
 
@@ -70,6 +73,11 @@ QDataStream& operator >>( QDataStream& stream, Position& position )
         >> position.m_angle;
 }
 
+bool Gradient::isEmpty() const
+{
+    return m_red.isEmpty() || m_green.isEmpty() || m_blue.isEmpty();
+}
+
 QDataStream& operator <<( QDataStream& stream, const Gradient& gradient )
 {
     return stream
@@ -120,14 +128,32 @@ QDataStream& operator >>( QDataStream& stream, GeneratorSettings& settings )
 
 QDataStream& operator <<( QDataStream& stream, const ViewSettings& settings )
 {
-    return stream << (qint8)settings.m_antiAliasing;
+    return stream << (qint8)settings.m_antiAliasing
+        << (qint8)settings.m_meshResolution
+        << settings.m_heightScale
+        << settings.m_cameraZoom;
 }
 
 QDataStream& operator >>( QDataStream& stream, ViewSettings& settings )
 {
+    int version = fraqtive()->configuration()->dataVersion();
+
+    if ( version < 2 )
+        settings = DataFunctions::defaultViewSettings();
+
     qint8 antiAliasing;
     stream >> antiAliasing;
     settings.m_antiAliasing = (AntiAliasing)antiAliasing;
+
+    if ( version >= 2 ) {
+        qint8 resolution;
+        stream >> resolution;
+        settings.m_meshResolution = (Resolution)resolution;
+
+        stream >> settings.m_heightScale
+            >> settings.m_cameraZoom;
+    }
+
     return stream;
 }
 

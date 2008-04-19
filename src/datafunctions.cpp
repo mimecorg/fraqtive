@@ -98,6 +98,9 @@ ViewSettings defaultViewSettings()
     ViewSettings settings;
 
     settings.setAntiAliasing( MediumAntiAliasing );
+    settings.setMeshResolution( MediumResolution );
+    settings.setHeightScale( 0.14 );
+    settings.setCameraZoom( 24.0 );
 
     return settings;
 }
@@ -177,6 +180,12 @@ QGradientStops calculateGradientStops( const Gradient& gradient )
 
 void fillGradientCache( const Gradient& gradient, QRgb* cache, int size )
 {
+    if ( gradient.isEmpty() ) {
+        for ( int i = 0; i < size; i++ )
+            cache[ i ] = qRgb( 0, 0, 0 );
+        return;
+    }
+
     QPolygonF red = interpolateCubic( gradient.red() );
     QPolygonF green = interpolateCubic( gradient.green() );
     QPolygonF blue = interpolateCubic( gradient.blue() );
