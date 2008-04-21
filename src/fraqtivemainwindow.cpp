@@ -255,8 +255,6 @@ void FraqtiveMainWindow::on_actionSaveBookmark_activated()
 
 void FraqtiveMainWindow::on_actionSaveImage_activated()
 {
-    ImageView* view = qobject_cast<ImageView*>( m_ui.mainContainer->view() );
-
     QList<QByteArray> supportedFormats = QImageWriter::supportedImageFormats();
 
     QList<QByteArray> formats;
@@ -309,7 +307,9 @@ void FraqtiveMainWindow::on_actionSaveImage_activated()
         if ( format == "tiff" )
             writer.setCompression( 1 );
 
-        if ( !writer.write( view->image() ) ) {
+        QImage image = currentImage();
+
+        if ( !writer.write( image ) ) {
             QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
         }
     }
@@ -317,9 +317,18 @@ void FraqtiveMainWindow::on_actionSaveImage_activated()
 
 void FraqtiveMainWindow::on_actionCopyImage_activated()
 {
-    ImageView* view = qobject_cast<ImageView*>( m_ui.mainContainer->view() );
+    QImage image = currentImage();
 
-    QApplication::clipboard()->setImage( view->image() );
+    QApplication::clipboard()->setImage( image );
+}
+
+QImage FraqtiveMainWindow::currentImage()
+{
+    if ( ImageView* imageView = qobject_cast<ImageView*>( m_ui.mainContainer->view() ) )
+        return imageView->image();
+    if ( MeshView* meshView = qobject_cast<MeshView*>( m_ui.mainContainer->view() ) )
+        return meshView->image();
+    return QImage();
 }
 
 void FraqtiveMainWindow::on_action2DView_activated()

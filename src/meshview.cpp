@@ -49,6 +49,11 @@ MeshView::~MeshView()
     delete[] m_textureCoordArray;
 }
 
+QImage MeshView::image()
+{
+    return grabFrameBuffer();
+}
+
 void MeshView::clearView()
 {
     delete[] m_vertexArray;

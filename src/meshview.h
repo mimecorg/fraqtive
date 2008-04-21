@@ -25,6 +25,9 @@ public:
     MeshView( QWidget* parent, FractalPresenter* presenter );
     ~MeshView();
 
+public:
+    QImage image();
+
 public: // AbstractView implementation
     void clearView();
 

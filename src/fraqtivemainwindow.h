@@ -62,6 +62,8 @@ private:
     void enterFullScreenMode();
     void leaveFullScreenMode();
 
+    QImage currentImage();
+
 private:
     Ui::FraqtiveMainWindow m_ui;
 
