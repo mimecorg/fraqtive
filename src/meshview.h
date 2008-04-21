@@ -90,6 +90,9 @@ private:
 
     double m_maximumDepth;
 
+    QVector<double> m_averageRowHeight;
+    double m_averageHeight;
+
     double m_rotation;
     double m_angle;
 

@@ -30,6 +30,7 @@ MeshView::MeshView( QWidget* parent, FractalPresenter* presenter ) : QGLWidget( 
     m_vertexArray( NULL ),
     m_textureCoordArray( NULL ),
     m_maximumDepth( 0.0 ),
+    m_averageHeight( 0.0 ),
     m_rotation( 0.0 ),
     m_angle( -45.0 ),
     m_tracking( NoTracking )
@@ -292,6 +293,7 @@ void MeshView::paintGL()
     glRotated( m_angle, 1.0, 0.0, 0.0 );
     glRotated( m_rotation, 0.0, 0.0, 1.0 );
     glScaled( 1.0, 1.0, m_settings.heightScale() );
+    glTranslated( 0.0, 0.0, m_averageHeight );
 
     double plane[ 4 ] = { 0.0, 0.0, 1.0, m_maximumDepth - 0.001 };
 
@@ -362,6 +364,9 @@ void MeshView::initializeVertices()
         }
     }
 
+    m_averageRowHeight.fill( 0.0, m_resolution.height() );
+    m_averageHeight = 0.0;
+
     glVertexPointer( 3, GL_FLOAT, 0, m_vertexArray );
     glEnableClientState( GL_VERTEX_ARRAY );
     glTexCoordPointer( 1, GL_FLOAT, 0, m_textureCoordArray );
@@ -377,14 +382,35 @@ void MeshView::updateVertices( const FractalData* data, const QRect& region )
         const double* src = data->buffer() + y * stride + region.left();
         float* vertices = m_vertexArray + y * 3 * width;
         float* coords = m_textureCoordArray + y * width;
+
+        double sum = 0.0;
+        int count = 0;
+
         for ( int x = 0; x < width; x++ ) {
             double value = src[ x ];
-            if ( value == 0.0 )
+            if ( value > 0.0 )
+                sum += value, count++;
+            else
                 value = InfiniteDepth;
             vertices[ 3 * x + 2 ] = -(float)value;
             coords[ x ] = (float)value;
         }
+
+        if ( count > 0 )
+            m_averageRowHeight[ y ] = sum / (double)count;
     }
+
+    double sum = 0.0;
+    int count = 0;
+
+    for ( int i = 0; i < m_averageRowHeight.count(); i++ ) {
+        double value = m_averageRowHeight[ i ];
+        if ( value > 0.0 )
+            sum += value, count++;
+    }
+
+    if ( count > 0 )
+        m_averageHeight = sum / (double)count;
 }
 
 void MeshView::mousePressEvent( QMouseEvent* e )
