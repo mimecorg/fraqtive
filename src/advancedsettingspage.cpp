@@ -36,6 +36,7 @@ void AdvancedSettingsPage::setModel( FractalModel* model )
 
     connect( m_model, SIGNAL( generatorSettingsChanged() ), this, SLOT( generatorSettingsChanged() ) );
     connect( m_model, SIGNAL( viewSettingsChanged() ), this, SLOT( viewSettingsChanged() ) );
+    connect( m_model, SIGNAL( viewModeChanged() ), this, SLOT( viewModeChanged() ) );
 }
 
 void AdvancedSettingsPage::on_sliderDepth_valueChanged()
@@ -124,6 +125,24 @@ void AdvancedSettingsPage::viewSettingsChanged()
 {
     loadView();
     updateButtons();
+}
+
+void AdvancedSettingsPage::viewModeChanged()
+{
+    bool isImage = ( m_model->viewMode() == ImageViewMode );
+    bool isMesh = ( m_model->viewMode() == MeshViewMode );
+
+    m_ui.radioAANone->setEnabled( isImage );
+    m_ui.radioAALow->setEnabled( isImage );
+    m_ui.radioAAMedium->setEnabled( isImage );
+    m_ui.radioAAHigh->setEnabled( isImage );
+
+    m_ui.sliderHeight->setEnabled( isMesh );
+    m_ui.sliderZoom->setEnabled( isMesh );
+    m_ui.radioResLow->setEnabled( isMesh );
+    m_ui.radioResMedium->setEnabled( isMesh );
+    m_ui.radioResHigh->setEnabled( isMesh );
+    m_ui.radioResVHigh->setEnabled( isMesh );
 }
 
 void AdvancedSettingsPage::loadGenerator()

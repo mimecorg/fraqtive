@@ -18,6 +18,13 @@
 
 class FractalPresenter;
 
+enum ViewMode
+{
+    NoViewMode,
+    ImageViewMode,
+    MeshViewMode
+};
+
 class FractalModel : public QObject
 {
     Q_OBJECT
@@ -96,6 +103,9 @@ public:
     void saveDefaultViewSettings() const;
     void loadDefaultViewSettings();
 
+    void setViewMode( ViewMode mode );
+    ViewMode viewMode() const { return m_viewMode; }
+
 signals:
     void fractalTypeChanged();
     void positionChanged();
@@ -110,6 +120,8 @@ signals:
 
     void generatorSettingsChanged();
     void viewSettingsChanged();
+
+    void viewModeChanged();
 
 private:
     void storeParameters();
@@ -148,6 +160,8 @@ private:
 
     GeneratorSettings m_generatorSettings;
     ViewSettings m_viewSettings;
+
+    ViewMode m_viewMode;
 };
 
 #endif

@@ -83,6 +83,8 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
 
     m_ui.action3DView->setEnabled( QGLFormat::hasOpenGL() );
 
+    m_model->setViewMode( ImageViewMode );
+
     view->setFocus();
 
     ConfigurationData* config = fraqtive()->configuration();
@@ -328,6 +330,10 @@ void FraqtiveMainWindow::on_action2DView_activated()
 
         m_model->presenter()->setView( view );
         m_ui.mainContainer->setView( view );
+
+        m_model->setViewMode( ImageViewMode );
+
+        view->setFocus();
     }
 
     m_ui.action2DView->setChecked( true );
@@ -343,6 +349,10 @@ void FraqtiveMainWindow::on_action3DView_activated()
         m_ui.mainContainer->setView( view );
 
         m_model->clearHovering();
+
+        m_model->setViewMode( MeshViewMode );
+
+        view->setFocus();
     }
 
     m_ui.action2DView->setChecked( false );

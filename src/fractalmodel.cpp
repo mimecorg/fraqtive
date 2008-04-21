@@ -41,7 +41,8 @@ FractalModel::FractalModel( QObject* parent ) : QObject( parent ),
     m_enabled( false ),
     m_tracking( false ),
     m_hovering( false ),
-    m_navigation( false )
+    m_navigation( false ),
+    m_viewMode( NoViewMode )
 {
     initializeDefaultSettings();
 
@@ -336,4 +337,12 @@ void FractalModel::loadDefaultViewSettings()
 {
     ConfigurationData* config = fraqtive()->configuration();
     setViewSettings( config->value( "ViewSettings" ).value<ViewSettings>() );
+}
+
+void FractalModel::setViewMode( ViewMode mode )
+{
+    if ( m_viewMode != mode ) {
+        m_viewMode = mode;
+        emit viewModeChanged();
+    }
 }

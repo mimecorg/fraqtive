@@ -46,6 +46,7 @@ private slots:
 
     void generatorSettingsChanged();
     void viewSettingsChanged();
+    void viewModeChanged();
 
 private:
     void loadGenerator();
