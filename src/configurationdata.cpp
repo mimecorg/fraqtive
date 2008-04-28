@@ -11,7 +11,9 @@
 #include "configurationdata.h"
 
 #if defined( Q_WS_WIN )
+#ifndef _WIN32_IE
 #define _WIN32_IE 0x0400
+#endif
 #include <shlobj.h>
 #endif
 
