@@ -1,11 +1,13 @@
 Fraqtive
 Version 0.4.2 (2008-04-29)
 
+Fraqtive is a Mandelbrot family fractal generator. It uses very fast algorithms supporting SSE2
+
 Fraqtive is an open source, multi-platform generator of the Mandelbrot
 family fractals. It uses very fast algorithms supporting SSE2
 and multi-core processors. It generates high quality anti-aliased
-images. It allows real-time navigation and dynamic generation
-of the Julia fractal preview.
+images and renders 3D scenes using OpenGL. It allows real-time
+navigation and dynamic generation of the Julia fractal preview.
 
 
 Credits and License
