@@ -379,7 +379,7 @@ void FraqtiveMainWindow::on_actionQuickTutorial_activated()
 
 void FraqtiveMainWindow::on_actionAboutFraqtive_activated()
 {
-    QString version = "0.4.1";
+    QString version = "0.4.2";
     QString link = "<a href=\"http://fraqtive.mimec.org\">fraqtive.mimec.org</a>";
 
     QString message;
