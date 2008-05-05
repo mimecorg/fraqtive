@@ -29,7 +29,7 @@ MultiIconEngine::MultiIconEngine( const QString& fileName )
 
     int index = fileName.lastIndexOf( '-' );
     if ( index < 0 ) {
-        m_icon.addFile( fileName );
+        m_icon.addPixmap( QPixmap( fileName ) );
         return;
     }
     QString baseName = fileName.left( index + 1 );
@@ -40,7 +40,7 @@ MultiIconEngine::MultiIconEngine( const QString& fileName )
         int size = sizes[ i ];
         QString iconName = baseName + QString::number( size ) + ".png";
         if ( QFile::exists( iconName ) )
-            m_icon.addFile( iconName, QSize( size, size ) );
+            m_icon.addPixmap( QPixmap( iconName ) );
     }
 }
 
