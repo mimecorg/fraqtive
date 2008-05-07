@@ -96,7 +96,7 @@ void BookmarkModel::invalidateBookmark( const QString& name )
 {
     QMutexLocker locker( &m_mutex );
 
-    m_pixmaps.remove( name );
+    m_images.remove( name );
 
     if ( !m_queue.contains( name ) ) {
         m_queue.append( name );
@@ -139,8 +139,8 @@ QVariant BookmarkModel::data( const QModelIndex& index, int role ) const
         QString name = m_keys.at( index.row() );
 
         QPixmap pixmap;
-        if ( m_pixmaps.contains( name ) ) {
-            pixmap = m_pixmaps.value( name );
+        if ( m_images.contains( name ) ) {
+            pixmap = QPixmap::fromImage( m_images.value( name ) );
         } else {
             pixmap = QPixmap( 48, 48 );
             pixmap.fill( QApplication::palette().color( QPalette::Disabled, QPalette::Window ) );
@@ -225,7 +225,7 @@ void BookmarkModel::executeJob()
         return;
     }
 
-    m_pixmaps.insert( name, QPixmap::fromImage( image ) );
+    m_images.insert( name, image );
 
     int row = m_keys.indexOf( name );
     if ( row >= 0 )
