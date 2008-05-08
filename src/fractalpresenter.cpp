@@ -49,6 +49,7 @@ void FractalPresenter::setView( AbstractView* view )
     if ( m_model ) {
         m_view->setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
         m_view->setViewSettings( m_model->viewSettings() );
+        m_view->setAnimationState( m_model->animationState() );
     }
 }
 
@@ -142,6 +143,11 @@ void FractalPresenter::setGeneratorSettings( const GeneratorSettings& settings )
 void FractalPresenter::setViewSettings( const ViewSettings& settings )
 {
     m_view->setViewSettings( settings );
+}
+
+void FractalPresenter::setAnimationState( const AnimationState& state )
+{
+    m_view->setAnimationState( state );
 }
 
 const FractalData* FractalPresenter::fractalData()

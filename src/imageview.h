@@ -46,6 +46,8 @@ public: // AbstractView implementation
 
     void setViewSettings( const ViewSettings& settings );
 
+    void setAnimationState( const AnimationState& state );
+
 protected: // overrides
     void resizeEvent( QResizeEvent* e );
     void paintEvent( QPaintEvent* e );
@@ -95,6 +97,8 @@ private:
     ColorMapping m_colorMapping;
 
     ViewSettings m_settings;
+
+    AnimationState m_animationState;
 
     QRgb* m_gradientCache;
 

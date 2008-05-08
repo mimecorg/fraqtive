@@ -417,6 +417,84 @@ Q_DECLARE_METATYPE( Preset )
 
 typedef QMap<QString, Preset> PresetMap;
 
+class AnimationSettings
+{
+public:
+    AnimationSettings();
+
+public:
+    void setScrollingEnabled( bool enabled ) { m_scrollingEnabled = enabled; }
+    bool isScrollingEnabled() const { return m_scrollingEnabled; }
+
+    void setScrollingSpeed( double speed ) { m_scrollingSpeed = speed; }
+    double scrollingSpeed() const { return m_scrollingSpeed; }
+
+    void setRotationEnabled( bool enabled ) { m_rotationEnabled = enabled; }
+    bool isRotationEnabled() const { return m_rotationEnabled; }
+
+    void setRotationSpeed( double speed ) { m_rotationSpeed = speed; }
+    double rotationSpeed() const { return m_rotationSpeed; }
+
+public:
+    friend bool operator ==( const AnimationSettings& lhv, const AnimationSettings& rhv );
+    friend bool operator !=( const AnimationSettings& lhv, const AnimationSettings& rhv ) { return !( lhv == rhv ); }
+
+private:
+    bool m_scrollingEnabled;
+    bool m_rotationEnabled;
+    double m_scrollingSpeed;
+    double m_rotationSpeed;
+};
+
+inline AnimationSettings::AnimationSettings() :
+    m_scrollingEnabled( false ),
+    m_rotationEnabled( false ),
+    m_scrollingSpeed( 0.0 ),
+    m_rotationSpeed( 0.0 )
+{
+}
+
+inline bool operator ==( const AnimationSettings& lhv, const AnimationSettings& rhv )
+{
+    return lhv.m_scrollingEnabled == rhv.m_scrollingEnabled
+        && lhv.m_rotationEnabled == rhv.m_rotationEnabled
+        && qFuzzyCompare( lhv.m_scrollingSpeed, rhv.m_scrollingSpeed )
+        && qFuzzyCompare( lhv.m_rotationSpeed, rhv.m_rotationSpeed );
+}
+
+class AnimationState
+{
+public:
+    AnimationState();
+
+public:
+    void setScrolling( double scrolling ) { m_scrolling = scrolling; }
+    double scrolling() const { return m_scrolling; }
+
+    void setRotation( double rotation ) { m_rotation = rotation; }
+    double rotation() const { return m_rotation; }
+
+public:
+    friend bool operator ==( const AnimationState& lhv, const AnimationState& rhv );
+    friend bool operator !=( const AnimationState& lhv, const AnimationState& rhv ) { return !( lhv == rhv ); }
+
+private:
+    double m_scrolling;
+    double m_rotation;
+};
+
+inline AnimationState::AnimationState() :
+    m_scrolling( 0.0 ),
+    m_rotation( 0.0 )
+{
+}
+
+inline bool operator ==( const AnimationState& lhv, const AnimationState& rhv )
+{
+    return qFuzzyCompare( lhv.m_scrolling, rhv.m_scrolling )
+        && qFuzzyCompare( lhv.m_rotation, rhv.m_rotation );
+}
+
 void registerDataStructures();
 
 #endif

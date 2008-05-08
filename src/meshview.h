@@ -44,6 +44,8 @@ public: // AbstractView implementation
 
     void setViewSettings( const ViewSettings& settings );
 
+    void setAnimationState( const AnimationState& state );
+
 protected: // overrides
     void initializeGL();
     void resizeGL( int width, int height );
@@ -78,6 +80,8 @@ private:
     ColorMapping m_colorMapping;
 
     ViewSettings m_settings;
+
+    AnimationState m_animationState;
 
     GLuint m_textureId;
     bool m_textureDirty;

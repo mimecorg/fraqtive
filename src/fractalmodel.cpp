@@ -48,6 +48,11 @@ FractalModel::FractalModel( QObject* parent ) : QObject( parent ),
 
     m_presenter = new FractalPresenter( this );
     m_presenter->setModel( this );
+
+    m_timer = new QTimer( this );
+    m_timer->setInterval( 50 );
+
+    connect( m_timer, SIGNAL( timeout() ), this, SLOT( animate() ) );
 }
 
 FractalModel::~FractalModel()
@@ -343,6 +348,77 @@ void FractalModel::setViewMode( ViewMode mode )
 {
     if ( m_viewMode != mode ) {
         m_viewMode = mode;
+        updateTimer();
         emit viewModeChanged();
+    }
+}
+
+void FractalModel::setAnimationSettings( const AnimationSettings& settings )
+{
+    if ( m_animationSettings != settings ) {
+        m_animationSettings = settings;
+        updateTimer();
+        emit animationSettingsChanged();
+    }
+}
+
+void FractalModel::updateTimer()
+{
+    AnimationState lastState = m_animationState;
+
+    // reset state if animation was stopped
+    if ( !m_animationSettings.isScrollingEnabled() )
+        m_animationState.setScrolling( 0.0 );
+    if ( !m_animationSettings.isRotationEnabled() )
+        m_animationState.setRotation( 0.0 );
+
+    if ( m_animationState != lastState ) {
+        m_presenter->setAnimationState( m_animationState );
+        if ( m_previewPresenter )
+            m_previewPresenter->setAnimationState( m_animationState );
+    }
+
+    bool isScrolling = ( m_animationSettings.isScrollingEnabled() && m_animationSettings.scrollingSpeed() != 0.0 );
+    bool isRotating = ( m_viewMode == MeshViewMode && m_animationSettings.isRotationEnabled()
+        && m_animationSettings.rotationSpeed() != 0.0 );
+
+    // only enable timer if either animation is active
+    if ( isScrolling || isRotating ) {
+        if ( !m_timer->isActive() ) {
+            m_time.start();
+            m_timer->start();
+        }
+    } else {
+        if ( m_timer->isActive() )
+            m_timer->stop();
+    }
+}
+
+static double adjustState( double value )
+{
+    while ( value > 1.0 )
+        value -= 1.0;
+    while ( value < 0.0 )
+        value += 1.0;
+    return value;
+}
+
+void FractalModel::animate()
+{
+    int elapsed = m_time.restart();
+
+    // ignore large changes caused by time settings changes and wrapping at midnight
+    if ( elapsed > 0 && elapsed < 5000 ) {
+        if ( m_animationSettings.isScrollingEnabled() ) {
+            double scrolling = m_animationState.scrolling() + 0.001 * elapsed * m_animationSettings.scrollingSpeed();
+            m_animationState.setScrolling( adjustState( scrolling ) );
+        }
+        if ( m_viewMode == MeshViewMode && m_animationSettings.isRotationEnabled() ) {
+            double rotation = m_animationState.rotation() + 0.001 * elapsed * m_animationSettings.rotationSpeed();
+            m_animationState.setRotation( adjustState( rotation ) );
+        }
+        m_presenter->setAnimationState( m_animationState );
+        if ( m_previewPresenter )
+            m_previewPresenter->setAnimationState( m_animationState );
     }
 }

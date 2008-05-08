@@ -18,6 +18,7 @@ class FractalData;
 class Gradient;
 class ColorMapping;
 class ViewSettings;
+class AnimationState;
 
 class AbstractView
 {
@@ -40,6 +41,8 @@ public:
     virtual void setColorMapping( const ColorMapping& mapping ) = 0;
 
     virtual void setViewSettings( const ViewSettings& settings ) = 0;
+
+    virtual void setAnimationState( const AnimationState& state ) = 0;
 };
 
 #endif

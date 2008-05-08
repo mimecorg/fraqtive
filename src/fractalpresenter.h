@@ -49,6 +49,8 @@ public:
     void setGeneratorSettings( const GeneratorSettings& settings );
     void setViewSettings( const ViewSettings& settings );
 
+    void setAnimationState( const AnimationState& state );
+
     const FractalData* fractalData();
 
     int maximumIterations() const;

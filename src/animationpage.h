@@ -8,37 +8,47 @@
 * (at your option) any later version.
 **************************************************************************/
 
-#ifndef PROPERTYTOOLBOX_H
-#define PROPERTYTOOLBOX_H
+#ifndef ANIMATIONPAGE_H
+#define ANIMATIONPAGE_H
 
-#include <QToolBox>
+#include <QWidget>
+
+#include "ui_animationpage.h"
 
 class FractalModel;
-class ParametersPage;
-class ColorSettingsPage;
-class AdvancedSettingsPage;
-class AnimationPage;
 
-class PropertyToolBox : public QToolBox
+class AnimationPage : public QWidget
 {
+    Q_OBJECT
 public:
-    PropertyToolBox( QWidget* parent );
-    ~PropertyToolBox();
+    AnimationPage( QWidget* parent );
+    ~AnimationPage();
 
 public:
     void setModel( FractalModel* model );
 
-public: // overrides
-    QSize sizeHint() const;
+private slots:
+    void on_sliderScrolling_valueChanged();
+    void on_sliderRotation_valueChanged();
+
+    void on_stopScrolling_clicked();
+    void on_stopRotation_clicked();
+
+    void animationSettingsChanged();
+    void viewModeChanged();
 
 private:
-    void addPage( QWidget* page );
+    void loadSettings();
+    void saveSettings();
+
+    void updateButtons();
 
 private:
-    ParametersPage* m_parameters;
-    ColorSettingsPage* m_colorSettings;
-    AdvancedSettingsPage* m_advancedSettings;
-    AnimationPage* m_animationPage;
+    Ui::AnimationPage m_ui;
+
+    FractalModel* m_model;
+
+    bool m_loading;
 };
 
 #endif

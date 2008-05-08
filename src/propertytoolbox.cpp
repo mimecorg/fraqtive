@@ -13,16 +13,19 @@
 #include "parameterspage.h"
 #include "colorsettingspage.h"
 #include "advancedsettingspage.h"
+#include "animationpage.h"
 
 PropertyToolBox::PropertyToolBox( QWidget* parent ) : QToolBox( parent )
 {
     m_parameters = new ParametersPage( this );
     m_colorSettings = new ColorSettingsPage( this );
     m_advancedSettings = new AdvancedSettingsPage( this );
+    m_animationPage = new AnimationPage( this );
 
     addPage( m_parameters );
     addPage( m_colorSettings );
     addPage( m_advancedSettings );
+    addPage( m_animationPage );
 }
 
 PropertyToolBox::~PropertyToolBox()
@@ -34,6 +37,7 @@ void PropertyToolBox::setModel( FractalModel* model )
     m_parameters->setModel( model );
     m_colorSettings->setModel( model );
     m_advancedSettings->setModel( model );
+    m_animationPage->setModel( model );
 }
 
 QSize PropertyToolBox::sizeHint() const

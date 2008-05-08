@@ -138,7 +138,13 @@ static const int GradientSize = 16384;
 
 void ImageView::drawImage( const FractalData* data, const QRect& region )
 {
-    DataFunctions::ColorMapper mapper( m_gradientCache, GradientSize, m_backgroundColor.rgb(), m_colorMapping );
+    ColorMapping mapping = m_colorMapping;
+    double offset = mapping.offset() + m_animationState.scrolling();
+    if ( offset > 1.0 )
+        offset -= 1.0;
+    mapping.setOffset( offset );
+
+    DataFunctions::ColorMapper mapper( m_gradientCache, GradientSize, m_backgroundColor.rgb(), mapping );
     DataFunctions::drawImage( m_image, data, region, mapper, m_settings.antiAliasing() );
 }
 
@@ -181,6 +187,14 @@ void ImageView::setViewSettings( const ViewSettings& settings )
     m_settings = settings;
 
     updateImage();
+}
+
+void ImageView::setAnimationState( const AnimationState& state )
+{
+    if ( m_animationState.scrolling() != state.scrolling() ) {
+        m_animationState = state;
+        updateImage();
+    }
 }
 
 void ImageView::updateGradient()
