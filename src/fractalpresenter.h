@@ -93,6 +93,8 @@ private:
 
     FractalType m_type;
     Position m_position;
+
+    QSize m_resolution;
 };
 
 #endif

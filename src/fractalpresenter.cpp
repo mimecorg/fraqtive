@@ -163,7 +163,10 @@ int FractalPresenter::maximumIterations() const
 
 void FractalPresenter::setResolution( const QSize& resolution )
 {
-    m_generator->setResolution( resolution );
+    if ( m_resolution != resolution ) {
+        m_resolution = resolution;
+        m_generator->setResolution( resolution );
+    }
 }
 
 void FractalPresenter::setHoveringPoint( const QPointF& point )
@@ -239,10 +242,9 @@ void FractalPresenter::customEvent( QEvent* e )
 
 QMatrix FractalPresenter::matrixFromPosition( const Position& position )
 {
-    QSize resolution = m_data.size();
-    QPointF center( resolution.width() / 2.0, resolution.height() / 2.0 );
+    QPointF center( m_resolution.width() / 2.0, m_resolution.height() / 2.0 );
 
-    double scale = pow( 10.0, -position.zoomFactor() ) / resolution.height();
+    double scale = pow( 10.0, -position.zoomFactor() ) / m_resolution.height();
 
     QMatrix matrix;
     matrix.translate( position.center().x(), position.center().y() );
@@ -255,10 +257,9 @@ QMatrix FractalPresenter::matrixFromPosition( const Position& position )
 
 Position FractalPresenter::positionFromMatrix( const QMatrix& matrix )
 {
-    QSize resolution = m_data.size();
-    QPointF center( resolution.width() / 2.0, resolution.height() / 2.0 );
+    QPointF center( m_resolution.width() / 2.0, m_resolution.height() / 2.0 );
 
-    QLineF line( center, QPointF( center.x() + resolution.height(), center.y() ) );
+    QLineF line( center, QPointF( center.x() + m_resolution.height(), center.y() ) );
     QLineF mapped = matrix.map( line );
 
     Position position;
