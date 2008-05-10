@@ -463,7 +463,7 @@ void MeshView::mouseMoveEvent( QMouseEvent* e )
         }
 
         case ZoomInOut: {
-            m_presenter->adjustCameraZoom( 0.02 * ( e->pos().y() - m_lastPos.y() ) );
+            m_presenter->adjustCameraZoom( -0.02 * ( e->pos().y() - m_lastPos.y() ) );
             break;
         }
     }

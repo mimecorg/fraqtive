@@ -211,7 +211,7 @@ void FractalPresenter::adjustCameraZoom( double delta )
 {
     ViewSettings settings = m_model->viewSettings();
 
-    double zoom = qBound( 10.0, settings.cameraZoom() - 3.5 * delta, 45.0 );
+    double zoom = qBound( 10.0, settings.cameraZoom() + 3.5 * delta, 45.0 );
 
     settings.setCameraZoom( zoom );
     m_model->setViewSettings( settings );

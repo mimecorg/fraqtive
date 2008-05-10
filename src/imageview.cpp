@@ -422,7 +422,7 @@ void ImageView::wheelEvent( QWheelEvent* e )
 
     switch ( mode ) {
         case ZoomPoint: {
-            double zoom = pow( 10.0, delta / zoomFactor );
+            double zoom = pow( 10.0, -delta / zoomFactor );
             matrix.translate( e->pos().x(), e->pos().y() );
             matrix.scale( zoom, zoom );
             matrix.translate( -e->pos().x(), -e->pos().y() );
@@ -430,7 +430,7 @@ void ImageView::wheelEvent( QWheelEvent* e )
         }
 
         case ZoomCenter: {
-            double zoom = pow( 10.0, delta / zoomFactor );
+            double zoom = pow( 10.0, -delta / zoomFactor );
             matrix.translate( center.x(), center.y() );
             matrix.scale( zoom, zoom );
             matrix.translate( -center.x(), -center.y() );
@@ -438,7 +438,7 @@ void ImageView::wheelEvent( QWheelEvent* e )
         }
 
         case RotateCenter: {
-            double angle = delta / rotateFactor;
+            double angle = -delta / rotateFactor;
             matrix.translate( center.x(), center.y() );
             matrix.rotate( angle );
             matrix.translate( -center.x(), -center.y() );
