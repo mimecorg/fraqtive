@@ -222,11 +222,7 @@ void ImageView::updateImage()
 
     const FractalData* data = m_presenter->fractalData();
 
-    if ( m_image.size() != data->size() - QSize( 2, 2 ) )
-        return;
-
-    m_updatedRegion = QRect();
-    partialUpdate( data );
+    initialUpdate( data );
 }
 
 void ImageView::resizeEvent( QResizeEvent* e )
