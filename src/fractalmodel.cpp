@@ -10,6 +10,8 @@
 
 #include "fractalmodel.h"
 
+#include <QTimer>
+
 #include "fractalpresenter.h"
 #include "datafunctions.h"
 #include "fraqtiveapplication.h"

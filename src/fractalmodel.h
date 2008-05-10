@@ -13,8 +13,11 @@
 
 #include <QObject>
 #include <QColor>
+#include <QTime>
 
 #include "datastructures.h"
+
+class QTimer;
 
 class FractalPresenter;
 
