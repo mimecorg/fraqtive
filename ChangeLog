@@ -1,3 +1,10 @@
+0.4.3 (2008-05-12)
+    * added: color and mesh animation
+    * fixed: compatibility with Qt 4.4
+    * fixed: inverted mouse wheel operations
+    * fixed: losing position on multi-core processors
+    * fixed: install image format plugins on Windows
+
 0.4.2 (2008-04-29)
     * added: mesh view
     * added: mesh advanced settings
