@@ -1,16 +1,30 @@
-/**************************************************************************
-* This file is part of the Fraqtive program
-* Copyright (C) 2004-2008 Michał Męciński
+/****************************************************************************
+* Modern Qt style for Windows
+* Copyright (C) 2008 Michał Męciński
 *
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*   1. Redistributions of source code must retain the above copyright notice,
+*      this list of conditions and the following disclaimer.
+*   2. Redistributions in binary form must reproduce the above copyright
+*      notice, this list of conditions and the following disclaimer in the
+*      documentation and/or other materials provided with the distribution.
+*   3. Neither the name of the copyright holder nor the names of the
+*      contributors may be used to endorse or promote products derived from
+*      this software without specific prior written permission.
 *
-* This code is partially based on the QtDotNet Style, a Qt Solutions
-* component, licensed under the GNU General Public License.
-* Copyright (C) 2003-2007 Trolltech ASA.
-**************************************************************************/
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+****************************************************************************/
 
 #include "windowsmodernstyle.h"
 
@@ -29,7 +43,11 @@
 #include <QMenuBar>
 #include <QToolBar>
 #include <QLayout>
+
+#if !defined( WMSTYLE_NO_PLUGIN )
 #include <QStylePlugin>
+#endif
+
 #include <qt_windows.h>
 
 typedef bool (WINAPI* PtrIsAppThemed)();
@@ -357,7 +375,7 @@ int WindowsModernStyle::pixelMetric( PixelMetric metric, const QStyleOption* opt
         case PM_ToolBarItemSpacing:
             return 0;
         case PM_ToolBarIconSize:
-            return 22;
+            return 16;
 
         case PM_ButtonShiftVertical:
         case PM_ButtonShiftHorizontal:
@@ -401,8 +419,14 @@ QSize WindowsModernStyle::sizeFromContents( ContentsType type, const QStyleOptio
 {
     switch ( type ) {
         case CT_MenuBar:
-        case CT_Menu:
             return contentsSize - QSize( 0, 1 );
+
+        case CT_Menu:
+#if ( QT_VERSION < 0x040400 )
+            return contentsSize - QSize( 0, 1 );
+#else
+            return contentsSize;
+#endif
 
         case CT_MenuBarItem:
             return contentsSize + QSize( 16, 6 );
@@ -524,6 +548,14 @@ void WindowsModernStyle::drawPrimitive( PrimitiveElement element, const QStyleOp
                 return;
             }
             break;
+
+        case PE_WindowGradient: {
+            QLinearGradient gradient( option->rect.topLeft(), option->rect.topRight() );
+            gradient.setColorAt( 0.0, m_colorBackgroundBegin );
+            gradient.setColorAt( 0.6, m_colorBackgroundEnd );
+            painter->fillRect( option->rect, gradient );
+            return;
+        }
 
         case PE_PanelMenuBar:
             return;
@@ -759,7 +791,8 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
                 if ( optionItem->menuItemType == QStyleOptionMenuItem::SubMenu ) {
                     QStyleOption optionArrow;
                     optionArrow.initFrom( widget );
-                    optionArrow.rect = option->rect.adjusted( option->rect.width() - 14, 6, 0, -6 );
+                    optionArrow.rect = option->rect.adjusted( 0, 4, -4, -4 );
+                    optionArrow.rect.setLeft( option->rect.right() - 12 );
                     optionArrow.state = option->state & State_Enabled;
                     drawPrimitive( PE_IndicatorArrowRight, &optionArrow, painter, widget );
                 }
@@ -777,15 +810,9 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
                 else
                     rect.setRight( toolBar->childrenRect().right() + 2 );
             }
-            QRegion region = rect;
-            region -= QRect( rect.left(), rect.bottom(), 2, 1 );
-            region -= QRect( rect.right() - 1, rect.bottom(), 2, 1 );
-            region -= QRect( rect.left(),  rect.bottom() - 1, 1, 1 );
-            region -= QRect( rect.right(), rect.bottom() - 1, 1, 1 );
-            region -= QRect( rect.left(), rect.top(), 2, 1 );
-            region -= QRect( rect.right() - 1, rect.top(), 2, 1 );
-            region -= QRect( rect.left(),  rect.top() + 1, 1, 1 );
-            region -= QRect( rect.right(), rect.top() + 1, 1, 1 );
+            QRegion region = rect.adjusted( 2, 0, -2, 0 );
+            region += rect.adjusted( 0, 2, 0, -2 );
+            region += rect.adjusted( 1, 1, -1, -1 );
             painter->setClipRegion( region );
             QLinearGradient gradient;
             if ( vertical )
@@ -967,6 +994,8 @@ void WindowsModernStyle::drawComplexControl( ComplexControl control, const QStyl
         QWindowsXPStyle::drawComplexControl( control, option, painter, widget );
 }
 
+#if !defined( WMSTYLE_NO_PLUGIN )
+
 class WindowsModernStylePlugin : public QStylePlugin
 {
 public: // overrides
@@ -981,10 +1010,12 @@ QStringList WindowsModernStylePlugin::keys() const
 
 QStyle* WindowsModernStylePlugin::create( const QString& key )
 {
-    if (key.toLower() == "windowsmodernstyle")
+    if ( key.toLower() == "windowsmodernstyle" )
         return new WindowsModernStyle();
     return NULL;
 }
+
+#if !defined( WMSTYLE_EXPORT_PLUGIN )
 
 QObject* qt_plugin_instance_windowsmodernstyle()
 {
@@ -995,5 +1026,13 @@ QObject* qt_plugin_instance_windowsmodernstyle()
 }
 
 Q_IMPORT_PLUGIN( windowsmodernstyle )
+
+#else
+
+Q_EXPORT_PLUGIN2( windowsmodernstyle, WindowsModernStylePlugin )
+
+#endif // !defined( WMSTYLE_EXPORT_PLUGIN )
+
+#endif // !defined( WMSTYLE_NO_PLUGIN )
 
 #endif // !defined( NO_STYLE_WINDOWSMODERN )
