@@ -21,7 +21,12 @@ FraqtiveApplication::FraqtiveApplication( int& argc, char** argv ) : QApplicatio
     setStyle( "windowsmodernstyle" );
 #endif
 
-    setWindowIcon( QIcon( ":/icons/fraqtive-48.png" ) ); 
+    QIcon icon;
+    icon.addFile( ":/icons/fraqtive-16.png", QSize( 16, 16 ) );
+    icon.addFile( ":/icons/fraqtive-22.png", QSize( 22, 22 ) );
+    icon.addFile( ":/icons/fraqtive-32.png", QSize( 32, 32 ) );
+    icon.addFile( ":/icons/fraqtive-48.png", QSize( 48, 48 ) );
+    setWindowIcon( icon ); 
 
     registerDataStructures();
 

@@ -13,17 +13,16 @@
    <string>Fraqtive</string>
   </property>
   <widget class="QWidget" name="centralWidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>47</y>
+     <width>798</width>
+     <height>603</height>
+    </rect>
+   </property>
    <layout class="QVBoxLayout" >
-    <property name="leftMargin" >
-     <number>0</number>
-    </property>
-    <property name="topMargin" >
-     <number>0</number>
-    </property>
-    <property name="rightMargin" >
-     <number>0</number>
-    </property>
-    <property name="bottomMargin" >
+    <property name="margin" >
      <number>0</number>
     </property>
     <item>
@@ -32,8 +31,25 @@
    </layout>
   </widget>
   <widget class="QToolBar" name="toolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>21</y>
+     <width>880</width>
+     <height>26</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>Toolbar</string>
+   </property>
+   <property name="iconSize" >
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle" >
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
    </property>
    <attribute name="toolBarArea" >
     <enum>TopToolBarArea</enum>
@@ -57,6 +73,14 @@
    <addaction name="actionFullScreen" />
   </widget>
   <widget class="QDockWidget" name="dockProperties" >
+   <property name="geometry" >
+    <rect>
+     <x>802</x>
+     <y>47</y>
+     <width>78</width>
+     <height>300</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>Properties</string>
    </property>
@@ -64,7 +88,18 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockPropertiesContents" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>78</width>
+      <height>278</height>
+     </rect>
+    </property>
     <layout class="QVBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
      <item>
       <widget class="PropertyToolBox" native="1" name="propertyToolBox" />
      </item>
@@ -72,6 +107,14 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockPreview" >
+   <property name="geometry" >
+    <rect>
+     <x>802</x>
+     <y>351</y>
+     <width>78</width>
+     <height>299</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>Julia Preview</string>
    </property>
@@ -79,7 +122,18 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockPreviewContents" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>78</width>
+      <height>277</height>
+     </rect>
+    </property>
     <layout class="QVBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
      <item>
       <widget class="ViewContainer" native="1" name="previewContainer" />
      </item>
@@ -154,7 +208,8 @@
   </widget>
   <action name="actionQuit" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/quit-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/quit-16.png</normaloff>:/icons/quit-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Quit</string>
@@ -165,7 +220,8 @@
   </action>
   <action name="actionAboutFraqtive" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/fraqtive-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/fraqtive-16.png</normaloff>:/icons/fraqtive-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;About Fraqtive</string>
@@ -173,7 +229,8 @@
   </action>
   <action name="actionAboutQt" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/qt-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/qt-16.png</normaloff>:/icons/qt-16.png</iconset>
    </property>
    <property name="text" >
     <string>About &amp;Qt</string>
@@ -181,7 +238,8 @@
   </action>
   <action name="actionQuickTutorial" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/tutorial-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/tutorial-16.png</normaloff>:/icons/tutorial-16.png</iconset>
    </property>
    <property name="text" >
     <string>Quick &amp;Tutorial</string>
@@ -192,26 +250,38 @@
   </action>
   <action name="actionFractalType" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/edit-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/edit-16.png</normaloff>:/icons/edit-16.png</iconset>
    </property>
    <property name="text" >
     <string>Change &amp;Fractal Type...</string>
    </property>
+   <property name="iconText" >
+    <string>Fractal Type</string>
+   </property>
   </action>
   <action name="actionEditGradient" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/gradient-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/gradient-16.png</normaloff>:/icons/gradient-16.png</iconset>
    </property>
    <property name="text" >
     <string>Edit &amp;Gradient...</string>
    </property>
+   <property name="iconText" >
+    <string>Gradient</string>
+   </property>
   </action>
   <action name="actionDefaultPosition" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/home-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/home-16.png</normaloff>:/icons/home-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Default Position</string>
+   </property>
+   <property name="iconText" >
+    <string>Default</string>
    </property>
    <property name="shortcut" >
     <string>Alt+Home</string>
@@ -219,10 +289,14 @@
   </action>
   <action name="actionNavigateBack" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/back-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/back-16.png</normaloff>:/icons/back-16.png</iconset>
    </property>
    <property name="text" >
     <string>Navigate &amp;Back</string>
+   </property>
+   <property name="iconText" >
+    <string>Back</string>
    </property>
    <property name="shortcut" >
     <string>Alt+Left</string>
@@ -230,10 +304,14 @@
   </action>
   <action name="actionNavigateForward" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/forward-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/forward-16.png</normaloff>:/icons/forward-16.png</iconset>
    </property>
    <property name="text" >
     <string>Navigate &amp;Forward</string>
+   </property>
+   <property name="iconText" >
+    <string>Forward</string>
    </property>
    <property name="shortcut" >
     <string>Alt+Right</string>
@@ -241,7 +319,8 @@
   </action>
   <action name="actionFullScreen" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/fullscreen-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/fullscreen-16.png</normaloff>:/icons/fullscreen-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Full Screen</string>
@@ -252,7 +331,8 @@
   </action>
   <action name="actionLoadBookmark" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/load-bookmark-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/load-bookmark-16.png</normaloff>:/icons/load-bookmark-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Load Bookmark...</string>
@@ -260,7 +340,8 @@
   </action>
   <action name="actionSaveBookmark" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/save-bookmark-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/save-bookmark-16.png</normaloff>:/icons/save-bookmark-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Save Bookmark...</string>
@@ -268,7 +349,8 @@
   </action>
   <action name="actionLoadPreset" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/load-preset-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/load-preset-16.png</normaloff>:/icons/load-preset-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Load Preset...</string>
@@ -276,7 +358,8 @@
   </action>
   <action name="actionSavePreset" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/save-preset-16.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/save-preset-16.png</normaloff>:/icons/save-preset-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Save Preset...</string>
@@ -284,10 +367,14 @@
   </action>
   <action name="actionCopyImage" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/copy-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/copy-16.png</normaloff>:/icons/copy-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Copy Image</string>
+   </property>
+   <property name="iconText" >
+    <string>Copy</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+C</string>
@@ -295,10 +382,14 @@
   </action>
   <action name="actionSaveImage" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/save-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/save-16.png</normaloff>:/icons/save-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Save Image...</string>
+   </property>
+   <property name="iconText" >
+    <string>Save</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+S</string>
@@ -312,7 +403,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/view2d-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/view2d-16.png</normaloff>:/icons/view2d-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;2D View</string>
@@ -326,7 +418,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/icons/view3d-22.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/view3d-16.png</normaloff>:/icons/view3d-16.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;3D View</string>

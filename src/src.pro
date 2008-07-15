@@ -34,7 +34,6 @@ HEADERS   += abstractjobprovider.h \
              loadbookmarkdialog.h \
              loadpresetdialog.h \
              meshview.h \
-             multiiconengine.h \
              parameterspage.h \
              presetlistview.h \
              presetmodel.h \
@@ -73,7 +72,6 @@ SOURCES   += advancedsettingspage.cpp \
              loadpresetdialog.cpp \
              main.cpp \
              meshview.cpp \
-             multiiconengine.cpp \
              parameterspage.cpp \
              presetlistview.cpp \
              presetmodel.cpp \

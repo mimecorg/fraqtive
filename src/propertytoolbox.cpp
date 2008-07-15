@@ -26,6 +26,11 @@ PropertyToolBox::PropertyToolBox( QWidget* parent ) : QToolBox( parent )
     addPage( m_colorSettings );
     addPage( m_advancedSettings );
     addPage( m_animationPage );
+
+    setItemIcon( 0, QIcon( ":/icons/edit-16.png" ) );
+    setItemIcon( 1, QIcon( ":/icons/gradient-16.png" ) );
+    setItemIcon( 2, QIcon( ":/icons/configure-16.png" ) );
+    setItemIcon( 3, QIcon( ":/icons/arrows-16.png" ) );
 }
 
 PropertyToolBox::~PropertyToolBox()

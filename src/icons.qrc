@@ -1,37 +1,29 @@
 <RCC>
     <qresource>
+        <file>icons/arrows-16.png</file>
         <file>icons/back-16.png</file>
-        <file>icons/back-22.png</file>
+        <file>icons/configure-16.png</file>
         <file>icons/copy-16.png</file>
-        <file>icons/copy-22.png</file>
         <file>icons/delete-16.png</file>
         <file>icons/edit-16.png</file>
-        <file>icons/edit-22.png</file>
         <file>icons/forward-16.png</file>
-        <file>icons/forward-22.png</file>
         <file>icons/fraqtive-16.png</file>
         <file>icons/fraqtive-22.png</file>
         <file>icons/fraqtive-32.png</file>
         <file>icons/fraqtive-48.png</file>
         <file>icons/fullscreen-16.png</file>
-        <file>icons/fullscreen-22.png</file>
         <file>icons/gradient-16.png</file>
-        <file>icons/gradient-22.png</file>
         <file>icons/home-16.png</file>
-        <file>icons/home-22.png</file>
         <file>icons/load-bookmark-16.png</file>
         <file>icons/load-preset-16.png</file>
         <file>icons/qt-16.png</file>
         <file>icons/quit-16.png</file>
         <file>icons/rename-16.png</file>
         <file>icons/save-16.png</file>
-        <file>icons/save-22.png</file>
         <file>icons/save-bookmark-16.png</file>
         <file>icons/save-preset-16.png</file>
         <file>icons/tutorial-16.png</file>
         <file>icons/view2d-16.png</file>
-        <file>icons/view2d-22.png</file>
         <file>icons/view3d-16.png</file>
-        <file>icons/view3d-22.png</file>
     </qresource>
 </RCC>
