@@ -1,4 +1,4 @@
-!define VERSION "0.4.3"
+!define VERSION "0.4.4"
 
 !define SRCDIR ".."
 !define BUILDDIR "..\release"

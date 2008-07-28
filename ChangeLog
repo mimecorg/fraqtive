@@ -1,3 +1,7 @@
+0.4.4 (2008-07-28)
+    * updated version of the Windows Modern Style
+    * various UI improvements
+
 0.4.3 (2008-05-12)
     * added: color and mesh animation
     * fixed: compatibility with Qt 4.4
