@@ -10,6 +10,13 @@
 
 #include "fraqtiveapplication.h"
 
+#ifdef HAVE_STATIC_JPEG
+Q_IMPORT_PLUGIN( qjpeg )
+#endif
+#ifdef HAVE_STATIC_TIFF
+Q_IMPORT_PLUGIN( qtiff )
+#endif
+
 int main( int argc, char* argv[] )
 {
     FraqtiveApplication application( argc, argv );

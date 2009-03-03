@@ -129,6 +129,17 @@ sse2 {
     SOURCES += generatorcore.cpp
 }
 
+static {
+    !contains( QT_CONFIG, no-jpeg ) {
+        DEFINES += HAVE_STATIC_JPEG
+        QTPLUGIN += qjpeg
+    }
+    !contains( QT_CONFIG, no-tiff ) {
+        DEFINES += HAVE_STATIC_TIFF
+        QTPLUGIN += qtiff
+    }
+}
+
 INCLUDEPATH += .
 
 PRECOMPILED_HEADER = fraqtive_pch.h
