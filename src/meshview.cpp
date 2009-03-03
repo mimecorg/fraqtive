@@ -270,18 +270,20 @@ void MeshView::paintGL()
 
     if ( m_colorMapping.isMirrored() && hasMirroredRepeat() ) {
         if ( m_colorMapping.isReversed() )
-            glTranslated( offset + 1.0, 0.0, 0.0 );
+            glTranslated( 2.0 * offset + 1.0, 0.0, 0.0 );
         else
-            glTranslated( offset, 0.0, 0.0 );
+            glTranslated( 2.0 * offset, 0.0, 0.0 );
         glScaled( scale, 1.0, 1.0 );
 
         glTexParameteri( GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT_ARB );
     } else {
-        glTranslated( offset, 0.0, 0.0 );
-        if ( m_colorMapping.isReversed() )
+        if ( m_colorMapping.isReversed() ) {
+            glTranslated( -offset, 0.0, 0.0 );
             glScaled( -scale, 1.0, 1.0 );
-        else
+        } else {
+            glTranslated( offset, 0.0, 0.0 );
             glScaled( scale, 1.0, 1.0 );
+        }
 
         glTexParameteri( GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     }
