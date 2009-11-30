@@ -220,11 +220,11 @@ static bool hasMirroredRepeat()
 # define APIENTRY
 #endif
 
-typedef void ( APIENTRY *pfn_glLockArraysEXT )( GLint first, GLsizei count );
-typedef void ( APIENTRY *pfn_glUnlockArraysEXT )(); 
+typedef void ( APIENTRY *_glLockArraysEXT )( GLint first, GLsizei count );
+typedef void ( APIENTRY *_glUnlockArraysEXT )(); 
 
-static pfn_glLockArraysEXT glLockArraysEXT = NULL;
-static pfn_glUnlockArraysEXT glUnlockArraysEXT = NULL;
+static _glLockArraysEXT p_glLockArraysEXT = NULL;
+static _glUnlockArraysEXT p_glUnlockArraysEXT = NULL;
 
 static bool hasLockArrays( const QGLContext* context )
 {
@@ -232,9 +232,9 @@ static bool hasLockArrays( const QGLContext* context )
     static bool result = false;
 
     if ( !checked ) {
-        glLockArraysEXT = (pfn_glLockArraysEXT)context->getProcAddress( "glLockArraysEXT" );
-        glUnlockArraysEXT = (pfn_glUnlockArraysEXT)context->getProcAddress( "glUnlockArraysEXT" );
-        if ( glLockArraysEXT != NULL && glUnlockArraysEXT != NULL )
+        p_glLockArraysEXT = (_glLockArraysEXT)context->getProcAddress( "glLockArraysEXT" );
+        p_glUnlockArraysEXT = (_glUnlockArraysEXT)context->getProcAddress( "glUnlockArraysEXT" );
+        if ( p_glLockArraysEXT != NULL && p_glUnlockArraysEXT != NULL )
             result = true;
         checked = true;
     }
@@ -319,7 +319,7 @@ void MeshView::paintGL()
     int width = m_resolution.width();
 
     if ( hasLockArrays( context() ) )
-        glLockArraysEXT( 0, m_resolution.height() * m_resolution.width() );
+        p_glLockArraysEXT( 0, m_resolution.height() * m_resolution.width() );
 
     int* indexArray = new int[ 2 * width ];
 
@@ -335,7 +335,7 @@ void MeshView::paintGL()
     delete[] indexArray;
 
     if ( hasLockArrays( context() ) )
-        glUnlockArraysEXT();
+        p_glUnlockArraysEXT();
 }
 
 void MeshView::generateTexture()
