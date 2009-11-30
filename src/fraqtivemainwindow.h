@@ -33,24 +33,24 @@ protected: // overrides
     void closeEvent( QCloseEvent* e );
 
 private slots:
-    void on_actionQuit_activated();
-    void on_actionFractalType_activated();
-    void on_actionEditGradient_activated();
-    void on_actionFullScreen_activated();
-    void on_actionNavigateBack_activated();
-    void on_actionNavigateForward_activated();
-    void on_actionDefaultPosition_activated();
-    void on_actionLoadPreset_activated();
-    void on_actionSavePreset_activated();
-    void on_actionLoadBookmark_activated();
-    void on_actionSaveBookmark_activated();
-    void on_actionSaveImage_activated();
-    void on_actionCopyImage_activated();
-    void on_action2DView_activated();
-    void on_action3DView_activated();
-    void on_actionQuickTutorial_activated();
-    void on_actionAboutFraqtive_activated();
-    void on_actionAboutQt_activated();
+    void on_actionQuit_triggered();
+    void on_actionFractalType_triggered();
+    void on_actionEditGradient_triggered();
+    void on_actionFullScreen_triggered();
+    void on_actionNavigateBack_triggered();
+    void on_actionNavigateForward_triggered();
+    void on_actionDefaultPosition_triggered();
+    void on_actionLoadPreset_triggered();
+    void on_actionSavePreset_triggered();
+    void on_actionLoadBookmark_triggered();
+    void on_actionSaveBookmark_triggered();
+    void on_actionSaveImage_triggered();
+    void on_actionCopyImage_triggered();
+    void on_action2DView_triggered();
+    void on_action3DView_triggered();
+    void on_actionQuickTutorial_triggered();
+    void on_actionAboutFraqtive_triggered();
+    void on_actionAboutQt_triggered();
 
     void positionChanged();
     void navigationChanged();

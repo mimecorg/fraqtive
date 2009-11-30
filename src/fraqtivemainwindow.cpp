@@ -96,7 +96,7 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
         restoreState( config->value( "State" ).toByteArray(), 1 );
 
     if ( config->value( "ShowTutorial", true ).toBool() )
-        on_actionQuickTutorial_activated();
+        on_actionQuickTutorial_triggered();
 }
 
 FraqtiveMainWindow::~FraqtiveMainWindow()
@@ -136,7 +136,7 @@ bool FraqtiveMainWindow::eventFilter( QObject* watched, QEvent* e )
     return QMainWindow::eventFilter( watched, e );
 }
 
-void FraqtiveMainWindow::on_actionQuit_activated()
+void FraqtiveMainWindow::on_actionQuit_triggered()
 {
     if ( isFullScreenMode() )
         leaveFullScreenMode();
@@ -144,7 +144,7 @@ void FraqtiveMainWindow::on_actionQuit_activated()
     close();
 }
 
-void FraqtiveMainWindow::on_actionFractalType_activated()
+void FraqtiveMainWindow::on_actionFractalType_triggered()
 {
     FractalTypeDialog dialog( this, m_model );
 
@@ -152,7 +152,7 @@ void FraqtiveMainWindow::on_actionFractalType_activated()
         m_model->setParameters( dialog.fractalType(), dialog.position() );
 }
 
-void FraqtiveMainWindow::on_actionEditGradient_activated()
+void FraqtiveMainWindow::on_actionEditGradient_triggered()
 {
     GradientDialog dialog( this );
     dialog.setGradient( m_model->gradient() );
@@ -167,7 +167,7 @@ void FraqtiveMainWindow::applyGradient( const Gradient& gradient )
     m_model->setGradient( gradient );
 }
 
-void FraqtiveMainWindow::on_actionFullScreen_activated()
+void FraqtiveMainWindow::on_actionFullScreen_triggered()
 {
     if ( isFullScreenMode() )
         leaveFullScreenMode();
@@ -199,7 +199,7 @@ void FraqtiveMainWindow::leaveFullScreenMode()
     show();
 }
 
-void FraqtiveMainWindow::on_actionDefaultPosition_activated()
+void FraqtiveMainWindow::on_actionDefaultPosition_triggered()
 {
     m_model->setDefaultPosition();
 }
@@ -209,12 +209,12 @@ void FraqtiveMainWindow::positionChanged()
     m_ui.actionDefaultPosition->setEnabled( !m_model->hasDefaultPosition() );
 }
 
-void FraqtiveMainWindow::on_actionNavigateBack_activated()
+void FraqtiveMainWindow::on_actionNavigateBack_triggered()
 {
     m_model->navigateBackward();
 }
 
-void FraqtiveMainWindow::on_actionNavigateForward_activated()
+void FraqtiveMainWindow::on_actionNavigateForward_triggered()
 {
     m_model->navigateForward();
 }
@@ -225,35 +225,35 @@ void FraqtiveMainWindow::navigationChanged()
     m_ui.actionNavigateForward->setEnabled( m_model->canNavigateForward() );
 }
 
-void FraqtiveMainWindow::on_actionLoadPreset_activated()
+void FraqtiveMainWindow::on_actionLoadPreset_triggered()
 {
     LoadPresetDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionSavePreset_activated()
+void FraqtiveMainWindow::on_actionSavePreset_triggered()
 {
     SavePresetDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionLoadBookmark_activated()
+void FraqtiveMainWindow::on_actionLoadBookmark_triggered()
 {
     LoadBookmarkDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionSaveBookmark_activated()
+void FraqtiveMainWindow::on_actionSaveBookmark_triggered()
 {
     SaveBookmarkDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionSaveImage_activated()
+void FraqtiveMainWindow::on_actionSaveImage_triggered()
 {
     QList<QByteArray> supportedFormats = QImageWriter::supportedImageFormats();
 
@@ -315,7 +315,7 @@ void FraqtiveMainWindow::on_actionSaveImage_activated()
     }
 }
 
-void FraqtiveMainWindow::on_actionCopyImage_activated()
+void FraqtiveMainWindow::on_actionCopyImage_triggered()
 {
     QImage image = currentImage();
 
@@ -331,7 +331,7 @@ QImage FraqtiveMainWindow::currentImage()
     return QImage();
 }
 
-void FraqtiveMainWindow::on_action2DView_activated()
+void FraqtiveMainWindow::on_action2DView_triggered()
 {
     if ( !qobject_cast<ImageView*>( m_ui.mainContainer->view() ) ) {
         ImageView* view = new ImageView( m_ui.mainContainer, m_model->presenter() );
@@ -349,7 +349,7 @@ void FraqtiveMainWindow::on_action2DView_activated()
     m_ui.action3DView->setChecked( false );
 }
 
-void FraqtiveMainWindow::on_action3DView_activated()
+void FraqtiveMainWindow::on_action3DView_triggered()
 {
     if ( !qobject_cast<MeshView*>( m_ui.mainContainer->view() ) ) {
         MeshView* view = new MeshView( m_ui.mainContainer, m_model->presenter() );
@@ -368,7 +368,7 @@ void FraqtiveMainWindow::on_action3DView_activated()
     m_ui.action3DView->setChecked( true );
 }
 
-void FraqtiveMainWindow::on_actionQuickTutorial_activated()
+void FraqtiveMainWindow::on_actionQuickTutorial_triggered()
 {
     if ( !m_tutorialDialog )
         m_tutorialDialog = new TutorialDialog( this );
@@ -377,7 +377,7 @@ void FraqtiveMainWindow::on_actionQuickTutorial_activated()
     m_tutorialDialog->activateWindow();
 }
 
-void FraqtiveMainWindow::on_actionAboutFraqtive_activated()
+void FraqtiveMainWindow::on_actionAboutFraqtive_triggered()
 {
     QString version = "0.4.4";
     QString link = "<a href=\"http://fraqtive.mimec.org\">fraqtive.mimec.org</a>";
@@ -392,7 +392,7 @@ void FraqtiveMainWindow::on_actionAboutFraqtive_activated()
     QMessageBox::about( this, tr( "About Fraqtive" ), message );
 }
 
-void FraqtiveMainWindow::on_actionAboutQt_activated()
+void FraqtiveMainWindow::on_actionAboutQt_triggered()
 {
     QMessageBox::aboutQt( this );
 }
