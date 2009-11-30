@@ -1,6 +1,6 @@
 /****************************************************************************
 * Modern Qt style for Windows
-* Copyright (C) 2008 Michał Męciński
+* Copyright (C) 2008-2009 Michał Męciński
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
@@ -71,6 +71,9 @@ public: // overrides
     void unpolish( QWidget* widget );
 
     int pixelMetric( PixelMetric metric, const QStyleOption* option, const QWidget* widget ) const;
+
+    int styleHint( StyleHint hint, const QStyleOption* option, const QWidget* widget,
+        QStyleHintReturn* returnData = NULL ) const;
 
     QSize sizeFromContents( ContentsType type, const QStyleOption* option,
         const QSize& contentsSize, const QWidget* widget ) const;

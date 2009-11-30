@@ -1,6 +1,6 @@
 /****************************************************************************
 * Modern Qt style for Windows
-* Copyright (C) 2008 Michał Męciński
+* Copyright (C) 2008-2009 Michał Męciński
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
@@ -136,9 +136,9 @@ void WindowsModernStyle::polish( QPalette& palette )
         QString name = QString::fromWCharArray( themeFileName );
         QString color = QString::fromWCharArray( themeColor );
         if ( name.endsWith( "Luna.msstyles" ) ) {
-            if ( color == "HomeStead" )
+            if ( color == QLatin1String( "HomeStead" ) )
                 m_mode = Olive;
-            else if ( color == "Metallic" )
+            else if ( color == QLatin1String( "Metallic" ) )
                 m_mode = Silver;
             else
                 m_mode = Blue;
@@ -377,6 +377,9 @@ int WindowsModernStyle::pixelMetric( PixelMetric metric, const QStyleOption* opt
         case PM_ToolBarIconSize:
             return 16;
 
+        case PM_MenuButtonIndicator:
+            return 12;
+
         case PM_ButtonShiftVertical:
         case PM_ButtonShiftHorizontal:
             if ( widget && qobject_cast<QToolBar*>( widget->parentWidget() ) )
@@ -397,7 +400,7 @@ int WindowsModernStyle::pixelMetric( PixelMetric metric, const QStyleOption* opt
 
         case PM_TabBarBaseOverlap:
             if ( isStyledTabWidget( widget ) || isStyledTabBar( widget ) )
-                return 1;
+                return 0;
             break;
         case PM_TabBarTabShiftVertical:
             if ( const QTabBar* tabBar = isStyledTabBar( widget ) )
@@ -412,6 +415,15 @@ int WindowsModernStyle::pixelMetric( PixelMetric metric, const QStyleOption* opt
         return QWindowsVistaStyle::pixelMetric( metric, option, widget );
     else
         return QWindowsXPStyle::pixelMetric( metric, option, widget );
+}
+
+int WindowsModernStyle::styleHint( StyleHint hint, const QStyleOption* option, const QWidget* widget,
+    QStyleHintReturn* returnData ) const
+{
+    if ( useVista() )
+        return QWindowsVistaStyle::styleHint( hint, option, widget, returnData );
+    else
+        return QWindowsXPStyle::styleHint( hint, option, widget, returnData );
 }
 
 QSize WindowsModernStyle::sizeFromContents( ContentsType type, const QStyleOption* option,
@@ -467,13 +479,8 @@ QRect WindowsModernStyle::subElementRect( SubElement element, const QStyleOption
             break;
 
         case SE_TabWidgetTabContents:
-            if ( const QTabWidget* tabWidget = isStyledTabWidget( widget ) ) {
+            if ( isStyledTabWidget( widget ) )
                 rect = QWindowsStyle::subElementRect( SE_TabWidgetTabPane, option, widget );
-                if ( tabWidget->tabPosition() == QTabWidget::South )
-                    rect.adjust( 0, 0, 0, -1 );
-                else
-                    rect.adjust( 0, 1, 0, 0 );
-            }
             break;
 
         case SE_TabWidgetTabBar:
@@ -625,6 +632,41 @@ void WindowsModernStyle::drawPrimitive( PrimitiveElement element, const QStyleOp
                     option->rect.right() - 2, ( option->rect.top() + option->rect.bottom() + 1 ) / 2 );
             return;
 
+        case PE_IndicatorButtonDropDown: {
+            QToolBar* toolBar;
+            if ( widget && ( toolBar = qobject_cast<QToolBar*>( widget->parentWidget() ) ) ) {
+                QRect rect = option->rect.adjusted( -1, 0, -1, -1 );
+                bool selected = option->state & State_MouseOver && option->state & State_Enabled;
+                bool sunken = option->state & State_Sunken;
+                if ( selected || sunken ) {
+                    painter->setPen( m_colorItemBorder );
+                    if ( toolBar->orientation() == Qt::Vertical ) {
+                        if ( sunken )
+                            painter->setBrush( m_colorItemSunkenEnd );
+                        else
+                            painter->setBrush( m_colorItemBackgroundEnd );
+                    } else {
+                        QLinearGradient gradient( rect.topLeft(), rect.bottomLeft() );
+                        if ( sunken ) {
+                            gradient.setColorAt( 0.0, m_colorItemSunkenBegin );
+                            gradient.setColorAt( 0.5, m_colorItemSunkenMiddle );
+                            gradient.setColorAt( 1.0, m_colorItemSunkenEnd );
+                        } else {
+                            gradient.setColorAt( 0.0, m_colorItemBackgroundBegin );
+                            gradient.setColorAt( 0.5, m_colorItemBackgroundMiddle );
+                            gradient.setColorAt( 1.0, m_colorItemBackgroundEnd );
+                        }
+                        painter->setBrush( gradient );
+                    }
+                    painter->drawRect( rect );
+                }
+                QStyleOption optionArrow = *option;
+                optionArrow.rect.adjust( 2, 2, -2, -2 );
+                drawPrimitive( PE_IndicatorArrowDown, &optionArrow, painter, widget );
+                return;
+            }
+        }
+
         case PE_IndicatorDockWidgetResizeHandle:
             return;
 
@@ -640,38 +682,15 @@ void WindowsModernStyle::drawPrimitive( PrimitiveElement element, const QStyleOp
             break;
 
         case PE_FrameTabWidget:
-            if ( const QTabWidget* tabWidget = isStyledTabWidget( widget ) ) {
+            if ( isStyledTabWidget( widget ) ) {
                 painter->fillRect( option->rect, option->palette.window() );
-                painter->setPen( m_colorBorder );
-                if ( tabWidget->tabPosition() == QTabWidget::North )
-                    painter->drawLine( option->rect.topLeft(), option->rect.topRight() );
-                else
-                    painter->drawLine( option->rect.bottomLeft(), option->rect.bottomRight() );
                 return;
             }
             break;
 
         case PE_FrameTabBarBase:
-            if ( const QTabBar* tabBar = isStyledTabBar( widget ) ) {
-                if ( const QStyleOptionTabBarBase *optionTabBar = qstyleoption_cast<const QStyleOptionTabBarBase *>( option ) ) {
-                    QRegion region( option->rect );
-                    QRect rect = optionTabBar->selectedTabRect;
-                    if ( tabBar->currentIndex() > 0 )
-                        rect.adjust( -2, 0, 0, 0 );
-                    if ( tabBar->currentIndex() < tabBar->count() - 1 )
-                        rect.adjust( 0, 0, 2, 0 );
-                    region -= rect;
-                    painter->save();
-                    painter->setClipRegion(region);
-                    painter->setPen( m_colorBorder );
-                    if ( tabBar->shape() == QTabBar::RoundedSouth )
-                        painter->drawLine( option->rect.bottomLeft(), option->rect.bottomRight() );
-                    else
-                        painter->drawLine( option->rect.topLeft(), option->rect.topRight() );
-                    painter->restore();
-                    return;
-                }
-            }
+            if ( isStyledTabBar( widget ) )
+                return;
             break;
 
         default:
@@ -749,7 +768,7 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
                 }
                 QRect checkRect = option->rect.adjusted( 2, 1, -2, -2 );
                 checkRect.setWidth( 20 );
-                if ( optionItem->checked ) {
+                if ( optionItem->checked && option->state & QStyle::State_Enabled ) {
                     painter->setPen( m_colorItemBorder );
                     if ( option->state & QStyle::State_Selected && option->state & QStyle::State_Enabled )
                         painter->setBrush( m_colorItemSunkenBegin );
@@ -810,6 +829,7 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
                 else
                     rect.setRight( toolBar->childrenRect().right() + 2 );
             }
+            painter->save();
             QRegion region = rect.adjusted( 2, 0, -2, 0 );
             region += rect.adjusted( 0, 2, 0, -2 );
             region += rect.adjusted( 1, 1, -1, -1 );
@@ -831,6 +851,7 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
             painter->drawLine( rect.topRight() + QPoint( 0, 2 ), rect.bottomRight() - QPoint( 0, 2 ) );
             painter->setPen( m_colorBorderLight );
             painter->drawPoint( rect.bottomRight() - QPoint( 1, 1 ) );
+            painter->restore();
             return;
         }
 
@@ -873,13 +894,13 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
                     if ( bottom )
                         rect.adjust( firstTab ? 0 : -2, -1, lastTab ? -1 : 1, -1 );
                     else
-                        rect.adjust( firstTab ? 0 : -2, 0, lastTab ? -1 : 1, 0 );
+                        rect.adjust( firstTab ? 0 : -2, 0, lastTab ? -1 : 1, 1 );
                 } else {
                     if ( bottom ) {
-                        rect.adjust( 0, 0, lastTab ? -1 : 0, -2 );
+                        rect.adjust( 0, -1, lastTab ? -1 : 0, -2 );
                         painter->setClipRect( rect.adjusted( 0, 1, 1, 1 ) );
                     } else {
-                        rect.adjust( 0, 1, lastTab ? -1 : 0, -1 );
+                        rect.adjust( 0, 1, lastTab ? -1 : 0, 0 );
                         painter->setClipRect( rect.adjusted( 0, 0, 1, 0 ) );
                     }
                 }
@@ -889,7 +910,7 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
                 else
                     gradient = QLinearGradient( rect.topLeft(), rect.bottomLeft() );
                 if ( option->state & State_Selected ) {
-                    gradient.setColorAt( 0.0, m_colorItemBackgroundEnd );
+                    gradient.setColorAt( 0.0, m_colorItemBackgroundBegin );
                     gradient.setColorAt( 1.0, option->palette.window().color() );
                     painter->setPen( m_colorBorder );
                 } else if ( option->state & State_MouseOver && option->state & State_Enabled ) {
@@ -929,6 +950,11 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
             return;
         }
 
+        case CE_Splitter:
+            if ( qobject_cast<const QMainWindow*>( widget->window() ) )
+                return;
+            break;
+
         default:
             break;
     }
@@ -947,11 +973,19 @@ void WindowsModernStyle::drawComplexControl( ComplexControl control, const QStyl
             QToolBar* toolBar;
             if ( widget && ( toolBar = qobject_cast<QToolBar*>( widget->parentWidget() ) ) ) {
                 if ( const QStyleOptionToolButton* optionToolButton = qstyleoption_cast<const QStyleOptionToolButton*>( option ) ) {
-                    bool selected = option->state & State_MouseOver && option->state & State_Enabled;
-                    bool checked = option->state & State_On;
-                    bool sunken = option->state & State_Sunken;
+                    QRect buttonRect = subControlRect( control, option, SC_ToolButton, widget );
+                    QStyle::State buttonState = option->state & ~State_Sunken;
+                    if ( option->state & State_Sunken ) {
+                        if ( optionToolButton->activeSubControls & SC_ToolButton )
+                            buttonState |= State_Sunken;
+                        else if ( optionToolButton->activeSubControls & SC_ToolButtonMenu )
+                            buttonState |= State_MouseOver;
+                    }
+                    bool selected = buttonState & State_MouseOver && option->state & State_Enabled;
+                    bool checked = buttonState & State_On;
+                    bool sunken = buttonState & State_Sunken;
                     if ( selected || checked || sunken ) {
-                        QRect rect = option->rect.adjusted( 0, 0, -1, -1 );
+                        QRect rect = buttonRect.adjusted( 0, 0, -1, -1 );
                         painter->setPen( m_colorItemBorder );
                         QLinearGradient gradient;
                         if ( toolBar->orientation() == Qt::Vertical )
@@ -976,8 +1010,26 @@ void WindowsModernStyle::drawComplexControl( ComplexControl control, const QStyl
                     }
                     QStyleOptionToolButton optionLabel = *optionToolButton;
                     int fw = pixelMetric( PM_DefaultFrameWidth, option, widget );
-                    optionLabel.rect = option->rect.adjusted( fw, fw, -fw, -fw );
+                    optionLabel.rect = buttonRect.adjusted( fw, fw, -fw, -fw );
                     drawControl( CE_ToolButtonLabel, &optionLabel, painter, widget );
+                    if ( optionToolButton->subControls & SC_ToolButtonMenu ) {
+                        QStyleOption optionMenu = *optionToolButton;
+                        optionMenu.rect = subControlRect( control, option, SC_ToolButtonMenu, widget );
+                        optionMenu.state = optionToolButton->state & ~State_Sunken;
+                        if ( optionToolButton->state & State_Sunken ) {
+                            if ( optionToolButton->activeSubControls & SC_ToolButton )
+                                optionMenu.state |= State_MouseOver | State_Sunken;
+                            else if ( optionToolButton->activeSubControls & SC_ToolButtonMenu )
+                                optionMenu.state |= State_Sunken;
+                        }
+                        drawPrimitive( PE_IndicatorButtonDropDown, &optionMenu, painter, widget );
+                    } else if ( optionToolButton->features & QStyleOptionToolButton::HasMenu ) {
+                        int size = pixelMetric( PM_MenuButtonIndicator, option, widget );
+                        QRect rect = optionToolButton->rect;
+                        QStyleOptionToolButton optionArrow = *optionToolButton;
+                        optionArrow.rect = QRect( rect.right() + 4 - size, rect.height() - size + 4, size - 5, size - 5 );
+                        drawPrimitive( PE_IndicatorArrowDown, &optionArrow, painter, widget );
+                    }
                     return;
                 }
             }
@@ -1010,7 +1062,7 @@ QStringList WindowsModernStylePlugin::keys() const
 
 QStyle* WindowsModernStylePlugin::create( const QString& key )
 {
-    if ( key.toLower() == "windowsmodernstyle" )
+    if ( key.toLower() == QLatin1String( "windowsmodernstyle" ) )
         return new WindowsModernStyle();
     return NULL;
 }
