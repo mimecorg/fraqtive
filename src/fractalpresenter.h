@@ -60,10 +60,10 @@ public:
     void setHoveringPoint( const QPointF& point );
     void clearHovering();
 
-    void setTrackingTransform( const QMatrix& transform );
+    void setTrackingTransform( const QTransform& transform );
     void clearTracking();
 
-    void changePosition( const QMatrix& transform );
+    void changePosition( const QTransform& transform );
 
     void switchToJulia( const QPointF& point );
 
@@ -73,8 +73,8 @@ protected: // overrides
     void customEvent( QEvent* e );
 
 private:
-    QMatrix matrixFromPosition( const Position& position );
-    Position positionFromMatrix( const QMatrix& matrix );
+    QTransform transformFromPosition( const Position& position );
+    Position positionFromTransform( const QTransform& transform );
 
     FractalType juliaType( const QPointF& point );
     Position juliaPosition();

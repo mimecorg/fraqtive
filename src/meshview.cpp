@@ -69,7 +69,7 @@ void MeshView::clearView()
     updateGL();
 }
 
-void MeshView::transformView( const QMatrix& /*transform*/ )
+void MeshView::transformView( const QTransform& /*transform*/ )
 {
     // not used in 3D mode
 }

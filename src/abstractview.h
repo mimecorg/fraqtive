@@ -12,7 +12,7 @@
 #define ABSTRACTVIEW_H
 
 class QColor;
-class QMatrix;
+class QTransform;
 
 class FractalData;
 class Gradient;
@@ -29,7 +29,7 @@ public:
 public:
     virtual void clearView() = 0;
 
-    virtual void transformView( const QMatrix& transform ) = 0;
+    virtual void transformView( const QTransform& transform ) = 0;
 
     virtual void initialUpdate( const FractalData* data ) = 0;
     virtual void partialUpdate( const FractalData* data ) = 0;

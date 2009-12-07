@@ -33,7 +33,7 @@ public:
 public: // AbstractView implementation
     void clearView();
 
-    void transformView( const QMatrix& transform );
+    void transformView( const QTransform& transform );
 
     void initialUpdate( const FractalData* data );
     void partialUpdate( const FractalData* data );
@@ -70,7 +70,7 @@ private:
 
     void calculateScale();
 
-    QMatrix worldMatrix();
+    QTransform worldTransform();
 
 private:
     enum Tracking
@@ -104,13 +104,13 @@ private:
 
     QRect m_updatedRegion;
 
-    QMatrix m_scale;
-    QMatrix m_invScale;
+    QTransform m_scale;
+    QTransform m_invScale;
 
     Tracking m_tracking;
     QPoint m_trackStart;
 
-    QMatrix m_transform;
+    QTransform m_transform;
 };
 
 #endif

@@ -66,7 +66,7 @@ void ImageView::clearView()
     update();
 }
 
-void ImageView::transformView( const QMatrix& transform )
+void ImageView::transformView( const QTransform& transform )
 {
     if ( m_image.isNull() )
         return;
@@ -76,7 +76,7 @@ void ImageView::transformView( const QMatrix& transform )
 
     QPainter painter( &image );
     painter.setRenderHint( QPainter::SmoothPixmapTransform );
-    painter.setWorldMatrix( transform * m_scale );
+    painter.setWorldTransform( transform * m_scale );
     painter.drawImage( 0, 0, m_image );
 
     m_image = image;
@@ -95,7 +95,7 @@ void ImageView::initialUpdate( const FractalData* data )
         if ( !m_image.isNull() ) {
             QPainter painter( &image );
             painter.setRenderHint( QPainter::SmoothPixmapTransform );
-            painter.setWorldMatrix( m_scale );
+            painter.setWorldTransform( m_scale );
             painter.drawImage( 0, 0, m_image );
         }
 
@@ -119,7 +119,7 @@ void ImageView::partialUpdate( const FractalData* data )
         drawImage( data, region );
         m_updatedRegion = validRegions.first();
 
-        update( worldMatrix().mapRect( region ).adjusted( -1, -1, 1, 1 ) );
+        update( worldTransform().mapRect( region ).adjusted( -1, -1, 1, 1 ) );
     }
 }
 
@@ -253,11 +253,11 @@ void ImageView::paintEvent( QPaintEvent* /*e*/ )
 
     QPainter painter( this );
     painter.setRenderHint( QPainter::SmoothPixmapTransform );
-    painter.setWorldMatrix( worldMatrix() );
+    painter.setWorldTransform( worldTransform() );
     painter.drawImage( 0, 0, m_image );
 }
 
-QMatrix ImageView::worldMatrix()
+QTransform ImageView::worldTransform()
 {
     if ( m_tracking != NoTracking )
         return m_transform * m_scale;
@@ -307,7 +307,7 @@ void ImageView::mouseMoveEvent( QMouseEvent* e )
         return;
 
     if ( m_tracking == NoTracking ) {
-        QPointF point = worldMatrix().inverted().map( e->pos() );
+        QPointF point = worldTransform().inverted().map( e->pos() );
         m_presenter->setHoveringPoint( point );
         return;
     }
@@ -318,19 +318,19 @@ void ImageView::mouseMoveEvent( QMouseEvent* e )
     QPointF center( width() / 2.0, height() / 2.0 );
     QLineF offset( m_trackStart, e->pos() );
 
-    QMatrix matrix;
+    QTransform transform;
 
     // first calculate new transformation in view coordinates
     switch ( m_tracking ) {
         case DragMove:
-            matrix.translate( offset.dx(), offset.dy() );
+            transform.translate( offset.dx(), offset.dy() );
             break;
 
         case ZoomCenter: {
             double zoom = pow( 10.0, offset.dy() / zoomFactor );
-            matrix.translate( center.x(), center.y() );
-            matrix.scale( zoom, zoom );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.scale( zoom, zoom );
+            transform.translate( -center.x(), -center.y() );
             break;
         }
 
@@ -338,9 +338,9 @@ void ImageView::mouseMoveEvent( QMouseEvent* e )
         case DragZoomOut: {
             double direction = ( m_tracking == DragZoomIn ) ? 1.0 : -1.0;
             double zoom = pow( 10.0, direction * offset.length() / zoomFactor );
-            matrix.translate( m_trackStart.x(), m_trackStart.y() );
-            matrix.scale( zoom, zoom );
-            matrix.translate( -m_trackStart.x(), -m_trackStart.y() );
+            transform.translate( m_trackStart.x(), m_trackStart.y() );
+            transform.scale( zoom, zoom );
+            transform.translate( -m_trackStart.x(), -m_trackStart.y() );
             break;
             }
 
@@ -349,23 +349,23 @@ void ImageView::mouseMoveEvent( QMouseEvent* e )
             QLineF to( center, e->pos() );
             double fromAngle = atan2( from.dy(), from.dx() );
             double toAngle = atan2( to.dy(), to.dx() );
-            matrix.translate( center.x(), center.y() );
-            matrix.rotate( ( toAngle - fromAngle ) * 180.0 / M_PI );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.rotate( ( toAngle - fromAngle ) * 180.0 / M_PI );
+            transform.translate( -center.x(), -center.y() );
             break;
         }
 
         case RotateCenter: {
             double angle = offset.dx() / rotateFactor;
-            matrix.translate( center.x(), center.y() );
-            matrix.rotate( angle );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.rotate( angle );
+            transform.translate( -center.x(), -center.y() );
             break;
         }
     }
 
     // then convert it from view coordinates to image coordinates
-    m_transform = m_scale * matrix * m_invScale;
+    m_transform = m_scale * transform * m_invScale;
     m_presenter->setTrackingTransform( m_transform );
 
     update();
@@ -388,7 +388,7 @@ void ImageView::mouseReleaseEvent( QMouseEvent* /*e*/ )
 void ImageView::mouseDoubleClickEvent( QMouseEvent* e )
 {
     if ( m_interactive && !m_image.isNull() ) {
-        QPointF point = worldMatrix().inverted().map( e->pos() );
+        QPointF point = worldTransform().inverted().map( e->pos() );
         m_presenter->switchToJulia( point );
     }
 }
@@ -414,35 +414,35 @@ void ImageView::wheelEvent( QWheelEvent* e )
     QPointF center( width() / 2.0, height() / 2.0 );
     double delta = e->delta() / 8.0;
 
-    QMatrix matrix;
+    QTransform transform;
 
     switch ( mode ) {
         case ZoomPoint: {
             double zoom = pow( 10.0, -delta / zoomFactor );
-            matrix.translate( e->pos().x(), e->pos().y() );
-            matrix.scale( zoom, zoom );
-            matrix.translate( -e->pos().x(), -e->pos().y() );
+            transform.translate( e->pos().x(), e->pos().y() );
+            transform.scale( zoom, zoom );
+            transform.translate( -e->pos().x(), -e->pos().y() );
             break;
         }
 
         case ZoomCenter: {
             double zoom = pow( 10.0, -delta / zoomFactor );
-            matrix.translate( center.x(), center.y() );
-            matrix.scale( zoom, zoom );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.scale( zoom, zoom );
+            transform.translate( -center.x(), -center.y() );
             break;
         }
 
         case RotateCenter: {
             double angle = -delta / rotateFactor;
-            matrix.translate( center.x(), center.y() );
-            matrix.rotate( angle );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.rotate( angle );
+            transform.translate( -center.x(), -center.y() );
             break;
         }
     }
 
-    m_presenter->changePosition( m_scale * matrix * m_invScale );
+    m_presenter->changePosition( m_scale * transform * m_invScale );
 
     e->accept();
 }
@@ -472,42 +472,42 @@ void ImageView::keyPressEvent( QKeyEvent* e )
     QPointF center( width() / 2.0, height() / 2.0 );
     double step = height() / 4.0;
 
-    QMatrix matrix;
+    QTransform transform;
 
     switch ( e->key() ) {
         case Qt::Key_Up:
-            matrix.translate( 0, step );
+            transform.translate( 0, step );
             break;
 
         case Qt::Key_Down:
-            matrix.translate( 0, -step );
+            transform.translate( 0, -step );
             break;
 
         case Qt::Key_Left:
-            matrix.translate( step, 0 );
+            transform.translate( step, 0 );
             break;
 
         case Qt::Key_Right:
-            matrix.translate( -step, 0 );
+            transform.translate( -step, 0 );
             break;
 
         case Qt::Key_Plus:
         case Qt::Key_Equal:
-            matrix.translate( center.x(), center.y() );
-            matrix.scale( 2.0, 2.0 );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.scale( 2.0, 2.0 );
+            transform.translate( -center.x(), -center.y() );
             break;
 
         case Qt::Key_Minus:
-            matrix.translate( center.x(), center.y() );
-            matrix.scale( 0.5, 0.5 );
-            matrix.translate( -center.x(), -center.y() );
+            transform.translate( center.x(), center.y() );
+            transform.scale( 0.5, 0.5 );
+            transform.translate( -center.x(), -center.y() );
             break;
     }
 
-    if ( !matrix.isIdentity() ) {
+    if ( !transform.isIdentity() ) {
         e->accept();
-        m_presenter->changePosition( m_scale * matrix * m_invScale );
+        m_presenter->changePosition( m_scale * transform * m_invScale );
     } else {
         e->ignore();
     }

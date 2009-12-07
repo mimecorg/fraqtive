@@ -31,7 +31,7 @@ public:
 public: // AbstractView implementation
     void clearView();
 
-    void transformView( const QMatrix& transform );
+    void transformView( const QTransform& transform );
 
     void initialUpdate( const FractalData* data );
     void partialUpdate( const FractalData* data );

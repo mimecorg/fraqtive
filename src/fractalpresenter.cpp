@@ -16,7 +16,7 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-#include <QMatrix>
+#include <QTransform>
 
 #include "fractalgenerator.h"
 #include "fractalmodel.h"
@@ -105,10 +105,10 @@ void FractalPresenter::setPosition( const Position& position )
 {
     if ( m_position != position ) {
         if ( m_enabled && !m_preview ) {
-            QMatrix oldMatrix = matrixFromPosition( m_position );
-            QMatrix newMatrix = matrixFromPosition( position );
-            QMatrix transform = ( newMatrix * oldMatrix.inverted() ).inverted();
-            m_view->transformView( transform );
+            QTransform oldTransform = transformFromPosition( m_position );
+            QTransform newTransform = transformFromPosition( position );
+            QTransform difference = ( newTransform * oldTransform.inverted() ).inverted();
+            m_view->transformView( difference );
         }
         m_position = position;
         m_generator->setPosition( position );
@@ -181,12 +181,12 @@ void FractalPresenter::clearHovering()
         m_model->clearHovering();
 }
 
-void FractalPresenter::setTrackingTransform( const QMatrix& transform )
+void FractalPresenter::setTrackingTransform( const QTransform& transform )
 {
-    QMatrix oldMatrix = matrixFromPosition( m_position );
-    QMatrix newMatrix = transform.inverted() * oldMatrix;
+    QTransform oldTransform = transformFromPosition( m_position );
+    QTransform newTransform = transform.inverted() * oldTransform;
 
-    Position position = positionFromMatrix( newMatrix );
+    Position position = positionFromTransform( newTransform );
     m_model->setTrackingPosition( position );
 }
 
@@ -195,12 +195,12 @@ void FractalPresenter::clearTracking()
     m_model->clearTracking();
 }
 
-void FractalPresenter::changePosition( const QMatrix& transform )
+void FractalPresenter::changePosition( const QTransform& transform )
 {
-    QMatrix oldMatrix = matrixFromPosition( m_position );
-    QMatrix newMatrix = transform.inverted() * oldMatrix;
+    QTransform oldTransform = transformFromPosition( m_position );
+    QTransform newTransform = transform.inverted() * oldTransform;
 
-    Position position = positionFromMatrix( newMatrix );
+    Position position = positionFromTransform( newTransform );
     m_model->setPosition( position );
 }
 
@@ -240,27 +240,27 @@ void FractalPresenter::customEvent( QEvent* e )
     }
 }
 
-QMatrix FractalPresenter::matrixFromPosition( const Position& position )
+QTransform FractalPresenter::transformFromPosition( const Position& position )
 {
     QPointF center( m_resolution.width() / 2.0, m_resolution.height() / 2.0 );
 
     double scale = pow( 10.0, -position.zoomFactor() ) / m_resolution.height();
 
-    QMatrix matrix;
-    matrix.translate( position.center().x(), position.center().y() );
-    matrix.rotate( -position.angle() );
-    matrix.scale( scale, scale );
-    matrix.translate( -center.x(), -center.y() );
+    QTransform transform;
+    transform.translate( position.center().x(), position.center().y() );
+    transform.rotate( -position.angle() );
+    transform.scale( scale, scale );
+    transform.translate( -center.x(), -center.y() );
 
-    return matrix;
+    return transform;
 }
 
-Position FractalPresenter::positionFromMatrix( const QMatrix& matrix )
+Position FractalPresenter::positionFromTransform( const QTransform& transform )
 {
     QPointF center( m_resolution.width() / 2.0, m_resolution.height() / 2.0 );
 
     QLineF line( center, QPointF( center.x() + m_resolution.height(), center.y() ) );
-    QLineF mapped = matrix.map( line );
+    QLineF mapped = transform.map( line );
 
     Position position;
     position.setCenter( mapped.p1() );
@@ -275,8 +275,8 @@ Position FractalPresenter::positionFromMatrix( const QMatrix& matrix )
 
 FractalType FractalPresenter::juliaType( const QPointF& point )
 {
-    QMatrix matrix = matrixFromPosition( m_position );
-    QPointF mapped = matrix.map( point );
+    QTransform transform = transformFromPosition( m_position );
+    QPointF mapped = transform.map( point );
 
     FractalType type = m_type;
     type.setFractal( JuliaFractal );
