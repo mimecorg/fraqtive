@@ -747,7 +747,11 @@ void WindowsModernStyle::drawControl( ControlElement element, const QStyleOption
             if ( option->state & QStyle::State_Selected && option->state & QStyle::State_Enabled ) {
                 painter->setPen( m_colorItemBorder );
                 painter->setBrush( m_colorItemBackgroundBegin );
+#if ( QT_VERSION >= 0x040600 )
+                painter->drawRect( option->rect.adjusted( 1, 0, -2, -1 ) );
+#else
                 painter->drawRect( option->rect.adjusted( 1, 0, -3, -1 ) );
+#endif
             } else {
                 QLinearGradient gradient( QPoint( 0, 0 ), QPoint( 25, 0 ) );
                 gradient.setColorAt( 0.0, m_colorBarBegin );
