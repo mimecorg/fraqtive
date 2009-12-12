@@ -278,6 +278,15 @@ void ImageView::mousePressEvent( QMouseEvent* e )
         return;
     }
 
+    if ( e->button() == Qt::XButton1 ) {
+        m_presenter->navigateBackward();
+        return;
+    }
+    if ( e->button() == Qt::XButton2 ) {
+        m_presenter->navigateForward();
+        return;
+    }
+
     m_trackStart = e->pos();
 
     if ( e->button() == Qt::LeftButton ) {
@@ -371,7 +380,7 @@ void ImageView::mouseMoveEvent( QMouseEvent* e )
     update();
 }
 
-void ImageView::mouseReleaseEvent( QMouseEvent* /*e*/ )
+void ImageView::mouseReleaseEvent( QMouseEvent* e )
 {
     if ( !m_interactive || m_tracking == NoTracking || m_image.isNull() )
         return;
@@ -383,6 +392,9 @@ void ImageView::mouseReleaseEvent( QMouseEvent* /*e*/ )
 
     m_tracking = NoTracking;
     m_presenter->clearTracking();
+
+    QPointF point = worldTransform().inverted().map( e->pos() );
+    m_presenter->setHoveringPoint( point );
 }
 
 void ImageView::mouseDoubleClickEvent( QMouseEvent* e )

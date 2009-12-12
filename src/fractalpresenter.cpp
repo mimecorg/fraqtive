@@ -112,6 +112,9 @@ void FractalPresenter::setPosition( const Position& position )
         }
         m_position = position;
         m_generator->setPosition( position );
+
+        if ( m_model && m_model->isHovering() && !m_model->isTracking() )
+            setHoveringPoint( m_hoveringPoint );
     }
 }
 
@@ -171,8 +174,10 @@ void FractalPresenter::setResolution( const QSize& resolution )
 
 void FractalPresenter::setHoveringPoint( const QPointF& point )
 {
-    if ( m_model && m_model->fractalType().fractal() != JuliaFractal )
+    if ( m_model && m_model->fractalType().fractal() != JuliaFractal ) {
+        m_hoveringPoint = point;
         m_model->setHoveringParameters( juliaType( point ), juliaPosition() );
+    }
 }
 
 void FractalPresenter::clearHovering()
@@ -218,6 +223,19 @@ void FractalPresenter::adjustCameraZoom( double delta )
 
     settings.setCameraZoom( zoom );
     m_model->setViewSettings( settings );
+}
+
+
+void FractalPresenter::navigateBackward()
+{
+    if ( m_model && m_model->canNavigateBackward() )
+        m_model->navigateBackward();
+}
+
+void FractalPresenter::navigateForward()
+{
+    if ( m_model && m_model->canNavigateForward() )
+        m_model->navigateForward();
 }
 
 void FractalPresenter::customEvent( QEvent* e )

@@ -69,6 +69,9 @@ public:
 
     void adjustCameraZoom( double delta );
 
+    void navigateBackward();
+    void navigateForward();
+
 protected: // overrides
     void customEvent( QEvent* e );
 
@@ -95,6 +98,8 @@ private:
     Position m_position;
 
     QSize m_resolution;
+
+    QPointF m_hoveringPoint;
 };
 
 #endif
