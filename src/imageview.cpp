@@ -371,6 +371,9 @@ void ImageView::mouseMoveEvent( QMouseEvent* e )
             transform.translate( -center.x(), -center.y() );
             break;
         }
+
+        default:
+            break;
     }
 
     // then convert it from view coordinates to image coordinates
@@ -452,6 +455,9 @@ void ImageView::wheelEvent( QWheelEvent* e )
             transform.translate( -center.x(), -center.y() );
             break;
         }
+
+        default:
+            break;
     }
 
     m_presenter->changePosition( m_scale * transform * m_invScale );

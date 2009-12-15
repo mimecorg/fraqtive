@@ -202,7 +202,7 @@ void ImageGenerator::calculateOutput( GeneratorCore::Output* output, const QRect
 
 int ImageGenerator::maximumIterations() const
 {
-    return pow( 10.0, m_generatorSettings.calculationDepth() ) * qMax( 1.0, 1.45 + m_position.zoomFactor() );
+    return (int)( pow( 10.0, m_generatorSettings.calculationDepth() ) * qMax( 1.0, 1.45 + m_position.zoomFactor() ) );
 }
 
 void ImageGenerator::addJobs()

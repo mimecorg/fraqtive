@@ -468,6 +468,9 @@ void MeshView::mouseMoveEvent( QMouseEvent* e )
             m_presenter->adjustCameraZoom( -0.02 * ( e->pos().y() - m_lastPos.y() ) );
             break;
         }
+
+        default:
+            break;
     }
 
     m_lastPos = e->pos();

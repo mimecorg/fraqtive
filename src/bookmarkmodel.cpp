@@ -262,7 +262,7 @@ void BookmarkModel::calculate( const Bookmark& bookmark, double* buffer, const Q
 
     GeneratorSettings settings = DataFunctions::defaultGeneratorSettings();
 
-    int maxIterations = pow( 10.0, settings.calculationDepth() ) * qMax( 1.0, 1.45 + position.zoomFactor() );
+    int maxIterations = (int)( pow( 10.0, settings.calculationDepth() ) * qMax( 1.0, 1.45 + position.zoomFactor() ) );
     double threshold = settings.detailThreshold();
 
 #if defined( HAVE_SSE2 )

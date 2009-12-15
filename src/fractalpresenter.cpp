@@ -254,6 +254,9 @@ void FractalPresenter::customEvent( QEvent* e )
             case FractalGenerator::FullUpdate:
                 m_view->fullUpdate( &m_data );
                 break;
+
+            default:
+                break;
         }
     }
 }

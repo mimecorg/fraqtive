@@ -171,7 +171,7 @@ void FractalGenerator::setResolution( const QSize& resolution )
 
 int FractalGenerator::maximumIterations() const
 {
-    return pow( 10.0, m_settings.calculationDepth() ) * qMax( 1.0, 1.45 + m_position.zoomFactor() );
+    return (int)( pow( 10.0, m_settings.calculationDepth() ) * qMax( 1.0, 1.45 + m_position.zoomFactor() ) );
 }
 
 FractalGenerator::UpdateStatus FractalGenerator::updateData( FractalData* data )
@@ -201,6 +201,9 @@ FractalGenerator::UpdateStatus FractalGenerator::updateData( FractalData* data )
 
         case ClearUpdate:
             data->clear();
+            break;
+
+        default:
             break;
     }
 
