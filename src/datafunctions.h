@@ -51,6 +51,7 @@ private:
 };
 
 void drawImage( QImage& image, const FractalData* data, const QRect& region, const ColorMapper& mapper, AntiAliasing antiAliasing );
+void drawImage( QImage& image, const QPoint& point, const FractalData* data, const QRect& region, const ColorMapper& mapper, AntiAliasing antiAliasing );
 
 GeneratorCore::Functor* createFunctor( const FractalType& type );
 

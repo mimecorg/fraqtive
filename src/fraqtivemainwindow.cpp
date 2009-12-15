@@ -15,6 +15,7 @@
 #include <QImageWriter>
 #include <QFileDialog>
 #include <QClipboard>
+#include <QProgressDialog>
 
 #include "tutorialdialog.h"
 #include "datastructures.h"
@@ -30,6 +31,8 @@
 #include "savebookmarkdialog.h"
 #include "loadpresetdialog.h"
 #include "savepresetdialog.h"
+#include "generateimagedialog.h"
+#include "imagegenerator.h"
 
 FraqtiveMainWindow::FraqtiveMainWindow() :
     m_tutorialDialog( NULL )
@@ -255,6 +258,27 @@ void FraqtiveMainWindow::on_actionSaveBookmark_triggered()
 
 void FraqtiveMainWindow::on_actionSaveImage_triggered()
 {
+    QImageWriter* writer = createImageWriter();
+    if ( writer ) {
+        QImage image = currentImage();
+
+        if ( !writer->write( image ) ) {
+            QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
+        }
+
+        delete writer;
+    }
+}
+
+void FraqtiveMainWindow::on_actionCopyImage_triggered()
+{
+    QImage image = currentImage();
+
+    QApplication::clipboard()->setImage( image );
+}
+
+QImageWriter* FraqtiveMainWindow::createImageWriter()
+{
     QList<QByteArray> supportedFormats = QImageWriter::supportedImageFormats();
 
     QList<QByteArray> formats;
@@ -302,24 +326,15 @@ void FraqtiveMainWindow::on_actionSaveImage_triggered()
         config->setValue( "SaveFormat", format );
         config->setValue( "SavePath", QFileInfo( fileName ).absolutePath() );
 
-        QImageWriter writer( fileName, format );
+        QImageWriter* writer = new QImageWriter( fileName, format );
 
         if ( format == "tiff" )
-            writer.setCompression( 1 );
+            writer->setCompression( 1 );
 
-        QImage image = currentImage();
-
-        if ( !writer.write( image ) ) {
-            QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
-        }
+        return writer;
     }
-}
 
-void FraqtiveMainWindow::on_actionCopyImage_triggered()
-{
-    QImage image = currentImage();
-
-    QApplication::clipboard()->setImage( image );
+    return NULL;
 }
 
 QImage FraqtiveMainWindow::currentImage()
@@ -329,6 +344,49 @@ QImage FraqtiveMainWindow::currentImage()
     if ( MeshView* meshView = qobject_cast<MeshView*>( m_ui.mainContainer->view() ) )
         return meshView->image();
     return QImage();
+}
+
+void FraqtiveMainWindow::on_actionGenerateImage_triggered()
+{
+    GenerateImageDialog dialog( this );
+
+    if ( dialog.exec() == QDialog::Accepted ) {
+        ImageGenerator generator( this );
+        if ( !generator.setResolution( dialog.resolution() ) ) {
+            QMessageBox::warning( this, tr( "Error" ), tr( "Not enough memory to generate image." ) );
+            return;
+        }
+        generator.setParameters( m_model->fractalType(), m_model->position() );
+        generator.setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
+        generator.setGeneratorSettings( dialog.generatorSettings() );
+        generator.setViewSettings( dialog.viewSettings() );
+
+        QProgressDialog progress( this );
+        progress.setWindowModality( Qt::WindowModal );
+        progress.setRange( 0, generator.maximumProgress() );
+        progress.setWindowTitle( tr( "Generate Image" ) );
+        progress.setLabelText( tr( "Calculating..." ) );
+        progress.setValue( 0 );
+
+        QEventLoop eventLoop;
+
+        connect( &generator, SIGNAL( progressChanged( int ) ), &progress, SLOT( setValue( int ) ), Qt::QueuedConnection );
+        connect( &generator, SIGNAL( completed() ), &eventLoop, SLOT( quit() ), Qt::QueuedConnection );
+        connect( &progress, SIGNAL( canceled() ), &eventLoop, SLOT( quit() ) );
+
+        generator.start();
+        eventLoop.exec();
+
+        if ( !progress.wasCanceled() ) {
+            QImageWriter* writer = createImageWriter();
+            if ( writer ) {
+                if ( !writer->write( generator.image() ) ) {
+                    QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
+                }
+                delete writer;
+            }
+        }
+    }
 }
 
 void FraqtiveMainWindow::on_action2DView_triggered()

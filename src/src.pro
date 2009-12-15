@@ -26,9 +26,11 @@ HEADERS   += abstractjobprovider.h \
              fractaltypewidget.h \
              fraqtiveapplication.h \
              fraqtivemainwindow.h \
+             generateimagedialog.h \
              generatorcore.h \
              gradientdialog.h \
              gradientwidget.h \
+             imagegenerator.h \
              imageview.h \
              jobscheduler.h \
              loadbookmarkdialog.h \
@@ -64,8 +66,10 @@ SOURCES   += advancedsettingspage.cpp \
              fractaltypewidget.cpp \
              fraqtiveapplication.cpp \
              fraqtivemainwindow.cpp \
+             generateimagedialog.cpp \
              gradientdialog.cpp \
              gradientwidget.cpp \
+             imagegenerator.cpp \
              imageview.cpp \
              jobscheduler.cpp \
              loadbookmarkdialog.cpp \
@@ -89,6 +93,7 @@ FORMS     += advancedsettingspage.ui \
              fractaltypedialog.ui \
              fractaltypewidget.ui \
              fraqtivemainwindow.ui \
+             generateimagedialog.ui \
              gradientdialog.ui \
              gradientwidget.ui \
              loadbookmarkdialog.ui \

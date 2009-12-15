@@ -46,6 +46,7 @@ private slots:
     void on_actionSaveBookmark_triggered();
     void on_actionSaveImage_triggered();
     void on_actionCopyImage_triggered();
+    void on_actionGenerateImage_triggered();
     void on_action2DView_triggered();
     void on_action3DView_triggered();
     void on_actionQuickTutorial_triggered();
@@ -62,6 +63,7 @@ private:
     void enterFullScreenMode();
     void leaveFullScreenMode();
 
+    QImageWriter* createImageWriter();
     QImage currentImage();
 
 private:

@@ -254,16 +254,16 @@ static inline QRgb calcAntiAliased( QRgb color[ 3 ][ 3 ] )
 }
 
 template<int A, int B, int C>
-static void drawAntiAliased( QImage& image, const FractalData* data, const QRect& region, const ColorMapper& mapper )
+static void drawAntiAliased( QImage& image, const QPoint& point, const FractalData* data, const QRect& region, const ColorMapper& mapper )
 {
     QRgb color[ 3 ][ 3 ];
 
     int stride = data->stride();
     int width = region.width();
 
-    for ( int y = region.top(); y <= region.bottom(); y++ ) {
-        const double* src = data->buffer() + y * stride + region.left() ;
-        QRgb* dest = reinterpret_cast<QRgb*>( image.scanLine( y ) ) + region.left();
+    for ( int y = 0; y < region.height(); y++ ) {
+        const double* src = data->buffer() + ( y + region.top() ) * stride + region.left() ;
+        QRgb* dest = reinterpret_cast<QRgb*>( image.scanLine( y + point.y() ) ) + point.x();
 
         for ( int i = 0; i < 3; i++ ) {
             color[ i ][ 1 ] = mapper.map( src[ i * stride ] );
@@ -283,18 +283,23 @@ static void drawAntiAliased( QImage& image, const FractalData* data, const QRect
 
 void drawImage( QImage& image, const FractalData* data, const QRect& region, const ColorMapper& mapper, AntiAliasing antiAliasing )
 {
+    drawImage( image, region.topLeft(), data, region, mapper, antiAliasing );
+}
+
+void drawImage( QImage& image, const QPoint& point, const FractalData* data, const QRect& region, const ColorMapper& mapper, AntiAliasing antiAliasing )
+{
     switch ( antiAliasing ) {
         case NoAntiAliasing:
-            drawAntiAliased<16, 0, 0>( image, data, region, mapper );
+            drawAntiAliased<16, 0, 0>( image, point, data, region, mapper );
             break;
         case LowAntiAliasing:
-            drawAntiAliased<12, 1, 0>( image, data, region, mapper );
+            drawAntiAliased<12, 1, 0>( image, point, data, region, mapper );
             break;
         case MediumAntiAliasing:
-            drawAntiAliased<8, 1, 1>( image, data, region, mapper );
+            drawAntiAliased<8, 1, 1>( image, point, data, region, mapper );
             break;
         case HighAntiAliasing:
-            drawAntiAliased<4, 2, 1>( image, data, region, mapper );
+            drawAntiAliased<4, 2, 1>( image, point, data, region, mapper );
             break;
     }
 }
