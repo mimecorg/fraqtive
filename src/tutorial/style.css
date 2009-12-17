@@ -27,8 +27,10 @@ table
 th
 {
   background-color: #ccf;
+  padding: 0.2em;
 }
 td
 {
   background-color: #eee;
+  padding: 0.2em;
 }
