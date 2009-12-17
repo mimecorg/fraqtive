@@ -1,5 +1,5 @@
 Fraqtive
-Version 0.4.4 (2008-07-28)
+Version 0.4.5 (2009-12-18)
 
 Fraqtive is an open source, multi-platform generator of the Mandelbrot
 family fractals. It uses very fast algorithms supporting SSE2
@@ -11,7 +11,7 @@ navigation and dynamic generation of the Julia fractal preview.
 Credits and License
 ===================
 
-Program copyright (C) 2004-2008 Michał Męciński
+Program copyright (C) 2004-2009 Michał Męciński
 
 Icons based on the KDE Crystal theme copyright (C) 2002 and following
 years KDE Artists
