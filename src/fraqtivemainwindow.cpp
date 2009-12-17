@@ -1,6 +1,6 @@
 /**************************************************************************
 * This file is part of the Fraqtive program
-* Copyright (C) 2004-2008 Michał Męciński
+* Copyright (C) 2004-2009 Michał Męciński
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -437,13 +437,13 @@ void FraqtiveMainWindow::on_actionQuickTutorial_triggered()
 
 void FraqtiveMainWindow::on_actionAboutFraqtive_triggered()
 {
-    QString version = "0.4.4";
+    QString version = "0.4.5";
     QString link = "<a href=\"http://fraqtive.mimec.org\">fraqtive.mimec.org</a>";
 
     QString message;
     message += "<h3>" + tr( "Fraqtive %1" ).arg( version ) + "</h3>";
     message += "<p>" + tr( "A Mandelbrot family fractal generator." ) + "</p>";
-    message += "<p>" + trUtf8( "Copyright (C) 2004-2008 Michał Męciński" ) + "</p>";
+    message += "<p>" + trUtf8( "Copyright (C) 2004-2009 Michał Męciński" ) + "</p>";
     message += "<p>" + tr( "This program is licensed under the GNU General Public License." ) + "</p>";
     message += "<p>" + tr( "Visit %1 for more information." ).arg( link ) + "</p>";
 

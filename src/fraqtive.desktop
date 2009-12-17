@@ -2,7 +2,7 @@
 Type=Application
 Name=Fraqtive
 GenericName=Fractal Generator
-Comment=Program drawing Mandelbrot and Julia fractals
+Comment=Mandelbrot family fractal generator
 Icon=fraqtive
 Exec=fraqtive
 Categories=Qt;Education;Science;Math;
