@@ -344,6 +344,9 @@ GeneratorCore::FunctorSSE2* createFunctorSSE2( const FractalType& type )
                 }
             }
             break;
+
+        default:
+            break;
     }
 
     return NULL;

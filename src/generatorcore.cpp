@@ -19,6 +19,8 @@
 # include <emmintrin.h>
 #endif
 
+// see http://wiki.mimec.org/wiki/Fraqtive/Generator_Core for a description of this code
+
 namespace GeneratorCore
 {
 
@@ -643,11 +645,11 @@ inline void calculatePowerSSE2<1>( __m128d& /*zx*/, __m128d& /*zy*/, __m128d& /*
 }
 
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-static const quint32 SignMask[ 8 ] = { 0, 0x80000000 };
-static const quint32 NotSignMask[ 8 ] = { 0xffffffff, 0x7fffffff };
+static const quint32 SignMask[ 2 ] = { 0, 0x80000000 };
+static const quint32 NotSignMask[ 2 ] = { 0xffffffff, 0x7fffffff };
 #else
-static const quint32 SignMask[ 8 ] = { 0x80000000, 0 };
-static const quint32 NotSignMask[ 8 ] = { 0x7fffffff, 0xffffffff };
+static const quint32 SignMask[ 2 ] = { 0x80000000, 0 };
+static const quint32 NotSignMask[ 2 ] = { 0x7fffffff, 0xffffffff };
 #endif
 
 template<Variant VARIANT>
@@ -661,14 +663,14 @@ inline void adjustSSE2<NormalVariant>( __m128d& /*zx*/, __m128d& /*zy*/ )
 template<>
 inline void adjustSSE2<ConjugateVariant>( __m128d& /*zx*/, __m128d& zy )
 {
-    __m128d mask = _mm_set1_pd( *reinterpret_cast<const double*>( SignMask ) );
+    __m128d mask = _mm_set1_pd( *(const double*)(const void*)SignMask );
     zy = _mm_xor_pd( mask, zy );
 }
 
 template<>
 inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
 {
-    __m128d mask = _mm_set1_pd( *reinterpret_cast<const double*>( NotSignMask ) );
+    __m128d mask = _mm_set1_pd( *(const double*)(const void*)NotSignMask );
     zx = _mm_and_pd( zx, mask );
     zy = _mm_and_pd( zy, mask );
 }
@@ -676,7 +678,7 @@ inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
 template<>
 inline void adjustSSE2<AbsoluteImVariant>( __m128d& /*zx*/, __m128d& zy )
 {
-    __m128d mask = _mm_set1_pd( *reinterpret_cast<const double*>( NotSignMask ) );
+    __m128d mask = _mm_set1_pd( *(const double*)(const void*)NotSignMask );
     zy = _mm_and_pd( zy, mask );
 }
 
