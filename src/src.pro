@@ -154,6 +154,10 @@ win32 {
     LIBS += -lshell32
 }
 
+unix {
+    LIBS += -lGLU
+}
+
 MOC_DIR = ../tmp
 RCC_DIR = ../tmp
 UI_DIR = ../tmp
