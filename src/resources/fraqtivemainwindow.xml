@@ -1,0 +1,31 @@
+<xmlui>
+  <strip id="stripMain">
+    <section id="sectionFile">
+      <action id="saveImage"/>
+      <action id="generateImage"/>
+    </section>
+    <section id="sectionEdit">
+      <action id="copyImage"/>
+      <action id="fractalType"/>
+      <action id="editGradient"/>
+      <grid>
+        <action id="loadPreset"/>
+        <action id="savePreset"/>
+      </grid>
+    </section>
+    <section id="sectionView">
+      <action id="view2d"/>
+      <action id="view3d"/>
+      <action id="fullScreen"/>
+    </section>
+    <section id="sectionPosition">
+      <action id="defaultPosition"/>
+      <action id="navigateBack"/>
+      <action id="navigateForward"/>
+      <grid>
+        <action id="loadBookmark"/>
+        <action id="saveBookmark"/>
+      </grid>
+    </section>
+  </strip>
+</xmlui>

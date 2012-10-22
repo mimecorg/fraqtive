@@ -17,7 +17,7 @@
     <number>12</number>
    </property>
    <item>
-    <widget class="GradientWidget" native="1" name="gradient" />
+    <widget class="GradientEditor" native="1" name="gradient" />
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox" >
@@ -33,9 +33,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GradientWidget</class>
+   <class>GradientEditor</class>
    <extends>QWidget</extends>
-   <header>gradientwidget.h</header>
+   <header>gradienteditor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

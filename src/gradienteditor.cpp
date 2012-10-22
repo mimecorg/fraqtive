@@ -8,11 +8,11 @@
 * (at your option) any later version.
 **************************************************************************/
 
-#include "gradientwidget.h"
+#include "gradienteditor.h"
 
 #include "datafunctions.h"
 
-GradientWidget::GradientWidget( QWidget* parent ) : QWidget( parent )
+GradientEditor::GradientEditor( QWidget* parent ) : QWidget( parent )
 {
     m_ui.setupUi( this );
 
@@ -21,18 +21,18 @@ GradientWidget::GradientWidget( QWidget* parent ) : QWidget( parent )
     m_ui.shadeBlue->setShadeColor( QColor( 0, 0, 255 ) );
 }
 
-GradientWidget::~GradientWidget()
+GradientEditor::~GradientEditor()
 {
 }
 
-void GradientWidget::setGradient( const Gradient& gradient )
+void GradientEditor::setGradient( const Gradient& gradient )
 {
     m_ui.shadeRed->setPoints( gradient.red() );
     m_ui.shadeGreen->setPoints( gradient.green() );
     m_ui.shadeBlue->setPoints( gradient.blue() );
 }
 
-Gradient GradientWidget::gradient() const
+Gradient GradientEditor::gradient() const
 {
     Gradient gradient;
     gradient.setRed( m_ui.shadeRed->points() );
@@ -41,22 +41,22 @@ Gradient GradientWidget::gradient() const
     return gradient;
 }
 
-void GradientWidget::on_shadeRed_pointsChanged()
+void GradientEditor::on_shadeRed_pointsChanged()
 {
     updateGradient();
 }
 
-void GradientWidget::on_shadeGreen_pointsChanged()
+void GradientEditor::on_shadeGreen_pointsChanged()
 {
     updateGradient();
 }
 
-void GradientWidget::on_shadeBlue_pointsChanged()
+void GradientEditor::on_shadeBlue_pointsChanged()
 {
     updateGradient();
 }
 
-void GradientWidget::updateGradient()
+void GradientEditor::updateGradient()
 {
     QGradientStops stops = DataFunctions::calculateGradientStops( gradient() );
     m_ui.gradient->setGradientStops( stops );

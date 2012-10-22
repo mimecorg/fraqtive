@@ -62,7 +62,7 @@ void PropertyToolBox::addPage( QWidget* page )
                 continue;
             QLabel* label = qobject_cast<QLabel*>( item->widget() );
             if ( label ) {
-                QString style = "border-bottom: 1px solid palette(dark);";
+                QString style = "border: none; border-bottom: 1px solid palette(dark);";
                 if ( i > 0 )
                     style += "margin-top: 2px;";
                 label->setStyleSheet( style );
@@ -80,6 +80,8 @@ void PropertyToolBox::addPage( QWidget* page )
             }
         }
     }
+
+    page->setBackgroundRole( QPalette::Base );
 
     addItem( page, page->windowTitle() );
 }

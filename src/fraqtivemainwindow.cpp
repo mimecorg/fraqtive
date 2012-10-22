@@ -33,16 +33,116 @@
 #include "savepresetdialog.h"
 #include "generateimagedialog.h"
 #include "imagegenerator.h"
+#include "iconloader.h"
+#include "xmlui/toolstrip.h"
+#include "xmlui/builder.h"
 
 FraqtiveMainWindow::FraqtiveMainWindow() :
     m_tutorialDialog( NULL )
 {
-    m_ui.setupUi( this );
+    QAction* action;
 
-    m_ui.menuView->addAction( m_ui.dockProperties->toggleViewAction() );
-    m_ui.menuView->addAction( m_ui.dockPreview->toggleViewAction() );
-    m_ui.menuView->addSeparator();
-    m_ui.menuView->addAction( m_ui.toolBar->toggleViewAction() );
+    action = new QAction( IconLoader::icon( "edit" ), tr( "Fractal Type..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionFractalType_triggered() ) );
+    setAction( "fractalType", action );
+
+    action = new QAction( IconLoader::icon( "gradient" ), tr( "Edit Gradient..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionEditGradient_triggered() ) );
+    setAction( "editGradient", action );
+
+    action = new QAction( IconLoader::icon( "fullscreen" ), tr( "Full Screen" ), this );
+    action->setShortcut( QKeySequence( Qt::Key_F11 ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionFullScreen_triggered() ) );
+    setAction( "fullScreen", action );
+
+    action = new QAction( IconLoader::icon( "back" ), tr( "Navigate Back" ), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Left ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionNavigateBack_triggered() ) );
+    setAction( "navigateBack", action );
+
+    action = new QAction( IconLoader::icon( "forward" ), tr( "Navigate Forward" ), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Right ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionNavigateForward_triggered() ) );
+    setAction( "navigateForward", action );
+
+    action = new QAction( IconLoader::icon( "home" ), tr( "Default Position" ), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Home ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionDefaultPosition_triggered() ) );
+    setAction( "defaultPosition", action );
+
+    action = new QAction( IconLoader::icon( "load-preset" ), tr( "Load Preset..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionLoadPreset_triggered() ) );
+    setAction( "loadPreset", action );
+
+    action = new QAction( IconLoader::icon( "save-preset" ), tr( "Save Preset..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionSavePreset_triggered() ) );
+    setAction( "savePreset", action );
+
+    action = new QAction( IconLoader::icon( "load-bookmark" ), tr( "Load Bookmark..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionLoadBookmark_triggered() ) );
+    setAction( "loadBookmark", action );
+
+    action = new QAction( IconLoader::icon( "save-bookmark" ), tr( "Save Bookmark..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionSaveBookmark_triggered() ) );
+    setAction( "saveBookmark", action );
+
+    action = new QAction( IconLoader::icon( "save" ), tr( "Save Image..." ), this );
+    action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionSaveImage_triggered() ) );
+    setAction( "saveImage", action );
+
+    action = new QAction( IconLoader::icon( "copy" ), tr( "Copy Image" ), this );
+    action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionCopyImage_triggered() ) );
+    setAction( "copyImage", action );
+
+    action = new QAction( IconLoader::icon( "generate-image" ), tr( "Generate Image..." ), this );
+    action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionGenerateImage_triggered() ) );
+    setAction( "generateImage", action );
+
+    action = new QAction( IconLoader::icon( "view2d" ), tr( "2D View" ), this );
+    action->setShortcut( QKeySequence( Qt::Key_F2 ) );
+    action->setCheckable( true );
+    action->setChecked( true );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_action2DView_triggered() ) );
+    setAction( "view2d", action );
+
+    action = new QAction( IconLoader::icon( "view3d" ), tr( "3D View" ), this );
+    action->setShortcut( QKeySequence( Qt::Key_F3 ) );
+    action->setCheckable( true );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_action3DView_triggered() ) );
+    setAction( "view3d", action );
+
+    action = new QAction( IconLoader::icon( "help" ), tr( "Quick Tutorial" ), this );
+    action->setShortcut( QKeySequence( Qt::Key_F1 ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionQuickTutorial_triggered() ) );
+    setAction( "quickTutorial", action );
+
+    action = new QAction( IconLoader::icon( "about" ), tr( "About Fraqtive" ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionAboutFraqtive_triggered() ) );
+    setAction( "aboutFraqtive", action );
+
+    setTitle( "sectionFile", tr( "File" ) );
+    setTitle( "sectionEdit", tr( "Edit" ) );
+    setTitle( "sectionView", tr( "View" ) );
+    setTitle( "sectionPosition", tr( "Position" ) );
+
+    loadXmlUiFile( ":/resources/fraqtivemainwindow.xml" );
+
+    XmlUi::ToolStrip* strip = new XmlUi::ToolStrip( this );
+    strip->addAuxiliaryAction( this->action( "quickTutorial" ) );
+    strip->addAuxiliaryAction( this->action( "aboutFraqtive" ) );
+    setMenuWidget( strip );
+
+    XmlUi::Builder* builder = new XmlUi::Builder( this );
+    builder->registerToolStrip( "stripMain", strip );
+    builder->addClient( this );
+
+    strip->setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( strip, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( customContextMenuRequested( const QPoint& ) ) );
+
+    m_ui.setupUi( this );
 
     m_model = new FractalModel( this );
 
@@ -84,7 +184,7 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
 
     m_ui.mainContainer->installEventFilter( this );
 
-    m_ui.action3DView->setEnabled( QGLFormat::hasOpenGL() );
+    this->action( "view3d" )->setEnabled( QGLFormat::hasOpenGL() );
 
     m_model->setViewMode( ImageViewMode );
 
@@ -96,7 +196,7 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
         restoreGeometry( config->value( "Geometry" ).toByteArray() );
 
     if ( config->contains( "State" ) )
-        restoreState( config->value( "State" ).toByteArray(), 1 );
+        restoreState( config->value( "State" ).toByteArray(), 2 );
 
     if ( config->value( "ShowTutorial", true ).toBool() )
         on_actionQuickTutorial_triggered();
@@ -115,7 +215,7 @@ void FraqtiveMainWindow::closeEvent( QCloseEvent* e )
 
     ConfigurationData* config = fraqtive()->configuration();
     config->setValue( "Geometry", saveGeometry() );
-    config->setValue( "State", saveState( 1 ) );
+    config->setValue( "State", saveState( 2 ) );
 
     if ( m_tutorialDialog )
         m_tutorialDialog->close();
@@ -139,12 +239,11 @@ bool FraqtiveMainWindow::eventFilter( QObject* watched, QEvent* e )
     return QMainWindow::eventFilter( watched, e );
 }
 
-void FraqtiveMainWindow::on_actionQuit_triggered()
+void FraqtiveMainWindow::customContextMenuRequested( const QPoint& pos )
 {
-    if ( isFullScreenMode() )
-        leaveFullScreenMode();
-
-    close();
+    QMenu* menu = createPopupMenu();
+    if ( menu )
+        menu->popup( menuWidget()->mapToGlobal( pos ) );
 }
 
 void FraqtiveMainWindow::on_actionFractalType_triggered()
@@ -187,7 +286,7 @@ void FraqtiveMainWindow::enterFullScreenMode()
 {
     m_ui.mainContainer->setParent( NULL );
     m_ui.mainContainer->showFullScreen();
-    m_ui.mainContainer->addActions( menuBar()->actions() );
+    m_ui.mainContainer->addActions( XmlUi::Client::actions() );
     m_ui.mainContainer->setWindowTitle( windowTitle() );
     hide();
 }
@@ -196,7 +295,7 @@ void FraqtiveMainWindow::leaveFullScreenMode()
 {
     m_ui.mainContainer->setParent( m_ui.centralWidget );
     m_ui.vboxLayout->addWidget( m_ui.mainContainer );
-    QList<QAction*> actions = menuBar()->actions();
+    QList<QAction*> actions = XmlUi::Client::actions();
     for ( int i = 0; i < actions.count(); i++ )
         m_ui.mainContainer->removeAction( actions.at( i ) );
     show();
@@ -209,7 +308,7 @@ void FraqtiveMainWindow::on_actionDefaultPosition_triggered()
 
 void FraqtiveMainWindow::positionChanged()
 {
-    m_ui.actionDefaultPosition->setEnabled( !m_model->hasDefaultPosition() );
+    action( "defaultPosition" )->setEnabled( !m_model->hasDefaultPosition() );
 }
 
 void FraqtiveMainWindow::on_actionNavigateBack_triggered()
@@ -224,8 +323,8 @@ void FraqtiveMainWindow::on_actionNavigateForward_triggered()
 
 void FraqtiveMainWindow::navigationChanged()
 {
-    m_ui.actionNavigateBack->setEnabled( m_model->canNavigateBackward() );
-    m_ui.actionNavigateForward->setEnabled( m_model->canNavigateForward() );
+    action( "navigateBack" )->setEnabled( m_model->canNavigateBackward() );
+    action( "navigateForward" )->setEnabled( m_model->canNavigateForward() );
 }
 
 void FraqtiveMainWindow::on_actionLoadPreset_triggered()
@@ -403,8 +502,8 @@ void FraqtiveMainWindow::on_action2DView_triggered()
         view->setFocus();
     }
 
-    m_ui.action2DView->setChecked( true );
-    m_ui.action3DView->setChecked( false );
+    action( "view2d" )->setChecked( true );
+    action( "view3d" )->setChecked( false );
 }
 
 void FraqtiveMainWindow::on_action3DView_triggered()
@@ -422,8 +521,8 @@ void FraqtiveMainWindow::on_action3DView_triggered()
         view->setFocus();
     }
 
-    m_ui.action2DView->setChecked( false );
-    m_ui.action3DView->setChecked( true );
+    action( "view2d" )->setChecked( false );
+    action( "view3d" )->setChecked( true );
 }
 
 void FraqtiveMainWindow::on_actionQuickTutorial_triggered()
@@ -448,9 +547,4 @@ void FraqtiveMainWindow::on_actionAboutFraqtive_triggered()
     message += "<p>" + tr( "Visit %1 for more information." ).arg( link ) + "</p>";
 
     QMessageBox::about( this, tr( "About Fraqtive" ), message );
-}
-
-void FraqtiveMainWindow::on_actionAboutQt_triggered()
-{
-    QMessageBox::aboutQt( this );
 }

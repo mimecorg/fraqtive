@@ -2,7 +2,7 @@
     * added: generating images of arbitrary size
     * added: handling 4th and 5th mouse buttons
     * fixed: compatibility with Qt 4.6
-    * fixed: collor mapping in 3D mode
+    * fixed: color mapping in 3D mode
     * fixed: updating Julia preview when navigating
 
 0.4.4 (2008-07-28)

@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>GradientWidget</class>
- <widget class="QWidget" name="GradientWidget" >
+ <class>GradientEditor</class>
+ <widget class="QWidget" name="GradientEditor" >
   <property name="geometry" >
    <rect>
     <x>0</x>

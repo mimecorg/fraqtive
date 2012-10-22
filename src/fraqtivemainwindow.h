@@ -14,12 +14,13 @@
 #include <QMainWindow>
 
 #include "ui_fraqtivemainwindow.h"
+#include "xmlui/client.h"
 
 class FractalModel;
 class Gradient;
 class TutorialDialog;
 
-class FraqtiveMainWindow : public QMainWindow
+class FraqtiveMainWindow : public QMainWindow, public XmlUi::Client
 {
     Q_OBJECT
 public:
@@ -33,7 +34,6 @@ protected: // overrides
     void closeEvent( QCloseEvent* e );
 
 private slots:
-    void on_actionQuit_triggered();
     void on_actionFractalType_triggered();
     void on_actionEditGradient_triggered();
     void on_actionFullScreen_triggered();
@@ -51,7 +51,8 @@ private slots:
     void on_action3DView_triggered();
     void on_actionQuickTutorial_triggered();
     void on_actionAboutFraqtive_triggered();
-    void on_actionAboutQt_triggered();
+
+    void customContextMenuRequested( const QPoint& pos );
 
     void positionChanged();
     void navigationChanged();

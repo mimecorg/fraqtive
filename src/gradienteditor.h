@@ -8,21 +8,21 @@
 * (at your option) any later version.
 **************************************************************************/
 
-#ifndef GRADIENTWIDGET_H
-#define GRADIENTWIDGET_H
+#ifndef GRADIENTEDITOR_H
+#define GRADIENTEDITOR_H
 
 #include <QWidget>
 
-#include "ui_gradientwidget.h"
+#include "ui_gradienteditor.h"
 
 class Gradient;
 
-class GradientWidget : public QWidget
+class GradientEditor : public QWidget
 {
     Q_OBJECT
 public:
-    GradientWidget( QWidget* parent );
-    ~GradientWidget();
+    GradientEditor( QWidget* parent );
+    ~GradientEditor();
 
 public:
     void setGradient( const Gradient& gradient );
@@ -40,7 +40,7 @@ private:
     void updateGradient();
 
 private:
-    Ui::GradientWidget m_ui;
+    Ui::GradientEditor m_ui;
 };
 
 #endif

@@ -3,7 +3,7 @@ include( ../config.pri )
 TEMPLATE = app
 TARGET = fraqtive
 
-QT += opengl
+QT += opengl xml
 
 HEADERS   += abstractjobprovider.h \
              abstractview.h \
@@ -29,7 +29,8 @@ HEADERS   += abstractjobprovider.h \
              generateimagedialog.h \
              generatorcore.h \
              gradientdialog.h \
-             gradientwidget.h \
+             gradienteditor.h \
+             iconloader.h \
              imagegenerator.h \
              imageview.h \
              jobscheduler.h \
@@ -68,7 +69,8 @@ SOURCES   += advancedsettingspage.cpp \
              fraqtivemainwindow.cpp \
              generateimagedialog.cpp \
              gradientdialog.cpp \
-             gradientwidget.cpp \
+             gradienteditor.cpp \
+             iconloader.cpp \
              imagegenerator.cpp \
              imageview.cpp \
              jobscheduler.cpp \
@@ -95,7 +97,7 @@ FORMS     += advancedsettingspage.ui \
              fraqtivemainwindow.ui \
              generateimagedialog.ui \
              gradientdialog.ui \
-             gradientwidget.ui \
+             gradienteditor.ui \
              loadbookmarkdialog.ui \
              loadpresetdialog.ui \
              parameterspage.ui \
@@ -106,12 +108,8 @@ FORMS     += advancedsettingspage.ui \
 
 RESOURCES += data.qrc \
              icons.qrc \
+             resources.qrc \
              tutorial.qrc
-
-win32 {
-    HEADERS += windowsmodernstyle.h
-    SOURCES += windowsmodernstyle.cpp
-}
 
 no-sse2|win32-msvc|win32-g++: CONFIG -= sse2
 
@@ -133,6 +131,8 @@ sse2 {
 } else {
     SOURCES += generatorcore.cpp
 }
+
+include( xmlui/xmlui.pri )
 
 static {
     !contains( QT_CONFIG, no-jpeg ) {
@@ -158,19 +158,22 @@ unix {
     LIBS += -lGLU
 }
 
-MOC_DIR = ../tmp
-RCC_DIR = ../tmp
-UI_DIR = ../tmp
-CONFIG( debug, debug|release ) {
-    OBJECTS_DIR = ../tmp/debug
-    DESTDIR = ../debug
-} else {
-    OBJECTS_DIR = ../tmp/release
-    DESTDIR = ../release
+!win32 | build_pass {
+    MOC_DIR = ../tmp
+    RCC_DIR = ../tmp
+    UI_DIR = ../tmp
+    CONFIG( debug, debug|release ) {
+        OBJECTS_DIR = ../tmp/debug
+        DESTDIR = ../debug
+    } else {
+        OBJECTS_DIR = ../tmp/release
+        DESTDIR = ../release
+    }
 }
 
 win32-msvc* {
     QMAKE_CXXFLAGS += -Fd\$(IntDir)
+    CONFIG -= flat
 }
 
 target.path = $$PREFIX/bin
