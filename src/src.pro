@@ -5,7 +5,8 @@ TARGET = fraqtive
 
 QT += opengl xml
 
-HEADERS   += abstractjobprovider.h \
+HEADERS   += aboutbox.h \
+             abstractjobprovider.h \
              abstractview.h \
              advancedsettingspage.h \
              animationpage.h \
@@ -30,6 +31,7 @@ HEADERS   += abstractjobprovider.h \
              generatorcore.h \
              gradientdialog.h \
              gradienteditor.h \
+             guidedialog.h \
              iconloader.h \
              imagegenerator.h \
              imageview.h \
@@ -45,10 +47,10 @@ HEADERS   += abstractjobprovider.h \
              savebookmarkdialog.h \
              savepresetdialog.h \
              shadewidget.h \
-             tutorialdialog.h \
              viewcontainer.h
 
-SOURCES   += advancedsettingspage.cpp \
+SOURCES   += aboutbox.cpp \
+             advancedsettingspage.cpp \
              animationpage.cpp \
              bookmarklistview.cpp \
              bookmarkmodel.cpp \
@@ -70,6 +72,7 @@ SOURCES   += advancedsettingspage.cpp \
              generateimagedialog.cpp \
              gradientdialog.cpp \
              gradienteditor.cpp \
+             guidedialog.cpp \
              iconloader.cpp \
              imagegenerator.cpp \
              imageview.cpp \
@@ -86,7 +89,6 @@ SOURCES   += advancedsettingspage.cpp \
              savebookmarkdialog.cpp \
              savepresetdialog.cpp \
              shadewidget.cpp \
-             tutorialdialog.cpp \
              viewcontainer.cpp
 
 FORMS     += advancedsettingspage.ui \
@@ -103,8 +105,7 @@ FORMS     += advancedsettingspage.ui \
              parameterspage.ui \
              renamedialog.ui \
              savebookmarkdialog.ui \
-             savepresetdialog.ui \
-             tutorialdialog.ui
+             savepresetdialog.ui
 
 RESOURCES += data.qrc \
              icons.qrc \

@@ -12,10 +12,13 @@
 #define FRAQTIVEAPPLICATION_H
 
 #include <QApplication>
+#include <QPointer>
 
 class JobScheduler;
 class ConfigurationData;
 class FraqtiveMainWindow;
+class AboutBox;
+class GuideDialog;
 
 class FraqtiveApplication : public QApplication
 {
@@ -29,10 +32,20 @@ public:
 
     ConfigurationData* configuration() const { return m_configuration; }
 
+public slots:
+    void about();
+    void showQuickGuide();
+
+private:
+    QString technicalInformation();
+
 private:
     JobScheduler* m_jobScheduler;
     ConfigurationData* m_configuration;
     FraqtiveMainWindow* m_mainWindow;
+
+    QPointer<AboutBox> m_aboutBox;
+    QPointer<GuideDialog> m_guideDialog;
 };
 
 inline FraqtiveApplication* fraqtive()

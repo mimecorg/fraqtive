@@ -13,34 +13,36 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-RenameDialog::RenameDialog( QWidget* parent ) : QDialog( parent )
+#include "iconloader.h"
+
+RenameDialog::RenameDialog( Mode mode, const QString& name, QWidget* parent ) : QDialog( parent ),
+    m_mode( mode )
 {
     m_ui.setupUi( this );
 
-    setMaximumHeight( sizeHint().height() );
-}
-
-RenameDialog::~RenameDialog()
-{
-}
-
-void RenameDialog::setMode( Mode mode )
-{
-    m_mode = mode;
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "rename", 22 ) );
 
     switch ( mode ) {
         case PresetMode:
             setWindowTitle( tr( "Rename Preset" ) );
+            m_ui.promptLabel->setText( tr( "Rename preset <b>%1<b>:" ).arg( name ) );
             break;
         case BookmarkMode:
             setWindowTitle( tr( "Rename Bookmark" ) );
+            m_ui.promptLabel->setText( tr( "Rename bookmark <b>%1<b>:" ).arg( name ) );
             break;
     }
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
+
+    setFixedHeight( sizeHint().height() );
+
+    m_ui.lineEdit->setText( name );
 }
 
-void RenameDialog::setName( const QString& name )
+RenameDialog::~RenameDialog()
 {
-    m_ui.lineEdit->setText( name );
 }
 
 QString RenameDialog::name() const

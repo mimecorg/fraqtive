@@ -26,13 +26,10 @@ public:
     };
 
 public:
-    RenameDialog( QWidget* parent );
+    RenameDialog( Mode mode, const QString& name, QWidget* parent );
     ~RenameDialog();
 
 public:
-    void setMode( Mode mode );
-
-    void setName( const QString& name );
     QString name() const;
 
     void setExistingNames( const QStringList& names );

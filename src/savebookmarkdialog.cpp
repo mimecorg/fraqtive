@@ -16,10 +16,17 @@
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "fractalmodel.h"
+#include "iconloader.h"
 
 SaveBookmarkDialog::SaveBookmarkDialog( QWidget* parent ) : QDialog( parent )
 {
     m_ui.setupUi( this );
+
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "save-bookmark", 22 ) );
+    m_ui.promptLabel->setText( tr( "Save fractal parameters as a bookmark:" ) );
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
 
     connect( m_ui.listView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
         this, SLOT( selectionChanged() ) );

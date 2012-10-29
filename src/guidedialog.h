@@ -8,34 +8,31 @@
 * (at your option) any later version.
 **************************************************************************/
 
-#ifndef TUTORIALDIALOG_H
-#define TUTORIALDIALOG_H
+#ifndef GUIDEDIALOG_H
+#define GUIDEDIALOG_H
+
+#include "xmlui/client.h"
 
 #include <QDialog>
 
-#include "ui_tutorialdialog.h"
+class QTextBrowser;
 
-class TutorialDialog : public QDialog
+class GuideDialog : public QDialog, public XmlUi::Client
 {
     Q_OBJECT
 public:
-    TutorialDialog( QWidget* parent );
-    ~TutorialDialog();
-
-protected: // overrides
-    void closeEvent( QCloseEvent* e );
+    GuideDialog( QWidget* parent );
+    ~GuideDialog();
 
 private slots:
-    void on_buttonBack_clicked();
-    void on_buttonNext_clicked();
+    void goBack();
+    void goForward();
+    void goHome();
+
+    void updateActions();
 
 private:
-    void loadPage( int page );
-
-private:
-    Ui::TutorialDialog m_ui;
-
-    int m_page;
+    QTextBrowser* m_browser;
 };
 
 #endif

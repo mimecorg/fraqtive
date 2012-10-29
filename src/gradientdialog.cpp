@@ -13,10 +13,17 @@
 #include <QPushButton>
 
 #include "datastructures.h"
+#include "iconloader.h"
 
 GradientDialog::GradientDialog( QWidget* parent ) : QDialog( parent )
 {
     m_ui.setupUi( this );
+
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "gradient", 22 ) );
+    m_ui.promptLabel->setText( tr( "Edit the color gradient:" ) );
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
 }
 
 GradientDialog::~GradientDialog()

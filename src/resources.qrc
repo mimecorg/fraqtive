@@ -1,5 +1,6 @@
 <RCC version="1.0">
     <qresource>
         <file>resources/fraqtivemainwindow.xml</file>
+        <file>resources/guidedialog.xml</file>
     </qresource>
 </RCC>

@@ -17,11 +17,18 @@
 #include "fractalpresenter.h"
 #include "fractalmodel.h"
 #include "imageview.h"
+#include "iconloader.h"
 
 LoadBookmarkDialog::LoadBookmarkDialog( QWidget* parent ) : QDialog( parent ),
     m_model( NULL )
 {
     m_ui.setupUi( this );
+
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "load-bookmark", 22 ) );
+    m_ui.promptLabel->setText( tr( "Load fractal parameters from a bookmark:" ) );
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
 
     m_ui.listView->setMap( fraqtive()->configuration()->bookmarks() );
 

@@ -72,10 +72,8 @@ void BookmarkListView::renameItem()
 
         QString name = model()->data( selection[ 0 ] ).toString();
 
-        RenameDialog dialog( this );
+        RenameDialog dialog( RenameDialog::BookmarkMode, name, this );
 
-        dialog.setMode( RenameDialog::BookmarkMode );
-        dialog.setName( name );
         dialog.setExistingNames( map->keys() );
 
         if ( dialog.exec() == QDialog::Accepted ) {

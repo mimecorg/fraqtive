@@ -15,6 +15,7 @@
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "datafunctions.h"
+#include "iconloader.h"
 
 static void initializeDefaultSettings()
 {
@@ -36,6 +37,14 @@ static void initializeDefaultSettings()
 GenerateImageDialog::GenerateImageDialog( QWidget* parent ) : QDialog( parent )
 {
     m_ui.setupUi( this );
+
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "generate-image", 22 ) );
+    m_ui.promptLabel->setText( tr( "Generate an image of the fractal:" ) );
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
+
+    setFixedHeight( sizeHint().height() );
 
     m_ui.sliderDepth->setScaledRange( 1.5, 3.5 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );

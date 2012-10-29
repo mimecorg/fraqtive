@@ -71,10 +71,8 @@ void PresetListView::renameItem()
         QString name = model()->data( selection[ 0 ] ).toString();
         PresetMap* map = ( (PresetModel*)model() )->map();
 
-        RenameDialog dialog( this );
+        RenameDialog dialog( RenameDialog::PresetMode, name, this );
 
-        dialog.setMode( RenameDialog::PresetMode );
-        dialog.setName( name );
         dialog.setExistingNames( map->keys() );
 
         if ( dialog.exec() == QDialog::Accepted ) {

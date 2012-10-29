@@ -17,7 +17,6 @@
 #include <QClipboard>
 #include <QProgressDialog>
 
-#include "tutorialdialog.h"
 #include "datastructures.h"
 #include "fractalmodel.h"
 #include "fractalpresenter.h"
@@ -37,8 +36,7 @@
 #include "xmlui/toolstrip.h"
 #include "xmlui/builder.h"
 
-FraqtiveMainWindow::FraqtiveMainWindow() :
-    m_tutorialDialog( NULL )
+FraqtiveMainWindow::FraqtiveMainWindow()
 {
     QAction* action;
 
@@ -114,13 +112,9 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
     connect( action, SIGNAL( triggered() ), this, SLOT( on_action3DView_triggered() ) );
     setAction( "view3d", action );
 
-    action = new QAction( IconLoader::icon( "help" ), tr( "Quick Tutorial" ), this );
-    action->setShortcut( QKeySequence( Qt::Key_F1 ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionQuickTutorial_triggered() ) );
-    setAction( "quickTutorial", action );
-
     action = new QAction( IconLoader::icon( "about" ), tr( "About Fraqtive" ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionAboutFraqtive_triggered() ) );
+    action->setShortcut( QKeySequence( Qt::Key_F1 ) );
+    connect( action, SIGNAL( triggered() ), fraqtive(), SLOT( about() ) );
     setAction( "aboutFraqtive", action );
 
     setTitle( "sectionFile", tr( "File" ) );
@@ -131,7 +125,6 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
     loadXmlUiFile( ":/resources/fraqtivemainwindow.xml" );
 
     XmlUi::ToolStrip* strip = new XmlUi::ToolStrip( this );
-    strip->addAuxiliaryAction( this->action( "quickTutorial" ) );
     strip->addAuxiliaryAction( this->action( "aboutFraqtive" ) );
     setMenuWidget( strip );
 
@@ -194,12 +187,11 @@ FraqtiveMainWindow::FraqtiveMainWindow() :
 
     if ( config->contains( "Geometry" ) )
         restoreGeometry( config->value( "Geometry" ).toByteArray() );
+    else
+        setWindowState( Qt::WindowMaximized );
 
     if ( config->contains( "State" ) )
         restoreState( config->value( "State" ).toByteArray(), 2 );
-
-    if ( config->value( "ShowTutorial", true ).toBool() )
-        on_actionQuickTutorial_triggered();
 }
 
 FraqtiveMainWindow::~FraqtiveMainWindow()
@@ -216,9 +208,6 @@ void FraqtiveMainWindow::closeEvent( QCloseEvent* e )
     ConfigurationData* config = fraqtive()->configuration();
     config->setValue( "Geometry", saveGeometry() );
     config->setValue( "State", saveState( 2 ) );
-
-    if ( m_tutorialDialog )
-        m_tutorialDialog->close();
 }
 
 bool FraqtiveMainWindow::eventFilter( QObject* watched, QEvent* e )
@@ -523,28 +512,4 @@ void FraqtiveMainWindow::on_action3DView_triggered()
 
     action( "view2d" )->setChecked( false );
     action( "view3d" )->setChecked( true );
-}
-
-void FraqtiveMainWindow::on_actionQuickTutorial_triggered()
-{
-    if ( !m_tutorialDialog )
-        m_tutorialDialog = new TutorialDialog( this );
-
-    m_tutorialDialog->show();
-    m_tutorialDialog->activateWindow();
-}
-
-void FraqtiveMainWindow::on_actionAboutFraqtive_triggered()
-{
-    QString version = "0.4.5";
-    QString link = "<a href=\"http://fraqtive.mimec.org\">fraqtive.mimec.org</a>";
-
-    QString message;
-    message += "<h3>" + tr( "Fraqtive %1" ).arg( version ) + "</h3>";
-    message += "<p>" + tr( "A Mandelbrot family fractal generator." ) + "</p>";
-    message += "<p>" + trUtf8( "Copyright (C) 2004-2009 Michał Męciński" ) + "</p>";
-    message += "<p>" + tr( "This program is licensed under the GNU General Public License." ) + "</p>";
-    message += "<p>" + tr( "Visit %1 for more information." ).arg( link ) + "</p>";
-
-    QMessageBox::about( this, tr( "About Fraqtive" ), message );
 }

@@ -18,7 +18,6 @@
 
 class FractalModel;
 class Gradient;
-class TutorialDialog;
 
 class FraqtiveMainWindow : public QMainWindow, public XmlUi::Client
 {
@@ -49,8 +48,6 @@ private slots:
     void on_actionGenerateImage_triggered();
     void on_action2DView_triggered();
     void on_action3DView_triggered();
-    void on_actionQuickTutorial_triggered();
-    void on_actionAboutFraqtive_triggered();
 
     void customContextMenuRequested( const QPoint& pos );
 
@@ -71,8 +68,6 @@ private:
     Ui::FraqtiveMainWindow m_ui;
 
     FractalModel* m_model;
-
-    TutorialDialog* m_tutorialDialog;
 };
 
 #endif

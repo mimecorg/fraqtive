@@ -19,14 +19,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="ViewContainer" name="mainContainer" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>200</height>
-       </size>
-      </property>
-     </widget>
+     <widget class="ViewContainer" name="mainContainer" native="true"/>
     </item>
    </layout>
   </widget>
@@ -61,14 +54,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="ViewContainer" name="previewContainer" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>200</height>
-        </size>
-       </property>
-      </widget>
+      <widget class="ViewContainer" name="previewContainer" native="true"/>
      </item>
     </layout>
    </widget>
@@ -76,15 +62,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PropertyToolBox</class>
-   <extends>QWidget</extends>
-   <header>propertytoolbox.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>ViewContainer</class>
    <extends>QWidget</extends>
    <header>viewcontainer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PropertyToolBox</class>
+   <extends>QWidget</extends>
+   <header>propertytoolbox.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

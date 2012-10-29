@@ -15,11 +15,18 @@
 #include "fraqtiveapplication.h"
 #include "configurationdata.h"
 #include "fractalmodel.h"
+#include "iconloader.h"
 
 LoadPresetDialog::LoadPresetDialog( QWidget* parent ) : QDialog( parent ),
     m_model( NULL )
 {
     m_ui.setupUi( this );
+
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "load-preset", 22 ) );
+    m_ui.promptLabel->setText( tr( "Load color settings from a preset:" ) );
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
 
     m_ui.listDefault->setMap( fraqtive()->configuration()->defaultPresets() );
     m_ui.listUser->setMap( fraqtive()->configuration()->userPresets() );

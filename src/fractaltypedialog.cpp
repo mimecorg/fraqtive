@@ -14,10 +14,19 @@
 #include "fractalmodel.h"
 #include "imageview.h"
 #include "datafunctions.h"
+#include "iconloader.h"
 
 FractalTypeDialog::FractalTypeDialog( QWidget* parent, const FractalModel* model ) : QDialog( parent )
 {
     m_ui.setupUi( this );
+
+    m_ui.promptPixmap->setPixmap( IconLoader::pixmap( "edit", 22 ) );
+    m_ui.promptLabel->setText( tr( "Change the type and variant of the fractal:" ) );
+
+    m_ui.promptLabel->setMinimumWidth( 350 );
+    m_ui.promptLabel->setFixedHeight( m_ui.promptLabel->heightForWidth( 350 ) );
+
+    setFixedHeight( sizeHint().height() );
 
     m_presenter = new FractalPresenter( this );
 
