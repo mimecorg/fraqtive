@@ -28,6 +28,7 @@ HEADERS   += aboutbox.h \
              fraqtiveapplication.h \
              fraqtivemainwindow.h \
              generateimagedialog.h \
+             generateseriesdialog.h \
              generatorcore.h \
              gradientdialog.h \
              gradienteditor.h \
@@ -70,6 +71,7 @@ SOURCES   += aboutbox.cpp \
              fraqtiveapplication.cpp \
              fraqtivemainwindow.cpp \
              generateimagedialog.cpp \
+             generateseriesdialog.cpp \
              gradientdialog.cpp \
              gradienteditor.cpp \
              guidedialog.cpp \
@@ -98,6 +100,7 @@ FORMS     += advancedsettingspage.ui \
              fractaltypewidget.ui \
              fraqtivemainwindow.ui \
              generateimagedialog.ui \
+             generateseriesdialog.ui \
              gradientdialog.ui \
              gradienteditor.ui \
              loadbookmarkdialog.ui \

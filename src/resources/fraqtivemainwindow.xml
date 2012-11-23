@@ -3,6 +3,7 @@
     <section id="sectionFile">
       <action id="saveImage"/>
       <action id="generateImage"/>
+      <action id="generateSeries"/>
     </section>
     <section id="sectionEdit">
       <action id="copyImage"/>

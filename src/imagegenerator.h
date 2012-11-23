@@ -27,17 +27,20 @@ public:
     ~ImageGenerator();
 
 public:
-    bool setResolution( const QSize& resolution );
+    void setResolution( const QSize& resolution );
     void setParameters( const FractalType& type, const Position& position );
     void setColorSettings( const Gradient& gradient, const QColor& backgroundColor, const ColorMapping& mapping );
     void setGeneratorSettings( const GeneratorSettings& settings );
     void setViewSettings( const ViewSettings& settings );
 
-    int maximumProgress() const { return m_maximumProgress; }
+    void setImageCount( int count );
+    void setCurrentImage( int image );
 
-    const QImage& image() const { return m_image; }
+    int maximumProgress() const { return m_maximumProgress * m_imageCount; }
 
-    void start();
+    QImage takeImage();
+
+    bool start();
 
 public: // AbstractJobProvider implementation
     int priority() const;
@@ -61,6 +64,8 @@ private:
     void finishJob();
 
 private:
+    QSize m_resolution;
+
     FractalType m_type;
     Position m_position;
 
@@ -81,6 +86,9 @@ private:
 
     int m_activeJobs;
     QWaitCondition m_allJobsDone;
+
+    int m_imageCount;
+    int m_currentImage;
 };
 
 #endif

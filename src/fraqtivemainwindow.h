@@ -12,6 +12,7 @@
 #define FRAQTIVEMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 
 #include "ui_fraqtivemainwindow.h"
 #include "xmlui/client.h"
@@ -46,6 +47,7 @@ private slots:
     void on_actionSaveImage_triggered();
     void on_actionCopyImage_triggered();
     void on_actionGenerateImage_triggered();
+    void on_actionGenerateSeries_triggered();
     void on_action2DView_triggered();
     void on_action3DView_triggered();
 
@@ -61,7 +63,12 @@ private:
     void enterFullScreenMode();
     void leaveFullScreenMode();
 
-    QImageWriter* createImageWriter();
+    QString getSaveFileName( const QString& title, const QString& fileName, QByteArray* selectedFormat, QFileDialog::Options options = 0 );
+    QString getSaveImageName( QByteArray* selectedFormat );
+    QString getSaveSeriesName( QByteArray* selectedFormat );
+
+    QImageWriter* createImageWriter( const QString& fileName, const QByteArray& format );
+
     QImage currentImage();
 
 private:

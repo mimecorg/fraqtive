@@ -13,7 +13,6 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QImageWriter>
-#include <QFileDialog>
 #include <QClipboard>
 #include <QProgressDialog>
 
@@ -31,6 +30,7 @@
 #include "loadpresetdialog.h"
 #include "savepresetdialog.h"
 #include "generateimagedialog.h"
+#include "generateseriesdialog.h"
 #include "imagegenerator.h"
 #include "iconloader.h"
 #include "xmlui/toolstrip.h"
@@ -98,6 +98,10 @@ FraqtiveMainWindow::FraqtiveMainWindow()
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
     connect( action, SIGNAL( triggered() ), this, SLOT( on_actionGenerateImage_triggered() ) );
     setAction( "generateImage", action );
+
+    action = new QAction( IconLoader::icon( "generate-series" ), tr( "Generate Series..." ), this );
+    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionGenerateSeries_triggered() ) );
+    setAction( "generateSeries", action );
 
     action = new QAction( IconLoader::icon( "view2d" ), tr( "2D View" ), this );
     action->setShortcut( QKeySequence( Qt::Key_F2 ) );
@@ -346,8 +350,12 @@ void FraqtiveMainWindow::on_actionSaveBookmark_triggered()
 
 void FraqtiveMainWindow::on_actionSaveImage_triggered()
 {
-    QImageWriter* writer = createImageWriter();
-    if ( writer ) {
+    QByteArray format;
+    QString fileName = getSaveImageName( &format );
+
+    if ( !fileName.isEmpty() ) {
+        QImageWriter* writer = createImageWriter( fileName, format );
+
         QImage image = currentImage();
 
         if ( !writer->write( image ) ) {
@@ -365,7 +373,7 @@ void FraqtiveMainWindow::on_actionCopyImage_triggered()
     QApplication::clipboard()->setImage( image );
 }
 
-QImageWriter* FraqtiveMainWindow::createImageWriter()
+QString FraqtiveMainWindow::getSaveFileName( const QString& title, const QString& fileName, QByteArray* selectedFormat, QFileDialog::Options options /*= 0*/ )
 {
     QList<QByteArray> supportedFormats = QImageWriter::supportedImageFormats();
 
@@ -388,41 +396,79 @@ QImageWriter* FraqtiveMainWindow::createImageWriter()
         }
     }
 
-    ConfigurationData* config = fraqtive()->configuration();
-
-    QByteArray format = config->value( "SaveFormat" ).toByteArray();
+    QByteArray format = *selectedFormat;
     if ( format.isEmpty() || !formats.contains( format ) )
         format = formats.first();
 
     QString selectedFilter = filters.at( formats.indexOf( format ) );
 
-    QString path = config->value( "SavePath", QDir::homePath() ).toString();
+    QString result = QFileDialog::getSaveFileName( this, title, fileName,
+        filters.join( ";;" ), &selectedFilter, options );
 
-    QString fileName = QFileInfo( QDir( path ), tr( "fractal" ) ).absoluteFilePath();
-
-    fileName = QFileDialog::getSaveFileName( this, tr( "Save Image" ), fileName,
-        filters.join( ";;" ), &selectedFilter );
-
-    if ( !fileName.isEmpty() ) {
+    if ( !result.isEmpty() ) {
         int index = filters.indexOf( selectedFilter );
         if ( index >= 0 )
             format = formats.at( index );
 
-        if ( QFileInfo( fileName ).suffix().isEmpty() )
-            fileName += '.' + format;
+        *selectedFormat = format;
 
-        config->setValue( "SaveFormat", format );
-        config->setValue( "SavePath", QFileInfo( fileName ).absolutePath() );
-
-        QImageWriter* writer = new QImageWriter( fileName, format );
-
-        if ( format == "tiff" )
-            writer->setCompression( 1 );
-
-        return writer;
+        if ( QFileInfo( result ).suffix().isEmpty() )
+            result += '.' + format;
     }
 
-    return NULL;
+    return result;
+}
+
+QString FraqtiveMainWindow::getSaveImageName( QByteArray* selectedFormat )
+{
+    ConfigurationData* config = fraqtive()->configuration();
+
+    QByteArray format = config->value( "SaveFormat" ).toByteArray();
+
+    QString path = config->value( "SavePath", QDir::homePath() ).toString();
+    QString fileName = QFileInfo( QDir( path ), tr( "fractal" ) ).absoluteFilePath();
+
+    QString result = getSaveFileName( tr( "Save Image" ), fileName, &format );
+
+    if ( !result.isEmpty() ) {
+        config->setValue( "SaveFormat", format );
+        config->setValue( "SavePath", QFileInfo( result ).absolutePath() );
+
+        *selectedFormat = format;
+    }
+
+    return result;
+}
+
+QString FraqtiveMainWindow::getSaveSeriesName( QByteArray* selectedFormat )
+{
+    ConfigurationData* config = fraqtive()->configuration();
+
+    QByteArray format = config->value( "SeriesFormat" ).toByteArray();
+
+    QString path = config->value( "SeriesPath", QDir::homePath() ).toString();
+    QString fileName = QFileInfo( QDir( path ), tr( "series" ) ).absoluteFilePath();
+
+    QString result = getSaveFileName( tr( "Save Series" ), fileName, &format, QFileDialog::DontConfirmOverwrite );
+
+    if ( !result.isEmpty() ) {
+        config->setValue( "SeriesFormat", format );
+        config->setValue( "SeriesPath", QFileInfo( result ).absolutePath() );
+
+        *selectedFormat = format;
+    }
+
+    return result;
+}
+
+QImageWriter* FraqtiveMainWindow::createImageWriter( const QString& fileName, const QByteArray& format )
+{
+    QImageWriter* writer = new QImageWriter( fileName, format );
+
+    if ( format == "tiff" )
+        writer->setCompression( 1 );
+
+    return writer;
 }
 
 QImage FraqtiveMainWindow::currentImage()
@@ -439,39 +485,154 @@ void FraqtiveMainWindow::on_actionGenerateImage_triggered()
     GenerateImageDialog dialog( this );
 
     if ( dialog.exec() == QDialog::Accepted ) {
-        ImageGenerator generator( this );
-        if ( !generator.setResolution( dialog.resolution() ) ) {
-            QMessageBox::warning( this, tr( "Error" ), tr( "Not enough memory to generate image." ) );
-            return;
-        }
-        generator.setParameters( m_model->fractalType(), m_model->position() );
-        generator.setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
-        generator.setGeneratorSettings( dialog.generatorSettings() );
-        generator.setViewSettings( dialog.viewSettings() );
+        QByteArray format;
+        QString fileName = getSaveImageName( &format );
 
-        QProgressDialog progress( this );
-        progress.setWindowModality( Qt::WindowModal );
-        progress.setRange( 0, generator.maximumProgress() );
-        progress.setWindowTitle( tr( "Generate Image" ) );
-        progress.setLabelText( tr( "Calculating..." ) );
-        progress.setValue( 0 );
+        if ( !fileName.isEmpty() ) {
+            ImageGenerator generator( this );
+            generator.setResolution( dialog.resolution() );
+            generator.setParameters( m_model->fractalType(), m_model->position() );
+            generator.setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
+            generator.setGeneratorSettings( dialog.generatorSettings() );
+            generator.setViewSettings( dialog.viewSettings() );
 
-        QEventLoop eventLoop;
+            QProgressDialog progress( this );
+            progress.setWindowModality( Qt::WindowModal );
+            progress.setRange( 0, generator.maximumProgress() );
+            progress.setWindowTitle( tr( "Generate Image" ) );
+            progress.setLabelText( tr( "Calculating..." ) );
+            progress.setValue( 0 );
 
-        connect( &generator, SIGNAL( progressChanged( int ) ), &progress, SLOT( setValue( int ) ), Qt::QueuedConnection );
-        connect( &generator, SIGNAL( completed() ), &eventLoop, SLOT( quit() ), Qt::QueuedConnection );
-        connect( &progress, SIGNAL( canceled() ), &eventLoop, SLOT( quit() ) );
+            progress.setFixedHeight( progress.sizeHint().height() );
+            progress.resize( 300, progress.height() );
 
-        generator.start();
-        eventLoop.exec();
+            QEventLoop eventLoop;
 
-        if ( !progress.wasCanceled() ) {
-            QImageWriter* writer = createImageWriter();
-            if ( writer ) {
-                if ( !writer->write( generator.image() ) ) {
+            connect( &generator, SIGNAL( progressChanged( int ) ), &progress, SLOT( setValue( int ) ), Qt::QueuedConnection );
+            connect( &generator, SIGNAL( completed() ), &eventLoop, SLOT( quit() ), Qt::QueuedConnection );
+            connect( &progress, SIGNAL( canceled() ), &eventLoop, SLOT( quit() ) );
+
+            if ( !generator.start() ) {
+                QMessageBox::warning( this, tr( "Error" ), tr( "Not enough memory to generate image." ) );
+                return;
+            }
+
+            eventLoop.exec();
+
+            if ( !progress.wasCanceled() ) {
+                QImageWriter* writer = createImageWriter( fileName, format );
+                if ( !writer->write( generator.takeImage() ) ) {
                     QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
                 }
                 delete writer;
+            }
+        }
+    }
+}
+
+void FraqtiveMainWindow::on_actionGenerateSeries_triggered()
+{
+    double zoomTo = m_model->position().zoomFactor();
+
+    GenerateSeriesDialog dialog( zoomTo, this );
+
+    if ( dialog.exec() == QDialog::Accepted ) {
+        QByteArray format;
+        QString fileName = getSaveSeriesName( &format );
+
+        if ( !fileName.isEmpty() ) {
+            QFileInfo info( fileName );
+
+            ImageGenerator generator( this );
+            generator.setImageCount( dialog.images() );
+            generator.setResolution( dialog.resolution() );
+
+            generator.setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
+            generator.setGeneratorSettings( dialog.generatorSettings() );
+            generator.setViewSettings( dialog.viewSettings() );
+
+            QProgressDialog progress( this );
+            progress.setWindowModality( Qt::WindowModal );
+            progress.setRange( 0, generator.maximumProgress() );
+            progress.setWindowTitle( tr( "Generate Series" ) );
+            progress.setValue( 0 );
+
+            progress.setFixedHeight( progress.sizeHint().height() );
+            progress.resize( 300, progress.height() );
+
+            connect( &generator, SIGNAL( progressChanged( int ) ), &progress, SLOT( setValue( int ) ), Qt::QueuedConnection );
+
+            QImage previous;
+
+            for ( int i = 0; i < dialog.images(); i++ ) {
+                progress.setLabelText( tr( "Calculating %1 of %2..." ).arg( i + 1 ).arg( dialog.images() ) );
+    
+                generator.setCurrentImage( i );
+
+                Position position = m_model->position();
+
+                double zoomFrom = zoomTo - dialog.zoomFactor();
+                double angleTo = position.angle();
+                double angleFrom = angleTo - dialog.angle();
+
+                double a = (double)i / (double)( dialog.images() - 1 );
+
+                position.setZoomFactor( zoomFrom + a * ( zoomTo - zoomFrom ) );
+                position.setAngle( angleFrom + a * ( angleTo - angleFrom ) );
+
+                generator.setParameters( m_model->fractalType(), position );
+
+                QEventLoop eventLoop;
+
+                connect( &generator, SIGNAL( completed() ), &eventLoop, SLOT( quit() ), Qt::QueuedConnection );
+                connect( &progress, SIGNAL( canceled() ), &eventLoop, SLOT( quit() ) );
+
+                if ( !generator.start() ) {
+                    QMessageBox::warning( this, tr( "Error" ), tr( "Not enough memory to generate image." ) );
+                    return;
+                }
+
+                eventLoop.exec();
+
+                if ( progress.wasCanceled() )
+                    break;
+
+                QString fullName = info.completeBaseName() + QLatin1String( "." ) + QString::number( i ).rightJustified( 4, QLatin1Char( '0' ) ) + QLatin1String( "." ) + info.suffix();
+                QString fullPath = info.absoluteDir().absoluteFilePath( fullName );
+
+                QImage current = generator.takeImage();
+
+                if ( !previous.isNull() ) {
+                    QPainter painter( &current );
+
+                    double angle = ( angleTo - angleFrom ) / (double)( dialog.images() - 1 );
+                    double scale = pow( 10.0, ( zoomTo - zoomFrom ) / (double)( dialog.images() - 1 ) );
+
+                    QTransform transform;
+                    transform.translate( current.width() / 2, current.height() / 2 );
+                    transform.rotate( angle );
+                    transform.scale( scale, scale );
+                    transform.translate( -current.width() / 2, -current.height() / 2 );
+
+                    painter.setOpacity( dialog.blending() );
+                    painter.setTransform( transform );
+                    painter.setRenderHint( QPainter::SmoothPixmapTransform );
+
+                    painter.drawImage( 0, 0, previous );
+
+                    previous = QImage();
+                }
+
+                QImageWriter* writer = createImageWriter( fullPath, format );
+                if ( !writer->write( current ) ) {
+                    QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
+                    delete writer;
+                    break;
+                }
+                delete writer;
+
+                if ( dialog.blending() > 0.01 )
+                    previous = current;
             }
         }
     }

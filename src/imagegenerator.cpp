@@ -28,7 +28,9 @@
 ImageGenerator::ImageGenerator( QObject* parent ) : QObject( parent ),
     m_gradientCache( NULL ),
     m_maximumProgress( 0 ),
-    m_activeJobs( 0 )
+    m_activeJobs( 0 ),
+    m_imageCount( 1 ),
+    m_currentImage( 0 )
 {
 }
 
@@ -53,34 +55,19 @@ static int roundToCellSize( int size )
     return ( ( size - 1 + GeneratorCore::CellSize - 1 ) / GeneratorCore::CellSize ) * GeneratorCore::CellSize + 1;
 }
 
-bool ImageGenerator::setResolution( const QSize& resolution )
+void ImageGenerator::setResolution( const QSize& resolution )
 {
-    m_image = QImage( resolution, QImage::Format_RGB32 );
+    m_resolution = resolution;
 
-    if ( m_image.isNull() )
-        return false;
-
-    m_regions.clear();
-
-    int width = roundToCellSize( resolution.width() + 2 );
     int height = resolution.height() + 2;
 
     int fullRegions = height / ( RegionSize - 2 );
     int remainder = height - fullRegions * ( RegionSize - 2 );
 
-    for ( int i = 0; i < fullRegions; i++ ) {
-        QRect region( 0, i * ( RegionSize - 2 ), width, RegionSize );
-        m_regions.append( region );
-    }
+    m_maximumProgress = fullRegions;
 
-    if ( remainder > 0 ) {
-        QRect region( 0, fullRegions * ( RegionSize - 2 ), width, roundToCellSize( remainder ) );
-        m_regions.append( region );
-    }
-
-    m_maximumProgress = m_regions.count();
-
-    return true;
+    if ( remainder > 0 )
+        m_maximumProgress++;
 }
 
 void ImageGenerator::setParameters( const FractalType& type, const Position& position )
@@ -112,9 +99,51 @@ void ImageGenerator::setViewSettings( const ViewSettings& settings )
     m_viewSettings = settings;
 }
 
-void ImageGenerator::start()
+void ImageGenerator::setImageCount( int count )
 {
+    m_imageCount = count;
+}
+
+void ImageGenerator::setCurrentImage( int image )
+{
+    m_currentImage = image;
+}
+
+QImage ImageGenerator::takeImage()
+{
+    QImage result = m_image;
+    m_image = QImage();
+    return result;
+}
+
+bool ImageGenerator::start()
+{
+    m_image = QImage( m_resolution, QImage::Format_RGB32 );
+
+    if ( m_image.isNull() )
+        return false;
+
+    m_regions.clear();
+
+    int width = roundToCellSize( m_image.width() + 2 );
+    int height = m_image.height() + 2;
+
+    int fullRegions = height / ( RegionSize - 2 );
+    int remainder = height - fullRegions * ( RegionSize - 2 );
+
+    for ( int i = 0; i < fullRegions; i++ ) {
+        QRect region( 0, i * ( RegionSize - 2 ), width, RegionSize );
+        m_regions.append( region );
+    }
+
+    if ( remainder > 0 ) {
+        QRect region( 0, fullRegions * ( RegionSize - 2 ), width, roundToCellSize( remainder ) );
+        m_regions.append( region );
+    }
+
     addJobs();
+
+    return true;
 }
 
 int ImageGenerator::priority() const
@@ -219,7 +248,7 @@ void ImageGenerator::cancelJobs()
     int count = fraqtive()->jobScheduler()->cancelAllJobs( this );
     m_activeJobs -= count;
 
-    emit progressChanged( m_maximumProgress - m_activeJobs );
+    emit progressChanged( m_maximumProgress * m_currentImage + m_maximumProgress - m_activeJobs );
 
     if ( m_activeJobs == 0 )
         m_allJobsDone.wakeAll();
@@ -229,7 +258,7 @@ void ImageGenerator::finishJob()
 {
     m_activeJobs--;
 
-    emit progressChanged( m_maximumProgress - m_activeJobs );
+    emit progressChanged( m_maximumProgress * m_currentImage + m_maximumProgress - m_activeJobs );
 
     if ( m_activeJobs == 0 ) {
         m_allJobsDone.wakeAll();
