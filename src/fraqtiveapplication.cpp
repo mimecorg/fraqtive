@@ -10,6 +10,16 @@
 
 #include "fraqtiveapplication.h"
 
+#include <QTimer>
+#include <QDateTime>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QUrl>
+
+#if defined( Q_WS_WIN )
+#include <shlobj.h>
+#endif
+
 #include "jobscheduler.h"
 #include "configurationdata.h"
 #include "fraqtivemainwindow.h"

@@ -15,6 +15,10 @@
 #include <QImageWriter>
 #include <QClipboard>
 #include <QProgressDialog>
+#include <QPainter>
+#include <QMenu>
+
+#include <math.h>
 
 #include "datastructures.h"
 #include "fractalmodel.h"
