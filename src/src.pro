@@ -139,11 +139,11 @@ sse2 {
 include( xmlui/xmlui.pri )
 
 static {
-    !contains( QT_CONFIG, no-jpeg ) {
+    !contains( QT_CONFIG, no-jpeg ) : !contains( QT_CONFIG, jpeg ) {
         DEFINES += HAVE_STATIC_JPEG
         QTPLUGIN += qjpeg
     }
-    !contains( QT_CONFIG, no-tiff ) {
+    !contains( QT_CONFIG, no-tiff ) : !contains( QT_CONFIG, tiff ) {
         DEFINES += HAVE_STATIC_TIFF
         QTPLUGIN += qtiff
     }
