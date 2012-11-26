@@ -129,6 +129,10 @@ void FraqtiveApplication::about()
         webMessage += "<h4>" + tr( "Website" ) + "</h4>";
         webMessage += "<p>" + tr( "Visit %1 for more information about Fraqtive." ).arg( link ) + "</p>";
 
+        QString donateMessage;
+        donateMessage += "<h4>" + tr( "Donations" ) + "</h4>";
+        donateMessage += "<p>" + tr( "If you like this program, your donation will help me dedicate more time for it, support it and implement new features." ) + "</p>";
+
         QString infoMessage = technicalInformation();
 
         m_aboutBox = new AboutBox( tr( "About Fraqtive" ), message, m_mainWindow );
@@ -139,6 +143,11 @@ void FraqtiveApplication::about()
         connect( helpButton, SIGNAL( clicked() ), this, SLOT( showQuickGuide() ) );
 
         m_aboutBox->addSection( IconLoader::pixmap( "web" ), webMessage );
+
+        AboutBoxSection* donateSection = m_aboutBox->addSection( IconLoader::pixmap( "donate" ), donateMessage );
+
+        QPushButton* donateButton = donateSection->addButton( tr( "&Donate" ) );
+        connect( donateButton, SIGNAL( clicked() ), this, SLOT( openDonations() ) );
 
         m_aboutBox->addSection( IconLoader::pixmap( "info" ), infoMessage );
     }
@@ -160,4 +169,9 @@ void FraqtiveApplication::showQuickGuide()
 
     m_guideDialog->show();
     m_guideDialog->activateWindow();
+}
+
+void FraqtiveApplication::openDonations()
+{
+    QDesktopServices::openUrl( QUrl( "http://fraqtive.mimec.org/donations" ) );
 }

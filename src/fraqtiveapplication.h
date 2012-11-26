@@ -35,6 +35,7 @@ public:
 public slots:
     void about();
     void showQuickGuide();
+    void openDonations();
 
 private:
     QString version() const;
