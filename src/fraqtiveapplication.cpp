@@ -37,6 +37,11 @@ FraqtiveApplication::FraqtiveApplication( int& argc, char** argv ) : QApplicatio
 
     m_mainWindow = new FraqtiveMainWindow();
     m_mainWindow->show();
+
+    if ( m_configuration->value( "LastVersion" ).toString() != version() ) {
+        m_configuration->setValue( "LastVersion", version() );
+        QTimer::singleShot( 100, this, SLOT( about() ) );
+    }
 }
 
 FraqtiveApplication::~FraqtiveApplication()
@@ -51,6 +56,11 @@ FraqtiveApplication::~FraqtiveApplication()
 
     delete m_configuration;
     m_configuration = NULL;
+}
+
+QString FraqtiveApplication::version() const
+{
+    return "0.4.5";
 }
 
 #if defined( Q_OS_WIN )
@@ -99,11 +109,9 @@ QString FraqtiveApplication::technicalInformation()
 
 void FraqtiveApplication::about()
 {
-    QString version = "0.4.5";
-
     if ( !m_aboutBox ) {
         QString message;
-        message += "<h3>" + tr( "Fraqtive %1" ).arg( version ) + "</h3>";
+        message += "<h3>" + tr( "Fraqtive %1" ).arg( version() ) + "</h3>";
         message += "<p>" + tr( "Mandelbrot family fractal generator." ) + "</p>";
         message += "<p>" + tr( "This program is free software: you can redistribute it and/or modify"
             " it under the terms of the GNU General Public License as published by"

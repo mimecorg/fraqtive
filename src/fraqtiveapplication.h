@@ -37,6 +37,8 @@ public slots:
     void showQuickGuide();
 
 private:
+    QString version() const;
+
     QString technicalInformation();
 
 private:
