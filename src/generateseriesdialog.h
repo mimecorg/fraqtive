@@ -16,11 +16,14 @@
 #include "ui_generateseriesdialog.h"
 #include "datastructures.h"
 
+class FractalModel;
+class FractalPresenter;
+
 class GenerateSeriesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    GenerateSeriesDialog( float zoomFactor, QWidget* parent );
+    GenerateSeriesDialog( QWidget* parent, const FractalModel* model );
     ~GenerateSeriesDialog();
 
 public:
@@ -38,8 +41,28 @@ public:
 public: // overrides
     void accept();
 
+private slots:
+    void on_sliderDepth_valueChanged();
+    void on_sliderDetail_valueChanged();
+    void on_radioAANone_clicked();
+    void on_radioAALow_clicked();
+    void on_radioAAMedium_clicked();
+    void on_radioAAHigh_clicked();
+    void on_spinZoom_valueChanged();
+    void on_spinAngle_valueChanged();
+    void on_animSlider_valueChanged();
+
+private:
+    void updatePosition();
+    void updateSettings();
+
 private:
     Ui::GenerateSeriesDialog m_ui;
+
+    FractalPresenter* m_presenter;
+
+    FractalType m_fractalType;
+    Position m_endPosition;
 
     QSize m_resolution;
     GeneratorSettings m_generatorSettings;

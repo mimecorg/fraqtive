@@ -532,9 +532,7 @@ void FraqtiveMainWindow::on_actionGenerateImage_triggered()
 
 void FraqtiveMainWindow::on_actionGenerateSeries_triggered()
 {
-    double zoomTo = m_model->position().zoomFactor();
-
-    GenerateSeriesDialog dialog( zoomTo, this );
+    GenerateSeriesDialog dialog( this, m_model );
 
     if ( dialog.exec() == QDialog::Accepted ) {
         QByteArray format;
@@ -571,6 +569,7 @@ void FraqtiveMainWindow::on_actionGenerateSeries_triggered()
 
                 Position position = m_model->position();
 
+                double zoomTo = position.zoomFactor();
                 double zoomFrom = zoomTo - dialog.zoomFactor();
                 double angleTo = position.angle();
                 double angleFrom = angleTo - dialog.angle();

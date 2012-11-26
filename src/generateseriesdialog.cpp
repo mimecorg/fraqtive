@@ -11,6 +11,9 @@
 #include "generateseriesdialog.h"
 
 #include "fraqtiveapplication.h"
+#include "fractalpresenter.h"
+#include "fractalmodel.h"
+#include "imageview.h"
 #include "configurationdata.h"
 #include "datafunctions.h"
 #include "iconloader.h"
@@ -36,7 +39,8 @@ static void initializeSeriesSettings()
     }
 }
 
-GenerateSeriesDialog::GenerateSeriesDialog( float zoomFactor, QWidget* parent ) : QDialog( parent )
+GenerateSeriesDialog::GenerateSeriesDialog( QWidget* parent, const FractalModel* model ) : QDialog( parent ),
+    m_presenter( NULL )
 {
     m_ui.setupUi( this );
 
@@ -97,7 +101,10 @@ GenerateSeriesDialog::GenerateSeriesDialog( float zoomFactor, QWidget* parent ) 
 
     m_ui.spinImages->setValue( m_images );
 
-    m_zoomFactor = zoomFactor + 0.45;
+    m_fractalType = model->fractalType();
+    m_endPosition = model->position();
+
+    m_zoomFactor = m_endPosition.zoomFactor() + 0.45;
     m_angle = 0.0;
 
     m_ui.spinZoom->setValue( m_zoomFactor );
@@ -106,6 +113,21 @@ GenerateSeriesDialog::GenerateSeriesDialog( float zoomFactor, QWidget* parent ) 
     m_blending = config->value( "SeriesBlending" ).toDouble();
 
     m_ui.spinBlending->setValue( m_blending );
+
+    m_presenter = new FractalPresenter( this );
+
+    ImageView* view = new ImageView( m_ui.viewContainer, m_presenter );
+    m_ui.viewContainer->setView( view );
+
+    m_presenter->setView( view );
+    m_presenter->setPriority( 1 );
+
+    m_presenter->setColorSettings( model->gradient(), model->backgroundColor(), model->colorMapping() );
+
+    updatePosition();
+    updateSettings();
+
+    m_presenter->setEnabled( true );
 }
 
 GenerateSeriesDialog::~GenerateSeriesDialog()
@@ -120,20 +142,7 @@ void GenerateSeriesDialog::accept()
 
     config->setValue( "SeriesResolution", QVariant::fromValue( m_resolution ) );
 
-    m_generatorSettings.setCalculationDepth( m_ui.sliderDepth->scaledValue() );
-    m_generatorSettings.setDetailThreshold( m_ui.sliderDetail->scaledValue() );
-
     config->setValue( "SeriesGeneratorSettings", QVariant::fromValue( m_generatorSettings ) );
-
-    if ( m_ui.radioAANone->isChecked() )
-        m_viewSettings.setAntiAliasing( NoAntiAliasing );
-    if ( m_ui.radioAALow->isChecked() )
-        m_viewSettings.setAntiAliasing( LowAntiAliasing );
-    if ( m_ui.radioAAMedium->isChecked() )
-        m_viewSettings.setAntiAliasing( MediumAntiAliasing );
-    if ( m_ui.radioAAHigh->isChecked() )
-        m_viewSettings.setAntiAliasing( HighAntiAliasing );
-
     config->setValue( "SeriesViewSettings", QVariant::fromValue( m_viewSettings ) );
 
     m_images = m_ui.spinImages->value();
@@ -148,4 +157,90 @@ void GenerateSeriesDialog::accept()
     config->setValue( "SeriesBlending", m_blending );
 
     QDialog::accept();
+}
+
+void GenerateSeriesDialog::on_sliderDepth_valueChanged()
+{
+    updateSettings();
+}
+
+void GenerateSeriesDialog::on_sliderDetail_valueChanged()
+{
+    updateSettings();
+}
+
+void GenerateSeriesDialog::on_radioAANone_clicked()
+{
+    updateSettings();
+}
+
+void GenerateSeriesDialog::on_radioAALow_clicked()
+{
+    updateSettings();
+}
+
+void GenerateSeriesDialog::on_radioAAMedium_clicked()
+{
+    updateSettings();
+}
+
+void GenerateSeriesDialog::on_radioAAHigh_clicked()
+{
+    updateSettings();
+}
+
+void GenerateSeriesDialog::on_spinZoom_valueChanged()
+{
+    updatePosition();
+}
+
+void GenerateSeriesDialog::on_spinAngle_valueChanged()
+{
+    updatePosition();
+}
+
+void GenerateSeriesDialog::on_animSlider_valueChanged()
+{
+    updatePosition();
+}
+
+void GenerateSeriesDialog::updatePosition()
+{
+    if ( !m_presenter )
+        return;
+
+    Position position = m_endPosition;
+
+    double zoomTo = position.zoomFactor();
+    double zoomFrom = zoomTo - m_ui.spinZoom->value();
+    double angleTo = position.angle();
+    double angleFrom = angleTo - m_ui.spinAngle->value();
+
+    double a = (double)m_ui.animSlider->value() / 100.0;
+
+    position.setZoomFactor( zoomFrom + a * ( zoomTo - zoomFrom ) );
+    position.setAngle( angleFrom + a * ( angleTo - angleFrom ) );
+
+    m_presenter->setParameters( m_fractalType, position );
+}
+
+void GenerateSeriesDialog::updateSettings()
+{
+    if ( !m_presenter )
+        return;
+
+    m_generatorSettings.setCalculationDepth( m_ui.sliderDepth->scaledValue() );
+    m_generatorSettings.setDetailThreshold( m_ui.sliderDetail->scaledValue() );
+
+    if ( m_ui.radioAANone->isChecked() )
+        m_viewSettings.setAntiAliasing( NoAntiAliasing );
+    if ( m_ui.radioAALow->isChecked() )
+        m_viewSettings.setAntiAliasing( LowAntiAliasing );
+    if ( m_ui.radioAAMedium->isChecked() )
+        m_viewSettings.setAntiAliasing( MediumAntiAliasing );
+    if ( m_ui.radioAAHigh->isChecked() )
+        m_viewSettings.setAntiAliasing( HighAntiAliasing );
+
+    m_presenter->setGeneratorSettings( m_generatorSettings );
+    m_presenter->setViewSettings( m_viewSettings );
 }
