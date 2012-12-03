@@ -52,7 +52,7 @@ GenerateSeriesDialog::GenerateSeriesDialog( QWidget* parent, const FractalModel*
 
     setFixedHeight( sizeHint().height() );
 
-    m_ui.sliderDepth->setScaledRange( 1.5, 3.5 );
+    m_ui.sliderDepth->setScaledRange( 1.5, 4.0 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
 
     int width = 0;

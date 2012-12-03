@@ -20,7 +20,7 @@ AdvancedSettingsPage::AdvancedSettingsPage( QWidget* parent ) : QWidget( parent 
 {
     m_ui.setupUi( this );
 
-    m_ui.sliderDepth->setScaledRange( 1.5, 3.5 );
+    m_ui.sliderDepth->setScaledRange( 1.5, 4.0 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
     m_ui.sliderHeight->setScaledRange( 0.02, 0.42 );
     m_ui.sliderZoom->setScaledRange( 45.0, 10.0 );
