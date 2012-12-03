@@ -74,6 +74,9 @@ QString FraqtiveApplication::version() const
 }
 
 #if defined( Q_OS_WIN )
+#if defined( Q_CC_GNU )
+#define __ImageBase _image_base__
+#endif
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 #endif
 

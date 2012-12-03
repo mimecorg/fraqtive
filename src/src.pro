@@ -154,7 +154,7 @@ INCLUDEPATH += .
 PRECOMPILED_HEADER = fraqtive_pch.h
 
 win32 {
-    RC_FILE = fraqtive.rc
+    !win32-g++:RC_FILE = fraqtive.rc
     LIBS += -lshell32
 }
 
