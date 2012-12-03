@@ -1,11 +1,11 @@
-Installation
+Requirements
 ============
 
 Requirements:
 
- * Qt 4.3 or newer (http://www.trolltech.com/products/qt/)
+ * Qt 4.3 or newer (http://qt.digia.com/product/)
 
-The program can be build using the standard 'qmake' tool from Qt. Simple configure
+The program can be built using the standard 'qmake' tool from Qt. Simple configure
 scripts are available for both Linux and Windows which create a configuration file
 and run qmake with appropriate parameters. See detailed instructions below.
 
@@ -13,9 +13,9 @@ and run qmake with appropriate parameters. See detailed instructions below.
 Linux
 =====
 
-To compile the program you will need a modern C++ compiler (preferably gcc)
-and headers for the Qt library (if you use binary packages, make sure you have
-the appropriate 'devel' package installed).
+To compile the program you will need a C++ compiler (preferably gcc) and headers
+for the Qt library (if you use binary packages, make sure you have the appropriate
+'devel' package installed).
 
 The typical procedure of building and installing the program is:
 
@@ -46,9 +46,8 @@ Additional options that can be passed to the configure script:
 Windows
 =======
 
-You must have the Qt/Windows Open Source Edition installed. By default it is compiled
-using the MinGW compiler. Since Qt 4.3.2 also Microsoft Visual C++ is supported and
-can be used to compile Qt libraries and programs using Qt.
+You must have the open source edition of Qt installed. The program can be compiled
+using either the MinGW compiler or Microsoft Visual C++.
 
 If you are using MinGW, open the Qt Command Prompt. Go to the directory where
 you have unpacked Fraqtive and run:
@@ -56,9 +55,9 @@ you have unpacked Fraqtive and run:
     > configure.bat
     > mingw32-make
 
-If you are using Microsoft Visual C++, open the Visual Studio Command Prompt. Note that
-only Visual Studio 2005 or newer is supported. Make sure that QTDIR is set to the path
-where Qt was installed. Go to the directory where you have unpacked Fraqtive and run:
+If you are using Microsoft Visual C++, open the Visual Studio Command Prompt.
+Make sure that QTDIR is set to the path where Qt was installed. Go to the directory
+where you have unpacked Fraqtive and run:
 
     > set QTDIR=C:\path\to\qt4
     > configure.bat
