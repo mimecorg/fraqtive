@@ -8,13 +8,17 @@ images and renders 3D scenes using OpenGL. It allows real-time
 navigation and dynamic generation of the Julia fractal preview.
 
 
-Credits and License
-===================
+Copyrights
+==========
 
-Program copyright (C) 2004-2009 Michał Męciński
+Copyright (C) 2004-2012 Michał Męciński
 
 Icons based on the KDE Crystal theme copyright (C) 2002 and following
 years KDE Artists
+
+    
+License
+=======
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

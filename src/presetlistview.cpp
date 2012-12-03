@@ -1,6 +1,6 @@
 /**************************************************************************
 * This file is part of the Fraqtive program
-* Copyright (C) 2004-2009 Micha³ Mêciñski
+* Copyright (C) 2004-2012 Micha³ Mêciñski
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by

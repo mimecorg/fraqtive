@@ -1,6 +1,6 @@
 /**************************************************************************
 * This file is part of the Fraqtive program
-* Copyright (C) 2004-2009 Michał Męciński
+* Copyright (C) 2004-2012 Michał Męciński
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ VIProductVersion "${BUILDVERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "Michał Męciński"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Fraqtive installer"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (C) 2004-2009 Michał Męciński"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (C) 2004-2012 Michał Męciński"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "fraqtive-${VERSION}-win32.exe"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Fraqtive"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
