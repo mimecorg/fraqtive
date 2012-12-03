@@ -101,13 +101,52 @@ void FractalPresenter::setFractalType( const FractalType& type )
     }
 }
 
+static QTransform preciselyInverted( const QTransform& transform )
+{
+    QTransform inverted;
+
+    switch ( transform.type() ) {
+        case QTransform::TxNone:
+            break;
+
+        case QTransform::TxTranslate:
+            inverted.translate( -transform.dx(), -transform.dy() );
+            break;
+
+        case QTransform::TxScale:
+            inverted.scale( 1.0 / transform.m11(), 1.0 / transform.m22() );
+            inverted.translate( -transform.dx(), -transform.dy() );
+            break;
+
+        default:
+            inverted = transform.inverted();
+    }
+
+    return inverted;
+}
+
+static QLineF preciselyMap( const QTransform& transform, const QLineF& line )
+{
+    qreal fx1 = line.x1();
+    qreal fy1 = line.y1();
+    qreal fx2 = line.x2();
+    qreal fy2 = line.y2();
+
+    qreal x1 = transform.m11() * fx1 + transform.m21() * fy1 + transform.dx();
+    qreal y1 = transform.m12() * fx1 + transform.m22() * fy1 + transform.dy();
+    qreal x2 = transform.m11() * fx2 + transform.m21() * fy2 + transform.dx();
+    qreal y2 = transform.m12() * fx2 + transform.m22() * fy2 + transform.dy();
+
+    return QLineF( x1, y1, x2, y2 );
+}
+
 void FractalPresenter::setPosition( const Position& position )
 {
     if ( m_position != position ) {
         if ( m_enabled && !m_preview ) {
             QTransform oldTransform = transformFromPosition( m_position );
             QTransform newTransform = transformFromPosition( position );
-            QTransform difference = ( newTransform * oldTransform.inverted() ).inverted();
+            QTransform difference = preciselyInverted( newTransform * preciselyInverted( oldTransform ) );
             m_view->transformView( difference );
         }
         m_position = position;
@@ -189,7 +228,7 @@ void FractalPresenter::clearHovering()
 void FractalPresenter::setTrackingTransform( const QTransform& transform )
 {
     QTransform oldTransform = transformFromPosition( m_position );
-    QTransform newTransform = transform.inverted() * oldTransform;
+    QTransform newTransform = preciselyInverted( transform ) * oldTransform;
 
     Position position = positionFromTransform( newTransform );
     m_model->setTrackingPosition( position );
@@ -203,7 +242,7 @@ void FractalPresenter::clearTracking()
 void FractalPresenter::changePosition( const QTransform& transform )
 {
     QTransform oldTransform = transformFromPosition( m_position );
-    QTransform newTransform = transform.inverted() * oldTransform;
+    QTransform newTransform = preciselyInverted( transform ) * oldTransform;
 
     Position position = positionFromTransform( newTransform );
     m_model->setPosition( position );
@@ -281,7 +320,7 @@ Position FractalPresenter::positionFromTransform( const QTransform& transform )
     QPointF center( m_resolution.width() / 2.0, m_resolution.height() / 2.0 );
 
     QLineF line( center, QPointF( center.x() + m_resolution.height(), center.y() ) );
-    QLineF mapped = transform.map( line );
+    QLineF mapped = preciselyMap( transform, line );
 
     Position position;
     position.setCenter( mapped.p1() );
