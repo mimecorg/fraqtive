@@ -12,19 +12,47 @@
 !define BUILDVERSION "0.4.5.3639"
 
 !define SRCDIR ".."
-
-!define QTDIR "D:\Qt4-msvc"
-!define UPXDIR "C:\Program Files\UPX"
+!define BUILDDIR "..\release"
 
 !define UNINST_KEY "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Fraqtive"
+
+!ifndef SIGN
+    !verbose 2
+
+    !system "$\"${NSISDIR}\makensis$\" /V2 /DSIGN ${SCRIPTNAME}" = 0
+
+    !system "..\..\sign.bat fraqtive-${VERSION}-${ARCHITECTURE}.exe" = 0
+
+    SetCompress off
+
+    OutFile "$%TEMP%\signinst.exe"
+
+    Section
+    SectionEnd
+!else
 
 !include "MUI2.nsh"
 
 !include "languages\fraqtive_en.nsh"
 
-SetCompressor /SOLID lzma
-SetCompressorDictSize 32
-OutFile "fraqtive-${VERSION}-win32.exe"
+!ifdef INNER
+    SetCompress off
+
+    OutFile "$%TEMP%\innerinst.exe"
+!else
+    !verbose 4
+
+    !system "$\"${NSISDIR}\makensis$\" /V2 /DSIGN /DINNER ${SCRIPTNAME}" = 0
+
+    !system "$%TEMP%\innerinst.exe" = 2
+
+    !system "..\..\sign.bat $%TEMP%\uninstall.exe" = 0
+
+    SetCompressor /SOLID lzma
+    SetCompressorDictSize 32
+
+    OutFile "fraqtive-${VERSION}-${ARCHITECTURE}.exe"
+!endif
 
 !define MULTIUSER_EXECUTIONLEVEL "Highest"
 !define MULTIUSER_MUI
@@ -34,7 +62,13 @@ OutFile "fraqtive-${VERSION}-win32.exe"
 !define MULTIUSER_INSTALLMODE_INSTDIR "Fraqtive"
 !define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_KEY "${UNINST_KEY}"
 !define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_VALUENAME "InstallLocation"
-!include "MultiUser.nsh"
+!if ${ARCHITECTURE} == "win_x64"
+    !define MULTIUSER_USE_PROGRAMFILES64
+!endif
+!ifndef INNER
+    !define MULTIUSER_NOUNINSTALL
+!endif
+!include "include\multiuser64.nsh"
 
 Name "$(NAME)"
 
@@ -65,31 +99,40 @@ ShowInstDetails nevershow
 !define MUI_FINISHPAGE_TITLE "$(TITLE)"
 !insertmacro MUI_PAGE_FINISH
   
-!define MUI_WELCOMEPAGE_TITLE "$(TITLE)"
-!insertmacro MUI_UNPAGE_WELCOME
+!ifdef INNER  
+    !define MUI_WELCOMEPAGE_TITLE "$(TITLE)"
+    !insertmacro MUI_UNPAGE_WELCOME
 
-!insertmacro MUI_UNPAGE_CONFIRM
+    !insertmacro MUI_UNPAGE_CONFIRM
 
-ShowUninstDetails nevershow
-!insertmacro MUI_UNPAGE_INSTFILES
+    ShowUninstDetails nevershow
+    !insertmacro MUI_UNPAGE_INSTFILES
 
-!define MUI_FINISHPAGE_TITLE "$(TITLE)"
-!insertmacro MUI_UNPAGE_FINISH
+    !define MUI_FINISHPAGE_TITLE "$(TITLE)"
+    !insertmacro MUI_UNPAGE_FINISH
+!endif
 
 !insertmacro MUI_LANGUAGE "English"
 
 VIProductVersion "${BUILDVERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "Michał Męciński"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Fraqtive installer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Fraqtive Setup"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (C) 2004-2012 Michał Męciński"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "fraqtive-${VERSION}-win32.exe"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "fraqtive-${VERSION}-${ARCHITECTURE}.exe"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Fraqtive"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
 
-!packhdr "$%TEMP%\exehead.tmp" '"${UPXDIR}\upx.exe" --lzma "$%TEMP%\exehead.tmp"'
-
 Function .onInit
+
+!if ${ARCHITECTURE} == "win_x64"
+    SetRegView 64
+!endif
+
+!ifdef INNER
+    WriteUninstaller "$%TEMP%\uninstall.exe"
+    Quit
+!endif
 
     !insertmacro MULTIUSER_INIT
 
@@ -106,14 +149,16 @@ Section
     SetOutPath "$INSTDIR\bin"
 
     Delete "$INSTDIR\bin\*.*"
-    RMDir /r "$INSTDIR\bin\imageformats"
 
-    File "bin\fraqtive.exe"
+    File "${BUILDDIR}\fraqtive.exe"
+
+    SetOutPath "$INSTDIR\bin"
 
     CreateShortCut "$SMPROGRAMS\Fraqtive.lnk" "$INSTDIR\bin\fraqtive.exe"
     CreateShortCut "$DESKTOP\Fraqtive.lnk" "$INSTDIR\bin\fraqtive.exe"
 
-    WriteRegStr SHCTX "${UNINST_KEY}" "DisplayName" "Fraqtive ${VERSION}"
+    WriteRegStr SHCTX "${UNINST_KEY}" "DisplayIcon" '"$INSTDIR\bin\fraqtive.exe"'
+    WriteRegStr SHCTX "${UNINST_KEY}" "DisplayName" "Fraqtive ${VERSION}${SUFFIX}"
     WriteRegStr SHCTX "${UNINST_KEY}" "DisplayVersion" "${VERSION}"
     WriteRegStr SHCTX "${UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe" /$MultiUser.InstallMode'
     WriteRegStr SHCTX "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
@@ -124,11 +169,20 @@ Section
     WriteRegDWORD SHCTX "${UNINST_KEY}" "NoModify" 1
     WriteRegDWORD SHCTX "${UNINST_KEY}" "NoRepair" 1
 
-    WriteUninstaller "uninstall.exe"
+!ifndef INNER
+    SetOutPath "$INSTDIR"
+    File "$%TEMP%\uninstall.exe"
+!endif
 
 SectionEnd
 
+!ifdef INNER
+
 Function un.onInit
+
+!if ${ARCHITECTURE} == "win_x64"
+    SetRegView 64
+!endif
 
     !insertmacro MULTIUSER_UNINIT
 
@@ -137,7 +191,7 @@ FunctionEnd
 Section "Uninstall"
 
     DeleteRegKey SHCTX "${UNINST_KEY}"
-
+    
     Delete "$SMPROGRAMS\Fraqtive.lnk"
     Delete "$DESKTOP\Fraqtive.lnk"
 
@@ -149,3 +203,6 @@ Section "Uninstall"
     RMDir "$INSTDIR"
 
 SectionEnd
+
+!endif
+!endif
