@@ -180,17 +180,17 @@ win32-msvc* {
     CONFIG -= flat
 }
 
-target.path = $$PREFIX/bin
+target.path = $${DESTINATION}$$PREFIX/bin
 INSTALLS += target
 
 unix {
     desktop.files = fraqtive.desktop
-    desktop.path = $$PREFIX/share/applications
+    desktop.path = $${DESTINATION}$$PREFIX/share/applications
     INSTALLS += desktop
 
     ICON_SIZES = 16 22 32 48
     for( size, ICON_SIZES ) {
-        path = $$PREFIX/share/icons/hicolor/$${size}x$${size}/apps
+        path = $${DESTINATION}$$PREFIX/share/icons/hicolor/$${size}x$${size}/apps
         file = $(INSTALL_ROOT)$$path/fraqtive.png
         eval( icon-$${size}.path = $$path )
         eval( icon-$${size}.commands = -$(INSTALL_FILE) $$IN_PWD/icons/fraqtive-$${size}.png $$file )
