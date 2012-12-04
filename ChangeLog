@@ -1,3 +1,9 @@
+0.4.6 (2012-12-04)
+    * generating series of images
+    * fixed navigation at high zoom levels
+    * increased the maximum number of iterations
+    * added the tool strip and other UI improvements
+
 0.4.5 (2009-12-18)
     * added: generating images of arbitrary size
     * added: handling 4th and 5th mouse buttons

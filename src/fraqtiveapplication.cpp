@@ -78,7 +78,7 @@ FraqtiveApplication::~FraqtiveApplication()
 
 QString FraqtiveApplication::version() const
 {
-    return "0.4.5";
+    return "0.4.6";
 }
 
 #if defined( Q_OS_WIN )

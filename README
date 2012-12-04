@@ -1,5 +1,7 @@
 Fraqtive
-Version 0.4.5 (2009-12-18)
+Version 0.4.6 (2012-12-04)
+
+Mandelbrot family fractal generator.
 
 Fraqtive is an open source, multi-platform generator of the Mandelbrot
 family fractals. It uses very fast algorithms supporting SSE2
