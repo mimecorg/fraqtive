@@ -96,11 +96,11 @@ QString FraqtiveApplication::technicalInformation()
 #else
     QString configBits = "32";
 #endif
+#endif
 #if defined ( QT_DEBUG )
     QString configMode = "debug";
 #else
     QString configMode = "release";
-#endif
 #endif
 #if defined( QT_DLL )
     QString configLink = "dynamic";

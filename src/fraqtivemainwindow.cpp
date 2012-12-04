@@ -53,79 +53,79 @@ FraqtiveMainWindow::FraqtiveMainWindow()
     QAction* action;
 
     action = new QAction( IconLoader::icon( "edit" ), tr( "Fractal Type..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionFractalType_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fractalType() ) );
     setAction( "fractalType", action );
 
     action = new QAction( IconLoader::icon( "gradient" ), tr( "Edit Gradient..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionEditGradient_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( editGradient() ) );
     setAction( "editGradient", action );
 
     action = new QAction( IconLoader::icon( "fullscreen" ), tr( "Full Screen" ), this );
     action->setShortcut( QKeySequence( Qt::Key_F11 ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionFullScreen_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( fullScreen() ) );
     setAction( "fullScreen", action );
 
     action = new QAction( IconLoader::icon( "back" ), tr( "Navigate Back" ), this );
     action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Left ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionNavigateBack_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( navigateBack() ) );
     setAction( "navigateBack", action );
 
     action = new QAction( IconLoader::icon( "forward" ), tr( "Navigate Forward" ), this );
     action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Right ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionNavigateForward_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( navigateForward() ) );
     setAction( "navigateForward", action );
 
     action = new QAction( IconLoader::icon( "home" ), tr( "Default Position" ), this );
     action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Home ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionDefaultPosition_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( defaultPosition() ) );
     setAction( "defaultPosition", action );
 
     action = new QAction( IconLoader::icon( "load-preset" ), tr( "Load Preset..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionLoadPreset_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( loadPreset() ) );
     setAction( "loadPreset", action );
 
     action = new QAction( IconLoader::icon( "save-preset" ), tr( "Save Preset..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionSavePreset_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( savePreset() ) );
     setAction( "savePreset", action );
 
     action = new QAction( IconLoader::icon( "load-bookmark" ), tr( "Load Bookmark..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionLoadBookmark_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( loadBookmark() ) );
     setAction( "loadBookmark", action );
 
     action = new QAction( IconLoader::icon( "save-bookmark" ), tr( "Save Bookmark..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionSaveBookmark_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( saveBookmark() ) );
     setAction( "saveBookmark", action );
 
     action = new QAction( IconLoader::icon( "save" ), tr( "Save Image..." ), this );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionSaveImage_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( saveImage() ) );
     setAction( "saveImage", action );
 
     action = new QAction( IconLoader::icon( "copy" ), tr( "Copy Image" ), this );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionCopyImage_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( copyImage() ) );
     setAction( "copyImage", action );
 
     action = new QAction( IconLoader::icon( "generate-image" ), tr( "Generate Image..." ), this );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionGenerateImage_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( generateImage() ) );
     setAction( "generateImage", action );
 
     action = new QAction( IconLoader::icon( "generate-series" ), tr( "Generate Series..." ), this );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_actionGenerateSeries_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( generateSeries() ) );
     setAction( "generateSeries", action );
 
     action = new QAction( IconLoader::icon( "view2d" ), tr( "2D View" ), this );
     action->setShortcut( QKeySequence( Qt::Key_F2 ) );
     action->setCheckable( true );
     action->setChecked( true );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_action2DView_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( view2d() ) );
     setAction( "view2d", action );
 
     action = new QAction( IconLoader::icon( "view3d" ), tr( "3D View" ), this );
     action->setShortcut( QKeySequence( Qt::Key_F3 ) );
     action->setCheckable( true );
-    connect( action, SIGNAL( triggered() ), this, SLOT( on_action3DView_triggered() ) );
+    connect( action, SIGNAL( triggered() ), this, SLOT( view3d() ) );
     setAction( "view3d", action );
 
     action = new QAction( IconLoader::icon( "about" ), tr( "About Fraqtive" ), this );
@@ -251,7 +251,7 @@ void FraqtiveMainWindow::customContextMenuRequested( const QPoint& pos )
         menu->popup( menuWidget()->mapToGlobal( pos ) );
 }
 
-void FraqtiveMainWindow::on_actionFractalType_triggered()
+void FraqtiveMainWindow::fractalType()
 {
     FractalTypeDialog dialog( this, m_model );
 
@@ -259,7 +259,7 @@ void FraqtiveMainWindow::on_actionFractalType_triggered()
         m_model->setParameters( dialog.fractalType(), dialog.position() );
 }
 
-void FraqtiveMainWindow::on_actionEditGradient_triggered()
+void FraqtiveMainWindow::editGradient()
 {
     GradientDialog dialog( this );
     dialog.setGradient( m_model->gradient() );
@@ -274,7 +274,7 @@ void FraqtiveMainWindow::applyGradient( const Gradient& gradient )
     m_model->setGradient( gradient );
 }
 
-void FraqtiveMainWindow::on_actionFullScreen_triggered()
+void FraqtiveMainWindow::fullScreen()
 {
     if ( isFullScreenMode() )
         leaveFullScreenMode();
@@ -306,7 +306,7 @@ void FraqtiveMainWindow::leaveFullScreenMode()
     show();
 }
 
-void FraqtiveMainWindow::on_actionDefaultPosition_triggered()
+void FraqtiveMainWindow::defaultPosition()
 {
     m_model->setDefaultPosition();
 }
@@ -316,12 +316,12 @@ void FraqtiveMainWindow::positionChanged()
     action( "defaultPosition" )->setEnabled( !m_model->hasDefaultPosition() );
 }
 
-void FraqtiveMainWindow::on_actionNavigateBack_triggered()
+void FraqtiveMainWindow::navigateBack()
 {
     m_model->navigateBackward();
 }
 
-void FraqtiveMainWindow::on_actionNavigateForward_triggered()
+void FraqtiveMainWindow::navigateForward()
 {
     m_model->navigateForward();
 }
@@ -332,35 +332,35 @@ void FraqtiveMainWindow::navigationChanged()
     action( "navigateForward" )->setEnabled( m_model->canNavigateForward() );
 }
 
-void FraqtiveMainWindow::on_actionLoadPreset_triggered()
+void FraqtiveMainWindow::loadPreset()
 {
     LoadPresetDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionSavePreset_triggered()
+void FraqtiveMainWindow::savePreset()
 {
     SavePresetDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionLoadBookmark_triggered()
+void FraqtiveMainWindow::loadBookmark()
 {
     LoadBookmarkDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionSaveBookmark_triggered()
+void FraqtiveMainWindow::saveBookmark()
 {
     SaveBookmarkDialog dialog( this );
     dialog.setModel( m_model );
     dialog.exec();
 }
 
-void FraqtiveMainWindow::on_actionSaveImage_triggered()
+void FraqtiveMainWindow::saveImage()
 {
     QByteArray format;
     QString fileName = getSaveImageName( &format );
@@ -378,7 +378,7 @@ void FraqtiveMainWindow::on_actionSaveImage_triggered()
     }
 }
 
-void FraqtiveMainWindow::on_actionCopyImage_triggered()
+void FraqtiveMainWindow::copyImage()
 {
     QImage image = currentImage();
 
@@ -492,7 +492,7 @@ QImage FraqtiveMainWindow::currentImage()
     return QImage();
 }
 
-void FraqtiveMainWindow::on_actionGenerateImage_triggered()
+void FraqtiveMainWindow::generateImage()
 {
     GenerateImageDialog dialog( this );
 
@@ -542,7 +542,7 @@ void FraqtiveMainWindow::on_actionGenerateImage_triggered()
     }
 }
 
-void FraqtiveMainWindow::on_actionGenerateSeries_triggered()
+void FraqtiveMainWindow::generateSeries()
 {
     GenerateSeriesDialog dialog( this, m_model );
 
@@ -649,7 +649,7 @@ void FraqtiveMainWindow::on_actionGenerateSeries_triggered()
     }
 }
 
-void FraqtiveMainWindow::on_action2DView_triggered()
+void FraqtiveMainWindow::view2d()
 {
     if ( !qobject_cast<ImageView*>( m_ui.mainContainer->view() ) ) {
         ImageView* view = new ImageView( m_ui.mainContainer, m_model->presenter() );
@@ -667,7 +667,7 @@ void FraqtiveMainWindow::on_action2DView_triggered()
     action( "view3d" )->setChecked( false );
 }
 
-void FraqtiveMainWindow::on_action3DView_triggered()
+void FraqtiveMainWindow::view3d()
 {
     if ( !qobject_cast<MeshView*>( m_ui.mainContainer->view() ) ) {
         MeshView* view = new MeshView( m_ui.mainContainer, m_model->presenter() );

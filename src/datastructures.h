@@ -91,7 +91,7 @@ inline FractalType::FractalType() :
 inline bool operator ==( const FractalType& lhv, const FractalType& rhv )
 {
     return ( lhv.m_fractal == rhv.m_fractal )
-        && ( lhv.m_fractal != JuliaFractal || lhv.m_parameter.x() == rhv.m_parameter.x() && lhv.m_parameter.y() == rhv.m_parameter.y() ) // exact compare
+        && ( lhv.m_fractal != JuliaFractal || ( lhv.m_parameter.x() == rhv.m_parameter.x() && lhv.m_parameter.y() == rhv.m_parameter.y() ) ) // exact compare
         && ( lhv.m_exponentType == rhv.m_exponentType )
         && ( lhv.m_exponentType != IntegralExponent || lhv.m_integralExponent == rhv.m_integralExponent )
         && ( lhv.m_exponentType != RealExponent || qFuzzyCompare( lhv.m_realExponent, rhv.m_realExponent ) )

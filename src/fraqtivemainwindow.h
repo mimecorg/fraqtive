@@ -42,22 +42,22 @@ protected: // overrides
     void closeEvent( QCloseEvent* e );
 
 private slots:
-    void on_actionFractalType_triggered();
-    void on_actionEditGradient_triggered();
-    void on_actionFullScreen_triggered();
-    void on_actionNavigateBack_triggered();
-    void on_actionNavigateForward_triggered();
-    void on_actionDefaultPosition_triggered();
-    void on_actionLoadPreset_triggered();
-    void on_actionSavePreset_triggered();
-    void on_actionLoadBookmark_triggered();
-    void on_actionSaveBookmark_triggered();
-    void on_actionSaveImage_triggered();
-    void on_actionCopyImage_triggered();
-    void on_actionGenerateImage_triggered();
-    void on_actionGenerateSeries_triggered();
-    void on_action2DView_triggered();
-    void on_action3DView_triggered();
+    void fractalType();
+    void editGradient();
+    void fullScreen();
+    void navigateBack();
+    void navigateForward();
+    void defaultPosition();
+    void loadPreset();
+    void savePreset();
+    void loadBookmark();
+    void saveBookmark();
+    void saveImage();
+    void copyImage();
+    void generateImage();
+    void generateSeries();
+    void view2d();
+    void view3d();
 
     void customContextMenuRequested( const QPoint& pos );
 

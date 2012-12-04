@@ -652,14 +652,6 @@ inline void calculatePowerSSE2<1>( __m128d& /*zx*/, __m128d& /*zy*/, __m128d& /*
 {
 }
 
-#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-static const quint32 SignMask[ 2 ] = { 0, 0x80000000 };
-static const quint32 NotSignMask[ 2 ] = { 0xffffffff, 0x7fffffff };
-#else
-static const quint32 SignMask[ 2 ] = { 0x80000000, 0 };
-static const quint32 NotSignMask[ 2 ] = { 0x7fffffff, 0xffffffff };
-#endif
-
 template<Variant VARIANT>
 static void adjustSSE2( __m128d& /*zx*/, __m128d& /*zy*/ );
 
@@ -671,14 +663,14 @@ inline void adjustSSE2<NormalVariant>( __m128d& /*zx*/, __m128d& /*zy*/ )
 template<>
 inline void adjustSSE2<ConjugateVariant>( __m128d& /*zx*/, __m128d& zy )
 {
-    __m128d mask = _mm_set1_pd( *(const double*)(const void*)SignMask );
+    __m128d mask = _mm_castsi128_pd( _mm_set_epi32( int( 0x80000000 ), 0, int( 0x80000000 ), 0 ) );
     zy = _mm_xor_pd( mask, zy );
 }
 
 template<>
 inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
 {
-    __m128d mask = _mm_set1_pd( *(const double*)(const void*)NotSignMask );
+    __m128d mask = _mm_castsi128_pd( _mm_set_epi32( 0x7fffffff, int( 0xffffffff ), 0x7fffffff, int( 0xffffffff ) ) );
     zx = _mm_and_pd( zx, mask );
     zy = _mm_and_pd( zy, mask );
 }
@@ -686,7 +678,7 @@ inline void adjustSSE2<AbsoluteVariant>( __m128d& zx, __m128d& zy )
 template<>
 inline void adjustSSE2<AbsoluteImVariant>( __m128d& /*zx*/, __m128d& zy )
 {
-    __m128d mask = _mm_set1_pd( *(const double*)(const void*)NotSignMask );
+    __m128d mask = _mm_castsi128_pd( _mm_set_epi32( 0x7fffffff, int( 0xffffffff ), 0x7fffffff, int( 0xffffffff ) ) );
     zy = _mm_and_pd( zy, mask );
 }
 
