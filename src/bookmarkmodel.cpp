@@ -123,10 +123,12 @@ void BookmarkModel::update()
 
     cancelJobs();
 
+    beginResetModel();
+
     m_keys = m_map->keys();
     qSort( m_keys.begin(), m_keys.end(), localeAwareLessThan );
 
-    reset();
+    endResetModel();
 }
 
 int BookmarkModel::rowCount( const QModelIndex& parent ) const

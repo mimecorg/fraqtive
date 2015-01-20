@@ -217,7 +217,7 @@ static bool hasMirroredRepeat()
     static bool result = false;
 
     if ( !checked ) {
-        QStringList extensions = QString::fromAscii( (const char*)glGetString( GL_EXTENSIONS ) ).split( ' ' );
+        QStringList extensions = QString::fromLatin1( (const char*)glGetString( GL_EXTENSIONS ) ).split( ' ' );
         if ( extensions.contains( "GL_ARB_texture_mirrored_repeat" ) || extensions.contains( "GL_IBM_texture_mirrored_repeat" ) )
             result = true;
         checked = true;

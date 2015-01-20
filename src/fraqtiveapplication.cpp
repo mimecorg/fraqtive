@@ -102,7 +102,7 @@ QString FraqtiveApplication::technicalInformation()
 #else
     QString configMode = "release";
 #endif
-#if defined( QT_DLL )
+#if defined( QT_SHARED )
     QString configLink = "dynamic";
 #else
     QString configLink = "static";

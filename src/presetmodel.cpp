@@ -48,11 +48,12 @@ static bool localeAwareLessThan( const QString& s1, const QString& s2 )
  
 void PresetModel::update()
 {
-    m_keys = m_map->keys();
+    beginResetModel();
 
+    m_keys = m_map->keys();
     qSort( m_keys.begin(), m_keys.end(), localeAwareLessThan );
 
-    reset();
+    endResetModel();
 }
 
 int PresetModel::rowCount( const QModelIndex& parent ) const
