@@ -57,6 +57,11 @@ GenerateImageDialog::GenerateImageDialog( QWidget* parent ) : QDialog( parent )
     m_ui.sliderDepth->setScaledRange( 1.5, 4.0 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
 
+    if ( QSysInfo::WordSize == 64 ) {
+        m_ui.spinWidth->setMaximum( 30720 );
+        m_ui.spinHeight->setMaximum( 17280 );
+    }
+
     initializeDefaultSettings();
 
     ConfigurationData* config = fraqtive()->configuration();

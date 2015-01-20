@@ -63,6 +63,11 @@ GenerateSeriesDialog::GenerateSeriesDialog( QWidget* parent, const FractalModel*
     m_ui.sliderDepth->setScaledRange( 1.5, 4.0 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
 
+    if ( QSysInfo::WordSize == 64 ) {
+        m_ui.spinWidth->setMaximum( 30720 );
+        m_ui.spinHeight->setMaximum( 17280 );
+    }
+
     int width = 0;
     QLabel* labels[ 3 ] = { m_ui.labelZoom, m_ui.labelAngle, m_ui.labelBlending };
 

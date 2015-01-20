@@ -97,7 +97,7 @@
                 <number>32</number>
                </property>
                <property name="maximum">
-                <number>4000</number>
+                <number>8000</number>
                </property>
               </widget>
              </item>
@@ -139,7 +139,7 @@
                 <number>32</number>
                </property>
                <property name="maximum">
-                <number>4000</number>
+                <number>8000</number>
                </property>
               </widget>
              </item>
@@ -584,15 +584,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+   <class>DoubleSlider</class>
+   <extends>QSlider</extends>
+   <header>doubleslider.h</header>
+  </customwidget>
+  <customwidget>
    <class>ViewContainer</class>
    <extends>QWidget</extends>
    <header>viewcontainer.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>DoubleSlider</class>
-   <extends>QSlider</extends>
-   <header>doubleslider.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
