@@ -16,28 +16,10 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-!define VERSION "0.4.6"
-!define BUILDVERSION "0.4.6.4721"
-
 !define SRCDIR ".."
 !define BUILDDIR "..\release"
 
 !define UNINST_KEY "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Fraqtive"
-
-!ifndef SIGN
-    !verbose 2
-
-    !system "$\"${NSISDIR}\makensis$\" /V2 /DSIGN ${SCRIPTNAME}" = 0
-
-    !system "..\..\sign.bat fraqtive-${VERSION}-${ARCHITECTURE}.exe" = 0
-
-    SetCompress off
-
-    OutFile "$%TEMP%\signinst.exe"
-
-    Section
-    SectionEnd
-!else
 
 !include "MUI2.nsh"
 
@@ -49,12 +31,6 @@
     OutFile "$%TEMP%\innerinst.exe"
 !else
     !verbose 4
-
-    !system "$\"${NSISDIR}\makensis$\" /V2 /DSIGN /DINNER ${SCRIPTNAME}" = 0
-
-    !system "$%TEMP%\innerinst.exe" = 2
-
-    !system "..\..\sign.bat $%TEMP%\uninstall.exe" = 0
 
     SetCompressor /SOLID lzma
     SetCompressorDictSize 32
@@ -126,7 +102,7 @@ VIProductVersion "${BUILDVERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "Michał Męciński"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Fraqtive Setup"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (C) 2004-2012 Michał Męciński"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (C) 2004-2015 Michał Męciński"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "fraqtive-${VERSION}-${ARCHITECTURE}.exe"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Fraqtive"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
@@ -159,6 +135,25 @@ Section
     Delete "$INSTDIR\bin\*.*"
 
     File "${BUILDDIR}\fraqtive.exe"
+
+    File "${VCRTDIR}\msvcp100.dll"
+    File "${VCRTDIR}\msvcr100.dll"
+
+    File "qt.conf"
+
+    File "${QTDIR}\bin\Qt5Core.dll"
+    File "${QTDIR}\bin\Qt5Gui.dll"
+    File "${QTDIR}\bin\Qt5OpenGL.dll"
+    File "${QTDIR}\bin\Qt5Widgets.dll"
+    File "${QTDIR}\bin\Qt5Xml.dll"
+
+    SetOutPath "$INSTDIR\plugins\imageformats"
+
+    File "${QTDIR}\plugins\imageformats\qjpeg.dll"
+
+    SetOutPath "$INSTDIR\plugins\platforms"
+
+    File "${QTDIR}\plugins\platforms\qwindows.dll"
 
     SetOutPath "$INSTDIR\bin"
 
@@ -207,10 +202,10 @@ Section "Uninstall"
     Delete "$INSTDIR\COPYING"
     Delete "$INSTDIR\README"
     RMDir /r "$INSTDIR\bin"
+    RMDir /r "$INSTDIR\plugins"
     Delete "$INSTDIR\uninstall.exe"
     RMDir "$INSTDIR"
 
 SectionEnd
 
-!endif
 !endif
