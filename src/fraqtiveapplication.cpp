@@ -78,7 +78,7 @@ FraqtiveApplication::~FraqtiveApplication()
 
 QString FraqtiveApplication::version() const
 {
-    return "0.4.6";
+    return "0.4.7";
 }
 
 #if defined( Q_OS_WIN )
@@ -138,7 +138,7 @@ void FraqtiveApplication::about()
             " it under the terms of the GNU General Public License as published by"
             " the Free Software Foundation, either version 3 of the License, or"
             " (at your option) any later version." ) + "</p>";
-        message += "<p>" + trUtf8( "Copyright &copy; 2004-2012 Michał Męciński" ) + "</p>";
+        message += "<p>" + trUtf8( "Copyright &copy; 2004-2015 Michał Męciński" ) + "</p>";
 
         QString link = "<a href=\"http://fraqtive.mimec.org\">fraqtive.mimec.org</a>";
 

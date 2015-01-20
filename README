@@ -1,5 +1,5 @@
 Fraqtive
-Version 0.4.6 (2012-12-04)
+Version 0.4.7 (2015-01-20)
 
 Mandelbrot family fractal generator.
 
@@ -13,7 +13,7 @@ navigation and dynamic generation of the Julia fractal preview.
 Copyrights
 ==========
 
-Copyright (C) 2004-2012 Michał Męciński
+Copyright (C) 2004-2015 Michał Męciński
 
 Icons based on the KDE Crystal theme copyright (C) 2002 and following
 years KDE Artists

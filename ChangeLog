@@ -1,3 +1,7 @@
+0.4.7 (2015-01-20)
+    * fixed compatibility with Qt5
+    * increased the maximum size of generated images
+
 0.4.6 (2012-12-04)
     * generating series of images
     * fixed navigation at high zoom levels
