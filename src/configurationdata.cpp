@@ -18,7 +18,7 @@
 
 #include "configurationdata.h"
 
-#if defined( Q_WS_WIN )
+#if defined( Q_OS_WIN )
 #ifndef _WIN32_IE
 #define _WIN32_IE 0x0400
 #endif
@@ -32,16 +32,10 @@ ConfigurationData::ConfigurationData()
 {
     QString homePath = QDir::homePath();
 
-#if defined( Q_WS_WIN )
-    QT_WA( {
-        TCHAR appDataPath[ MAX_PATH ];
-        if ( SHGetSpecialFolderPath( 0, appDataPath, CSIDL_APPDATA, FALSE ) )
-            m_dataPath = QDir::fromNativeSeparators( QString::fromUtf16( (ushort*)appDataPath ) );
-    } , {
-        char appDataPath[ MAX_PATH ];
-        if ( SHGetSpecialFolderPathA( 0, appDataPath, CSIDL_APPDATA, FALSE ) )
-            m_dataPath = QDir::fromNativeSeparators( QString::fromLocal8Bit( appDataPath ) );
-    } );
+#if defined( Q_OS_WIN )
+    TCHAR appDataPath[ MAX_PATH ];
+    if ( SHGetSpecialFolderPath( 0, appDataPath, CSIDL_APPDATA, FALSE ) )
+        m_dataPath = QDir::fromNativeSeparators( QString::fromUtf16( (ushort*)appDataPath ) );
     if ( m_dataPath.isEmpty() )
         m_dataPath = homePath;
     m_dataPath += "/Fraqtive";
