@@ -31,7 +31,7 @@
 
 #include <QtGlobal>
 
-#if !defined( Q_WS_MAC ) || defined( QT_NO_STYLE_AQUA )
+#if !defined( Q_OS_MAC ) || defined( QT_NO_STYLE_AQUA )
 #define XMLUI_NO_STYLE_MAC
 #endif
 
