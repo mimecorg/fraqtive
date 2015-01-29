@@ -1,3 +1,7 @@
+0.4.8 (2015-01-29)
+    * added multi-sampling option when generating images
+    * fixed location of data files on Windows with Qt5
+
 0.4.7 (2015-01-20)
     * fixed compatibility with Qt5
     * increased the maximum size of generated images
