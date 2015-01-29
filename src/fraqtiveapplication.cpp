@@ -24,7 +24,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-#if defined( Q_WS_WIN )
+#if defined( Q_OS_WIN )
 #include <shlobj.h>
 #endif
 
@@ -36,12 +36,18 @@
 #include "guidedialog.h"
 #include "iconloader.h"
 
+#if defined( Q_OS_WIN )
+#include "xmlui/windowsstyle.h"
+#elif defined( Q_OS_MAC )
+#include "xmlui/macstyle.h"
+#endif
+
 FraqtiveApplication::FraqtiveApplication( int& argc, char** argv ) : QApplication( argc, argv )
 {
-#if defined( Q_WS_WIN )
-    setStyle( "XmlUi::WindowsStyle" );
-#elif defined( Q_WS_MAC )
-    setStyle( "XmlUi::MacStyle" );
+#if defined( Q_OS_WIN ) && !defined( XMLUI_NO_STYLE_WINDOWS )
+    setStyle( new XmlUi::WindowsStyle() );
+#elif defined( Q_OS_MAC ) && !defined( XMLUI_NO_STYLE_MAC )
+    setStyle( new XmlUi::MacStyle() );
 #endif
 
     setWindowIcon( IconLoader::icon( "fraqtive" ) ); 

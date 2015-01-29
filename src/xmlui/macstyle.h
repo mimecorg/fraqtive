@@ -37,7 +37,7 @@
 
 #if !defined( XMLUI_NO_STYLE_MAC )
 
-#include <QMacStyle>
+#include <QProxyStyle>
 
 namespace XmlUi
 {
@@ -47,7 +47,7 @@ namespace XmlUi
 *
 * The style override default QToolButton rendering which are ugly on mac os x.
 */
-class MacStyle : public QMacStyle
+class MacStyle : public QProxyStyle
 {
     Q_OBJECT
 public:

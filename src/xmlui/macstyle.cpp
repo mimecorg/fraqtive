@@ -43,13 +43,9 @@
 #include <QLayout>
 #include <QDebug>
 
-#if !defined( XMLUI_NO_STYLE_PLUGIN )
-#include <QStylePlugin>
-#endif
-
 using namespace XmlUi;
 
-MacStyle::MacStyle() : QMacStyle()
+MacStyle::MacStyle() : QProxyStyle()
 {
 }
 
@@ -206,53 +202,7 @@ void MacStyle::drawComplexControl( ComplexControl control, const QStyleOptionCom
             break;
     }
 
-    QMacStyle::drawComplexControl( control, option, painter, widget );
+    QProxyStyle::drawComplexControl( control, option, painter, widget );
 }
-
-#if !defined( XMLUI_NO_STYLE_PLUGIN )
-
-namespace XmlUi
-{
-
-class MacStylePlugin : public QStylePlugin
-{
-public: // overrides
-    QStringList keys() const;
-    QStyle* create( const QString& key );
-};
-
-QStringList MacStylePlugin::keys() const
-{
-    return QStringList() << "XmlUi::MacStyle";
-}
-
-QStyle* MacStylePlugin::create( const QString& key )
-{
-    if ( key.toLower() == QLatin1String( "xmlui::macstyle" ) )
-        return new MacStyle();
-    return NULL;
-}
-
-#if !defined( XMLUI_EXPORT_STYLE_PLUGIN )
-
-QObject* qt_plugin_instance_xmlui_macstyle()
-{
-    static QPointer<QObject> instance;
-    if ( !instance )
-        instance = new MacStylePlugin();
-    return instance;
-}
-
-Q_IMPORT_PLUGIN( xmlui_macstyle )
-
-#else
-
-Q_EXPORT_PLUGIN2( xmlui_macstyle, MacStylePlugin )
-
-#endif // !defined( XMLUI_EXPORT_STYLE_PLUGIN )
-
-}
-
-#endif // !defined( XMLUI_NO_STYLE_PLUGIN )
 
 #endif // !defined( XMLUI_NO_STYLE_MAC )
