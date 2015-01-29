@@ -33,16 +33,27 @@ public:
 
 public:
     QSize resolution() const { return m_resolution; }
+    int multiSampling() const { return m_multiSampling; }
     GeneratorSettings generatorSettings() const { return m_generatorSettings; }
     ViewSettings viewSettings() const { return m_viewSettings; }
 
 public: // overrides
     void accept();
 
+private slots:
+    void on_radioMSNone_clicked();
+    void on_radioMS2x2_clicked();
+    void on_radioMS4x4_clicked();
+    void on_radioMS8x8_clicked();
+
+private:
+    void updateMaximumSize();
+
 private:
     Ui::GenerateImageDialog m_ui;
 
     QSize m_resolution;
+    int m_multiSampling;
     GeneratorSettings m_generatorSettings;
     ViewSettings m_viewSettings;
 };

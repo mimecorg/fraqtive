@@ -34,6 +34,8 @@ static void initializeSeriesSettings()
 
         if ( !config->contains( "SeriesResolution" ) )
             config->setValue( "SeriesResolution", QVariant::fromValue( QSize( 640, 480 ) ) );
+        if ( !config->contains( "SeriesMultiSampling" ) )
+            config->setValue( "SeriesMultiSampling", QVariant::fromValue( 0 ) );
         if ( !config->contains( "SeriesGeneratorSettings" ) )
             config->setValue( "SeriesGeneratorSettings", QVariant::fromValue( DataFunctions::defaultGeneratorSettings() ) );
         if ( !config->contains( "SeriesViewSettings" ) )
@@ -63,11 +65,6 @@ GenerateSeriesDialog::GenerateSeriesDialog( QWidget* parent, const FractalModel*
     m_ui.sliderDepth->setScaledRange( 1.5, 4.0 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
 
-    if ( QSysInfo::WordSize == 64 ) {
-        m_ui.spinWidth->setMaximum( 30720 );
-        m_ui.spinHeight->setMaximum( 17280 );
-    }
-
     int width = 0;
     QLabel* labels[ 3 ] = { m_ui.labelZoom, m_ui.labelAngle, m_ui.labelBlending };
 
@@ -82,6 +79,25 @@ GenerateSeriesDialog::GenerateSeriesDialog( QWidget* parent, const FractalModel*
     initializeSeriesSettings();
 
     ConfigurationData* config = fraqtive()->configuration();
+
+    m_multiSampling = config->value( "SeriesMultiSampling" ).value<int>();
+
+    switch ( m_multiSampling ) {
+        case 0:
+            m_ui.radioMSNone->setChecked( true );
+            break;
+        case 1:
+            m_ui.radioMS2x2->setChecked( true );
+            break;
+        case 2:
+            m_ui.radioMS4x4->setChecked( true );
+            break;
+        case 3:
+            m_ui.radioMS8x8->setChecked( true );
+            break;
+    }
+
+    updateMaximumSize();
 
     m_resolution = config->value( "SeriesResolution" ).value<QSize>();
 
@@ -155,6 +171,17 @@ void GenerateSeriesDialog::accept()
 
     config->setValue( "SeriesResolution", QVariant::fromValue( m_resolution ) );
 
+    if ( m_ui.radioMSNone->isChecked() )
+        m_multiSampling = 0;
+    else if ( m_ui.radioMS2x2->isChecked() )
+        m_multiSampling = 1;
+    else if ( m_ui.radioMS4x4->isChecked() )
+        m_multiSampling = 2;
+    else if ( m_ui.radioMS8x8->isChecked() )
+        m_multiSampling = 3;
+
+    config->setValue( "SeriesMultiSampling", QVariant::fromValue( m_multiSampling ) );
+
     config->setValue( "SeriesGeneratorSettings", QVariant::fromValue( m_generatorSettings ) );
     config->setValue( "SeriesViewSettings", QVariant::fromValue( m_viewSettings ) );
 
@@ -202,6 +229,26 @@ void GenerateSeriesDialog::on_radioAAHigh_clicked()
     updateSettings();
 }
 
+void GenerateSeriesDialog::on_radioMSNone_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateSeriesDialog::on_radioMS2x2_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateSeriesDialog::on_radioMS4x4_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateSeriesDialog::on_radioMS8x8_clicked()
+{
+    updateMaximumSize();
+}
+
 void GenerateSeriesDialog::on_spinZoom_valueChanged()
 {
     updatePosition();
@@ -215,6 +262,29 @@ void GenerateSeriesDialog::on_spinAngle_valueChanged()
 void GenerateSeriesDialog::on_animSlider_valueChanged()
 {
     updatePosition();
+}
+
+void GenerateSeriesDialog::updateMaximumSize()
+{
+    int width, height;
+    if ( QSysInfo::WordSize == 64 ) {
+        width = 30720;
+        height = 17280;
+    } else {
+        width = 8000;
+        height = 8000;
+    }
+
+    int multiSampling = 0;
+    if ( m_ui.radioMS2x2->isChecked() )
+        multiSampling = 1;
+    else if ( m_ui.radioMS4x4->isChecked() )
+        multiSampling = 2;
+    else if ( m_ui.radioMS8x8->isChecked() )
+        multiSampling = 3;
+
+    m_ui.spinWidth->setMaximum( width >> multiSampling );
+    m_ui.spinHeight->setMaximum( height >> multiSampling );
 }
 
 void GenerateSeriesDialog::updatePosition()

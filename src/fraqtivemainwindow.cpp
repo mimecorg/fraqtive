@@ -502,7 +502,7 @@ void FraqtiveMainWindow::generateImage()
 
         if ( !fileName.isEmpty() ) {
             ImageGenerator generator( this );
-            generator.setResolution( dialog.resolution() );
+            generator.setResolution( dialog.resolution() * ( 1 << dialog.multiSampling() ) );
             generator.setParameters( m_model->fractalType(), m_model->position() );
             generator.setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
             generator.setGeneratorSettings( dialog.generatorSettings() );
@@ -532,10 +532,16 @@ void FraqtiveMainWindow::generateImage()
             eventLoop.exec();
 
             if ( !progress.wasCanceled() ) {
+                QImage image = generator.takeImage();
+
+                for ( int i = 0; i < dialog.multiSampling(); i++ )
+                    image = image.scaledToWidth( image.width() / 2, Qt::SmoothTransformation );
+
                 QImageWriter* writer = createImageWriter( fileName, format );
-                if ( !writer->write( generator.takeImage() ) ) {
+
+                if ( !writer->write( image ) )
                     QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
-                }
+
                 delete writer;
             }
         }
@@ -555,7 +561,7 @@ void FraqtiveMainWindow::generateSeries()
 
             ImageGenerator generator( this );
             generator.setImageCount( dialog.images() );
-            generator.setResolution( dialog.resolution() );
+            generator.setResolution( dialog.resolution() * ( 1 << dialog.multiSampling() ) );
 
             generator.setColorSettings( m_model->gradient(), m_model->backgroundColor(), m_model->colorMapping() );
             generator.setGeneratorSettings( dialog.generatorSettings() );
@@ -630,20 +636,23 @@ void FraqtiveMainWindow::generateSeries()
                     painter.setRenderHint( QPainter::SmoothPixmapTransform );
 
                     painter.drawImage( 0, 0, previous );
-
-                    previous = QImage();
                 }
 
+                if ( dialog.blending() > 0.01 )
+                    previous = current;
+
+                for ( int i = 0; i < dialog.multiSampling(); i++ )
+                    current = current.scaledToWidth( current.width() / 2, Qt::SmoothTransformation );
+
                 QImageWriter* writer = createImageWriter( fullPath, format );
+
                 if ( !writer->write( current ) ) {
                     QMessageBox::warning( this, tr( "Error" ), tr( "The selected file could not be saved." ) );
                     delete writer;
                     break;
                 }
-                delete writer;
 
-                if ( dialog.blending() > 0.01 )
-                    previous = current;
+                delete writer;
             }
         }
     }

@@ -33,6 +33,8 @@ static void initializeDefaultSettings()
 
         if ( !config->contains( "ImageResolution" ) )
             config->setValue( "ImageResolution", QVariant::fromValue( QApplication::desktop()->screenGeometry().size() ) );
+        if ( !config->contains( "ImageMultiSampling" ) )
+            config->setValue( "ImageMultiSampling", QVariant::fromValue( 0 ) );
         if ( !config->contains( "ImageGeneratorSettings" ) )
             config->setValue( "ImageGeneratorSettings", QVariant::fromValue( DataFunctions::defaultGeneratorSettings() ) );
         if ( !config->contains( "ImageViewSettings" ) )
@@ -42,7 +44,8 @@ static void initializeDefaultSettings()
     }
 }
 
-GenerateImageDialog::GenerateImageDialog( QWidget* parent ) : QDialog( parent )
+GenerateImageDialog::GenerateImageDialog( QWidget* parent ) : QDialog( parent ),
+    m_multiSampling( 0 )
 {
     m_ui.setupUi( this );
 
@@ -57,14 +60,28 @@ GenerateImageDialog::GenerateImageDialog( QWidget* parent ) : QDialog( parent )
     m_ui.sliderDepth->setScaledRange( 1.5, 4.0 );
     m_ui.sliderDetail->setScaledRange( 3.0, 0.0 );
 
-    if ( QSysInfo::WordSize == 64 ) {
-        m_ui.spinWidth->setMaximum( 30720 );
-        m_ui.spinHeight->setMaximum( 17280 );
-    }
-
     initializeDefaultSettings();
 
     ConfigurationData* config = fraqtive()->configuration();
+
+    m_multiSampling = config->value( "ImageMultiSampling" ).value<int>();
+
+    switch ( m_multiSampling ) {
+        case 0:
+            m_ui.radioMSNone->setChecked( true );
+            break;
+        case 1:
+            m_ui.radioMS2x2->setChecked( true );
+            break;
+        case 2:
+            m_ui.radioMS4x4->setChecked( true );
+            break;
+        case 3:
+            m_ui.radioMS8x8->setChecked( true );
+            break;
+    }
+
+    updateMaximumSize();
 
     m_resolution = config->value( "ImageResolution" ).value<QSize>();
 
@@ -98,6 +115,49 @@ GenerateImageDialog::~GenerateImageDialog()
 {
 }
 
+void GenerateImageDialog::on_radioMSNone_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateImageDialog::on_radioMS2x2_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateImageDialog::on_radioMS4x4_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateImageDialog::on_radioMS8x8_clicked()
+{
+    updateMaximumSize();
+}
+
+void GenerateImageDialog::updateMaximumSize()
+{
+    int width, height;
+    if ( QSysInfo::WordSize == 64 ) {
+        width = 30720;
+        height = 17280;
+    } else {
+        width = 8000;
+        height = 8000;
+    }
+
+    int multiSampling = 0;
+    if ( m_ui.radioMS2x2->isChecked() )
+        multiSampling = 1;
+    else if ( m_ui.radioMS4x4->isChecked() )
+        multiSampling = 2;
+    else if ( m_ui.radioMS8x8->isChecked() )
+        multiSampling = 3;
+
+    m_ui.spinWidth->setMaximum( width >> multiSampling );
+    m_ui.spinHeight->setMaximum( height >> multiSampling );
+}
+
 void GenerateImageDialog::accept()
 {
     ConfigurationData* config = fraqtive()->configuration();
@@ -106,6 +166,17 @@ void GenerateImageDialog::accept()
 
     config->setValue( "ImageResolution", QVariant::fromValue( m_resolution ) );
 
+    if ( m_ui.radioMSNone->isChecked() )
+        m_multiSampling = 0;
+    else if ( m_ui.radioMS2x2->isChecked() )
+        m_multiSampling = 1;
+    else if ( m_ui.radioMS4x4->isChecked() )
+        m_multiSampling = 2;
+    else if ( m_ui.radioMS8x8->isChecked() )
+        m_multiSampling = 3;
+
+    config->setValue( "ImageMultiSampling", QVariant::fromValue( m_multiSampling ) );
+
     m_generatorSettings.setCalculationDepth( m_ui.sliderDepth->scaledValue() );
     m_generatorSettings.setDetailThreshold( m_ui.sliderDetail->scaledValue() );
 
@@ -113,11 +184,11 @@ void GenerateImageDialog::accept()
 
     if ( m_ui.radioAANone->isChecked() )
         m_viewSettings.setAntiAliasing( NoAntiAliasing );
-    if ( m_ui.radioAALow->isChecked() )
+    else if ( m_ui.radioAALow->isChecked() )
         m_viewSettings.setAntiAliasing( LowAntiAliasing );
-    if ( m_ui.radioAAMedium->isChecked() )
+    else if ( m_ui.radioAAMedium->isChecked() )
         m_viewSettings.setAntiAliasing( MediumAntiAliasing );
-    if ( m_ui.radioAAHigh->isChecked() )
+    else if ( m_ui.radioAAHigh->isChecked() )
         m_viewSettings.setAntiAliasing( HighAntiAliasing );
 
     config->setValue( "ImageViewSettings", QVariant::fromValue( m_viewSettings ) );

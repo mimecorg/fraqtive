@@ -36,6 +36,7 @@ public:
 
 public:
     QSize resolution() const { return m_resolution; }
+    int multiSampling() const { return m_multiSampling; }
     GeneratorSettings generatorSettings() const { return m_generatorSettings; }
     ViewSettings viewSettings() const { return m_viewSettings; }
 
@@ -56,11 +57,16 @@ private slots:
     void on_radioAALow_clicked();
     void on_radioAAMedium_clicked();
     void on_radioAAHigh_clicked();
+    void on_radioMSNone_clicked();
+    void on_radioMS2x2_clicked();
+    void on_radioMS4x4_clicked();
+    void on_radioMS8x8_clicked();
     void on_spinZoom_valueChanged();
     void on_spinAngle_valueChanged();
     void on_animSlider_valueChanged();
 
 private:
+    void updateMaximumSize();
     void updatePosition();
     void updateSettings();
 
@@ -73,6 +79,7 @@ private:
     Position m_endPosition;
 
     QSize m_resolution;
+    int m_multiSampling;
     GeneratorSettings m_generatorSettings;
     ViewSettings m_viewSettings;
 
