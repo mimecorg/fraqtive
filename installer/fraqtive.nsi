@@ -150,6 +150,7 @@ Section
     SetOutPath "$INSTDIR\plugins\imageformats"
 
     File "${QTDIR}\plugins\imageformats\qjpeg.dll"
+    File "${QTDIR}\plugins\imageformats\qtiff.dll"
 
     SetOutPath "$INSTDIR\plugins\platforms"
 
