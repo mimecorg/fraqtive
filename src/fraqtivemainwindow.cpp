@@ -284,7 +284,7 @@ void FraqtiveMainWindow::fullScreen()
 
 bool FraqtiveMainWindow::isFullScreenMode() const
 {
-    return m_ui.mainContainer->windowState() & Qt::WindowFullScreen;
+    return m_ui.mainContainer->isFullScreen();
 }
 
 void FraqtiveMainWindow::enterFullScreenMode()
@@ -298,8 +298,8 @@ void FraqtiveMainWindow::enterFullScreenMode()
 
 void FraqtiveMainWindow::leaveFullScreenMode()
 {
-    m_ui.mainContainer->setParent( m_ui.centralWidget );
     m_ui.vboxLayout->addWidget( m_ui.mainContainer );
+    m_ui.mainContainer->showNormal();
     QList<QAction*> actions = XmlUi::Client::actions();
     for ( int i = 0; i < actions.count(); i++ )
         m_ui.mainContainer->removeAction( actions.at( i ) );
