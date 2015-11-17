@@ -27,6 +27,8 @@ Q_IMPORT_PLUGIN( qtiff )
 
 int main( int argc, char* argv[] )
 {
+    qRegisterMetaType<QVector<int> >();
+
     FraqtiveApplication application( argc, argv );
     return application.exec();
 }
