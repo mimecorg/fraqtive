@@ -183,7 +183,7 @@ win32-msvc* {
 target.path = $${DESTINATION}$$PREFIX/bin
 INSTALLS += target
 
-unix {
+unix:!mac {
     desktop.files = fraqtive.desktop
     desktop.path = $${DESTINATION}$$PREFIX/share/applications
     INSTALLS += desktop
@@ -197,4 +197,8 @@ unix {
         eval( icon-$${size}.uninstall = -$(DEL_FILE) $$file )
         INSTALLS += icon-$${size}
     }
+
+    man.files = fraqtive.1
+    man.path = $${DESTINATION}$$PREFIX/share/man/man1
+    INSTALLS += man
 }
