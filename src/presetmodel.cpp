@@ -81,7 +81,7 @@ QVariant PresetModel::data( const QModelIndex& index, int role ) const
         bool reversed = preset.colorMapping().isReversed();
         bool mirrored = preset.colorMapping().isMirrored();
 
-        if ( !mirrored && !reversed || mirrored && reversed ) {
+        if ( ( !mirrored && !reversed ) || ( mirrored && reversed ) ) {
             for ( int i = 0; i < stops.count() / 2; i++ ) {
                 QGradientStop stop1 = stops.at( i );
                 QGradientStop stop2 = stops.at( stops.count() - i - 1 );

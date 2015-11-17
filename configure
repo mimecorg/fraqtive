@@ -81,7 +81,7 @@ for i in $paths; do
   if test "$version" != "**Unknown**"; then
     major=`echo $version | sed -e "s/\([0-9][0-9]*\).*/\1/"`
     minor=`echo $version | sed -e "s/[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/"`
-    if test $major -eq 4 -a $minor -ge 3; then
+    if test $major -eq 5; then
       QMAKE=$i
       break
     fi
@@ -89,7 +89,7 @@ for i in $paths; do
 done
 
 if test -z "$QMAKE"; then
-    echo "*** ERROR: Cannot find 'qmake' from Qt 4.3 or newer." >&2
+    echo "*** ERROR: Cannot find 'qmake' from Qt 5." >&2
     exit 1
 fi
 

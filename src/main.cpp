@@ -18,6 +18,8 @@
 
 #include "fraqtiveapplication.h"
 
+#include <QVector>
+
 #ifdef HAVE_STATIC_JPEG
 Q_IMPORT_PLUGIN( qjpeg )
 #endif
