@@ -1,0 +1,12 @@
+debug
+release
+src/fraqtive_pch.h.cpp
+src/fraqtive.vcxproj
+src/fraqtive.vcxproj.filters
+src/fraqtive.vcxproj.user
+tmp
+.qmake.stash
+config.pri
+configure-msvc.bat
+fraqtive.sln
+fraqtive.v12.suo
