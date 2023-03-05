@@ -19,6 +19,7 @@
 #include "shadewidget.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QPaintEvent>
 #include <QToolTip>
 

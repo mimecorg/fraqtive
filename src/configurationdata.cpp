@@ -25,6 +25,7 @@
 #include <shlobj.h>
 #endif
 
+#include <QDataStream>
 #include <QDir>
 #include <cstdlib>
 

@@ -21,6 +21,7 @@
 
 #include <QEvent>
 #include <QMutex>
+#include <QObject>
 #include <QWaitCondition>
 
 #include "abstractjobprovider.h"
