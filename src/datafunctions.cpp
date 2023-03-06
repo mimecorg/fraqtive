@@ -19,6 +19,8 @@
 #include "datafunctions.h"
 #include "fractaldata.h"
 
+#include <QPainterPath>
+
 namespace DataFunctions
 {
 
